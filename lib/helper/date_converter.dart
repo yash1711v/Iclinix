@@ -152,4 +152,12 @@ class SimpleTimeConverter {
   static String formatTimeToCustomFormat(DateTime dateTime) {
     return DateFormat('hh:mm a').format(dateTime); // Format as "hh:mm AM/PM"
   }
+
+  static String format12HourTo24Hour(String time12Hour) {
+    // Parse the 12-hour format string to a DateTime object
+    DateTime dateTime = DateFormat("hh:mm a").parse(time12Hour);
+
+    // Format it to 24-hour format
+    return DateFormat("HH:mm").format(dateTime); // Outputs as "08:25" or "20:25" depending on input
+  }
 }

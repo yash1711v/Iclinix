@@ -35,7 +35,7 @@ class SelectSlotTimeComponent extends StatelessWidget {
                 itemCount: appointmentControl.timeSlot.length, // Total time slots
                 itemBuilder: (context, index) {
                   // Compare selected time with the actual time slot
-                  bool isSelected = appointmentControl.selectedTime == appointmentControl.timeSlot[index];
+                  bool isSelected = appointmentControl.selectedTime == appointmentControl.timeSlot[index]['Time'];
                   return GestureDetector(
                     onTap: () {
                       appointmentControl.selectTimeSlot(index); // Update selected time
@@ -53,7 +53,7 @@ class SelectSlotTimeComponent extends StatelessWidget {
                       ),
                       child: Center(
                         child: Text(
-                          appointmentControl.timeSlot[index], // Display the time slot
+                          appointmentControl.timeSlot[index]['Time'], // Display the time slot
                           style: openSansRegular.copyWith(
                             fontSize: Dimensions.fontSize12,
                             color: isSelected

@@ -54,25 +54,25 @@ class PaymentScreen extends StatelessWidget {
                   bookingFee: '500',
                 ),
                 sizedBoxDefault(),
-                Obx(() {
-                  return CustomRadioButton(
-                    items: appointmentControl.paymentMethods,
-                    selectedValue: appointmentControl.selectedPaymentMethod.value,
-                    onChanged: (value) {
-                      debugPrint('Selected Payment Method: $value');
-                      if (value == 'Pay via debit/credit card/upi/NetBanking') {
-                        appointmentControl.selectPaymentMethod(value!);
-                      } else {
-                        // Update selected payment method
-                        appointmentControl.selectPaymentMethod(value!);
-                      }
-
-                    },
-                  );
-                }),
+                // Obx(() {
+                //   return CustomRadioButton(
+                //     items: appointmentControl.paymentMethods,
+                //     selectedValue: appointmentControl.selectedPaymentMethod.value,
+                //     onChanged: (value) {
+                //       debugPrint('Selected Payment Method: $value');
+                //       if (value == 'Pay via debit/credit card/upi/NetBanking') {
+                //         appointmentControl.selectPaymentMethod(value!);
+                //       } else {
+                //         // Update selected payment method
+                //         appointmentControl.selectPaymentMethod(value!);
+                //       }
+                //
+                //     },
+                //   );
+                // }),
                 sizedBoxDefault(),
                 Text(
-                  'Referral Code (Optional)',
+                  'Promotional Code (Optional)',
                   style: openSansRegular.copyWith(
                       color: Theme.of(context).hintColor,
                       fontSize: Dimensions.fontSize14),
@@ -93,14 +93,18 @@ class PaymentScreen extends StatelessWidget {
           padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
           child: SingleChildScrollView(
             child: CustomButtonWidget(
-              buttonText: 'Confirm Booking',
+              buttonText: 'Pay via Debit card/credit card/UPI/NetBanking',
               onPressed: () {
-                     if(appointmentControl.selectedPaymentMethod.value == 'Pay via debit/credit card/upi/NetBanking'){
-                       razorpayImplement(appointmentModel);
-                       // appointmentControl.bookAppointmentApi(appointmentModel);
-                     }else{
-                       appointmentControl.bookAppointmentApi(appointmentModel);
-                     }
+                appointmentControl.bookAppointmentApi(appointmentModel,appointmentControl.ScheduleType,appointmentControl.Scheduleid);
+                 // razorpayImplement(appointmentModel);
+
+                     // if(appointmentControl.selectedPaymentMethod.value == 'Pay via debit/credit card/upi/NetBanking'){
+                     //   // appointmentControl.bookAppointmentApi(appointmentModel);
+                     //   // razorpayImplement(appointmentModel);
+                     //   // appointmentControl.bookAppointmentApi(appointmentModel);
+                     // }else{
+                     //   appointmentControl.bookAppointmentApi(appointmentModel);
+                     // }
 
               },
               fontSize: Dimensions.fontSize14,
@@ -114,19 +118,19 @@ class PaymentScreen extends StatelessWidget {
 }
 
 Razorpay _razorpay = Razorpay();
-void razorpayImplement(AppointmentModel appointment) async {
+void razorpayImplement(AppointmentModel appointment,String orderId, String amount, String currency, String key) async {
   debugPrint('Razorpay Payment ${appointment.mobileNo}');
   try {
     _razorpay.open({
-      'key': 'rzp_test_ttuVlnJolWhSyR',
-      'amount': 100, //in the smallest currency sub-unit.
+      'key': key,
+      'amount': int.parse(amount)*100, //in the smallest currency sub-unit.
       'name': appointment.firstName, // Generate order_id using Orders API
       "order": {
-        "id": "order_${Random().nextInt(100)}",
+        "id": orderId,
         "entity": 100,
         "amount_paid": 0,
         "amount_due": 0,
-        "currency": "INR",
+        "currency": currency,
         "receipt": "Receipt #20",
         "status": "created",
         "attempts": 0,
@@ -140,15 +144,21 @@ void razorpayImplement(AppointmentModel appointment) async {
     });
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
             (PaymentSuccessResponse response) async {
-
+             debugPrint('Payment Success: ${response.data}');
+             debugPrint('Payment Success: ${response.orderId}');
+             debugPrint('Payment Success: ${response.paymentId}');
+              Get.toNamed(RouteHelper.getBookingSuccessfulRoute(
+                  appointment.appointmentTime,
+                  appointment.appointmentDate
+              ));
         });
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR,
             (PaymentSuccessResponse response) async {
-
+              debugPrint(' EVENT_PAYMENT_ERROR: ${response.paymentId}');
             });
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET,
             (PaymentSuccessResponse response) async {
-
+              debugPrint('EVENT_EXTERNAL_WALLET: ${response.paymentId}');
             });
   } catch (e) {
     _razorpay.clear();

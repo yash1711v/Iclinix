@@ -12,6 +12,7 @@ import 'package:iclinix/helper/date_converter.dart';
 import 'package:iclinix/helper/route_helper.dart';
 import 'package:iclinix/utils/images.dart';
 
+import '../app/screens/appointment/payment_screen.dart';
 import '../app/widget/loading_widget.dart';
 import '../data/models/body/appointment_model.dart';
 import 'profile_controller.dart';
@@ -36,6 +37,10 @@ class AppointmentController extends GetxController implements GetxService {
   DateTime selectedDate = DateTime.now().add(Duration(days: 1)); // Default to current date
   String? formattedDate;
 
+  String _scheduleType = "";
+  String get ScheduleType => _scheduleType;
+  String _scheduleid = "";
+  String get Scheduleid => _scheduleid;
 
 
   void updateDate(DateTime newDate,String branchId) {
@@ -47,21 +52,14 @@ class AppointmentController extends GetxController implements GetxService {
   String selectedValue = '';
 
   String? selectedTime;
-  List<String> timeSlot = [
-    '12:30',
-    '1:00',
-    '2:00',
-    '3:00',
-    '4:00',
-    '5:00',
-    '6:00',
-    '7:00',
-    '8:00',
+  List<Map<String,dynamic>> timeSlot = [
+    {'Time':"12:00","ScheduleType":"General","ScheduleTypeId":"1"}
   ];
 
   void selectTimeSlot(int index) {
-    selectedTime = timeSlot[index];
-    print("Selected Time: $selectedTime");
+    selectedTime = timeSlot[index]["Time"];
+    _scheduleType = timeSlot[index]["ScheduleType"];
+    _scheduleid = timeSlot[index]["ScheduleTypeId"];
     update(); // Update the state
   }
 
@@ -201,16 +199,16 @@ class AppointmentController extends GetxController implements GetxService {
   bool _isBookingLoading = false;
   bool get isBookingLoading => _isBookingLoading;
 
-  Future<void> bookAppointmentApi(AppointmentModel appointment) async {
+  Future<void> bookAppointmentApi(AppointmentModel appointment,String schedule_type, String schedule_Id) async {
     // _isBookingLoading = true;
     update();
-    Response response = await appointmentRepo.bookAppointmentRepo(appointment);
+    Response response = await appointmentRepo.bookAppointmentRepo(appointment,schedule_type,schedule_Id);
     debugPrint('Response: ${response.body}');
     if (response.statusCode == 200) {
-      Get.toNamed(RouteHelper.getBookingSuccessfulRoute(
-          appointment.appointmentTime,
-          appointment.appointmentDate
-      ));
+      debugPrint("Appointment booked successfully: ${response.body}");
+
+      razorpayImplement(appointment,response.body['history_id'].toString(),response.body['amount'],response.body['currency'],response.body['key']);
+
       showCustomSnackBar('Booking Created Successfully');
     } else {
       _isBookingLoading = false;
@@ -220,6 +218,8 @@ class AppointmentController extends GetxController implements GetxService {
     _isBookingLoading = false;
     update();
   }
+
+
 
   bool _isSlotLoading = false;
   bool get isSlotLoading => _isSlotLoading;
@@ -231,12 +231,18 @@ class AppointmentController extends GetxController implements GetxService {
      // debugPrint('Length: ${val.length}');
 
     if (response.statusCode == 200) {
+      debugPrint('Response: ${response.body}');
+
       timeSlot.clear();
       response.body['available_slots'].forEach((slot) {
         // print('Slot: $slot');
         String time = slot['ApptTime'].toString();
         String formattedTime = time.substring(0, time.length - 3);
-        timeSlot.add(SimpleTimeConverter.formatTimeToCustomFormat(DateTime.parse("1970-01-01 $formattedTime")).toString());
+        timeSlot.add({
+          "Time": SimpleTimeConverter.formatTimeToCustomFormat(DateTime.parse("1970-01-01 $formattedTime")).toString(),
+          "ScheduleType":slot['ScheduleType'].toString(),
+          "ScheduleTypeId":slot['PK_ScheduleTypeId'].toString()
+        });
       });
       // showCustomSnackBar('Booking Created Successfully');
     } else {
@@ -257,7 +263,7 @@ class AppointmentController extends GetxController implements GetxService {
     selectedPatientId.value = id; // Update the ID in RxInt
   }
 
-   List<String> paymentMethods = ['Cash', 'Pay via debit/credit card/upi/NetBanking'];
+   List<String> paymentMethods = ['Cash', 'Pay via Debit card/credit card/UPI/NetBanking'];
   List<String> paymentImages= [Images.icCash, Images.icRazorpay];
   var selectedPaymentMethod = 'Cash'.obs; // RxString for selected payment method
   void selectPaymentMethod(String method) {

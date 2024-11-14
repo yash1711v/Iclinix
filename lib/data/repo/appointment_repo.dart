@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+import '../../helper/date_converter.dart';
 import '../models/body/appointment_model.dart';
 
 class AppointmentRepo {
@@ -31,7 +32,7 @@ class AppointmentRepo {
     return apiClient.postData(AppConstants.slotListUrl,requestBody);
   }
 
-  Future<Response> bookAppointmentRepo(AppointmentModel appointment) async {
+  Future<Response> bookAppointmentRepo(AppointmentModel appointment,String schedule_type, String schedule_Id) async {
     // Prepare the data to be sent in the request body
     final requestBody = {
       "branchid": appointment.branchId,
@@ -42,14 +43,18 @@ class AppointmentRepo {
       if (appointment.includePatientType && appointment.mobileNo != null) 'mobileno': appointment.mobileNo,
       if (appointment.includePatientType && appointment.gender != null) 'gender': appointment.gender,
       if (appointment.includePatientType && appointment.dob != null) 'dob': appointment.dob,
-      "appointment_date": appointment.appointmentDate,
-      "appointment_time": appointment.appointmentTime,
+      "appointment_date": appointment.appointmentDate!,
+      "appointment_time": SimpleTimeConverter.format12HourTo24Hour(appointment.appointmentTime!),
       if (appointment.includePatientType && appointment.diabetesProblem != null) 'diabetes_problem': appointment.diabetesProblem,
       if (appointment.includePatientType && appointment.bpProblem != null) 'bp_problem': appointment.bpProblem,
       if (appointment.includePatientType && appointment.eyeProblem != null) 'eye_problem': appointment.eyeProblem,
-      "other_problem": appointment.otherProblem,
+      // "other_problem": appointment.otherProblem,
       if (appointment.includePatientType && appointment.patientType != null) 'patient_type': appointment.patientType,
-      "type" :appointment.type
+      "type" :appointment.type,
+      "pay_method": "razorpay",
+      "schedule_type": schedule_type,
+      "schedule_type_id": schedule_Id,
+      "doctor_id": 3
     };
 
     // Print the request body for debugging

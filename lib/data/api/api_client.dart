@@ -134,6 +134,7 @@ class ApiClient extends GetxService {
         body: jsonEncode(body),
         headers: headers ?? _mainHeaders,
       ).timeout(Duration(seconds: timeoutInSeconds));
+      debugPrint('====> API Response: [${response.statusCode}] $uri\n${response.body}');
       return handleResponse(response, uri);
     } catch (e) {
       return const Response(statusCode: 1, statusText: noInternetMessage);
@@ -222,7 +223,7 @@ class ApiClient extends GetxService {
     }else if(response0.statusCode != 200 && response0.body == null) {
       response0 = const Response(statusCode: 0, statusText: noInternetMessage);
     }
-    debugPrint('====> API Response: [${response0.statusCode}] $uri\n${response0.body}');
+    debugPrint('====> API Response: [${response0.statusCode}] $uri\n${response.body}');
     return response0;
   }
 
