@@ -180,7 +180,7 @@ class PatientDetailsScreen extends StatelessWidget {
                                 return null;
                               },
                               controller: _firstnameController,
-                              hintText: 'FIRST NAME',
+                              hintText: 'First Name',
                             ),
                             sizedBox10(),
                             CustomTextField(
@@ -196,11 +196,11 @@ class PatientDetailsScreen extends StatelessWidget {
                                 return null;
                               },
                               controller: _lastnameController,
-                              hintText: 'LAST NAME',
+                              hintText: 'Last Name',
                             ),
                             sizedBox10(),
                             CustomDropdownField(
-                              hintText: 'PATIENT GENDER',
+                              hintText: 'Gender',
                               selectedValue: appointmentControl.selectedGender.isEmpty
                                       ? null
                                       : appointmentControl.selectedGender,
@@ -215,7 +215,7 @@ class PatientDetailsScreen extends StatelessWidget {
                             ),
                             sizedBox10(),
                              Text(
-                              'ENTER PHONE',
+                              'Phone Number',
                               style: openSansRegular.copyWith(
                                   fontSize: Dimensions.fontSize12
                               ), //,
@@ -226,7 +226,7 @@ class PatientDetailsScreen extends StatelessWidget {
                               isNumber: true,
                               inputType: TextInputType.number,
                               controller: _phoneController,
-                              hintText: "ENTER PHONE",
+                              hintText: "ENTER PHONE NUMBER",
                               validation: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Please enter your Phone No';
@@ -239,7 +239,7 @@ class PatientDetailsScreen extends StatelessWidget {
                             ),
                             sizedBox10(),
                              Text(
-                              'PATIENT DOB',
+                              'DOB',
                                 style: openSansRegular.copyWith(
                                     fontSize: Dimensions.fontSize12
                                 ),
@@ -276,58 +276,35 @@ class PatientDetailsScreen extends StatelessWidget {
                                 return null;
                               },
                               suffixText: '',
-                              hintText: 'PATIENT DOB',
+                              hintText: 'DOB',
                               isCalenderIcon: true,
                               editText: true,
                             ),
                             sizedBox10(),
-                            CustomDropdownField(
-                              hintText: 'Do you have diabetes?',
-                              selectedValue:
-                                  appointmentControl.selectedDiabetes.isEmpty
-                                      ? null
-                                      : appointmentControl.selectedDiabetes,
-                              options: appointmentControl.diabetesOptions,
-                              onChanged: (String? newValue) {
-                                if (newValue != null) {
-                                  appointmentControl.updateDiabetes(newValue);
-                                  print(appointmentControl.selectedDiabetes);
-                                }
-                              },
-                              showTitle: true, // Set to true to show title
+                            Text(
+                              'YOUR COMPLAINT',
+                              style: openSansRegular.copyWith(
+                                  fontSize: Dimensions.fontSize12
+                              ), //,
                             ),
                             sizedBox10(),
-                            CustomDropdownField(
-                              hintText: 'Do you wear glasses?',
-                              selectedValue:
-                                  appointmentControl.selectedGlasses.isEmpty
-                                      ? null
-                                      : appointmentControl.selectedGlasses,
-                              options: appointmentControl.glassesOptions,
-                              onChanged: (String? newValue) {
-                                if (newValue != null) {
-                                  appointmentControl.updateGlasses(newValue);
-                                  print(appointmentControl.selectedGlasses);
+                            CustomTextField(
+                              isNumber: false,
+                              inputType: TextInputType.text,
+                              controller: _otherProblemController,
+                              maxLines: 4,
+                              hintText: "Write here.....",
+                              validation: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your Phone No';
+                                } else if (!RegExp(r'^\d{10}$')
+                                    .hasMatch(value)) {
+                                  return 'Please enter a valid 10-digit Phone No';
                                 }
+                                return null;
                               },
-                              showTitle: true,
                             ),
-                            sizedBox10(),
-                            CustomDropdownField(
-                              hintText: 'Any Previous Health Issue',
-                              selectedValue:
-                                  appointmentControl.selectedBp.isEmpty
-                                      ? null
-                                      : appointmentControl.selectedBp,
-                              options: appointmentControl.bpOptions,
-                              onChanged: (String? newValue) {
-                                if (newValue != null) {
-                                  appointmentControl.updateHealth(newValue);
-                                  print(appointmentControl.selectedBp);
-                                }
-                              },
-                              showTitle: true,
-                            ),
+
                           ],
                         ),
                   // sizedBox10(),
@@ -401,7 +378,9 @@ class PatientDetailsScreen extends StatelessWidget {
                             diabetesProblem: appointmentControl.getDiabetesStatus(),
                             bpProblem: appointmentControl.getBpStatus(),
                             eyeProblem: appointmentControl.getGlassesStatus(),
-                            otherProblem: _otherProblemController.text,
+                            // otherProblem: _otherProblemController.text,
+                              address: ,
+                            complaint: _otherProblemController.text,
                             patientType: 'new',
                             branchId: clinicId.toString(),
                             initial: appointmentControl.selectedInitial,

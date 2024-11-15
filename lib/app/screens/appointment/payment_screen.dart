@@ -19,19 +19,48 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 import '../../widget/custom_snackbar.dart';
 import '../../widget/group_radio_button.dart';
 
-class PaymentScreen extends StatelessWidget {
+class PaymentScreen extends StatefulWidget {
   final AppointmentModel appointmentModel;
 
+  PaymentScreen({
+    super.key,
+    required this.appointmentModel,
+  });
 
-  PaymentScreen({super.key, required this.appointmentModel,});
+  @override
+  State<PaymentScreen> createState() => _PaymentScreenState();
+}
 
+class _PaymentScreenState extends State<PaymentScreen> {
   final _referralController = TextEditingController();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Get.find<AppointmentController>().setAmount("");
+      Get.find<AppointmentController>().setPromotionalCode(false);
+      Get.find<AppointmentController>().bookAppointmentApi(
+          widget.appointmentModel,
+          Get.find<AppointmentController>().ScheduleType,
+          Get.find<AppointmentController>().Scheduleid);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+
     return GetBuilder<AppointmentController>(builder: (appointmentControl) {
+      if(Get.find<AppointmentController>().amount.isEmpty){
+        return Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      }
       return Scaffold(
-        appBar:  const CustomAppBar(
+        appBar: const CustomAppBar(
             isBackButtonExist: true,
             title: 'Payment Method',
             menuWidget: Row(
@@ -45,13 +74,12 @@ class PaymentScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 BookingSummaryWidget(
                   patientName:
-                      '${appointmentModel.firstName}${appointmentModel.lastName}',
-                  appointmentDate: '${appointmentModel.appointmentDate}',
-                  appointmentTime: '${appointmentModel.appointmentTime}',
-                  bookingFee: '500',
+                      '${widget.appointmentModel.firstName}${widget.appointmentModel.lastName}',
+                  appointmentDate: '${widget.appointmentModel.appointmentDate}',
+                  appointmentTime: '${widget.appointmentModel.appointmentTime}',
+                  bookingFee: appointmentControl.amount,
                 ),
                 sizedBoxDefault(),
                 // Obx(() {
@@ -70,17 +98,36 @@ class PaymentScreen extends StatelessWidget {
                 //     },
                 //   );
                 // }),
-                sizedBoxDefault(),
-                Text(
-                  'Promotional Code (Optional)',
-                  style: openSansRegular.copyWith(
-                      color: Theme.of(context).hintColor,
-                      fontSize: Dimensions.fontSize14),
+
+                Row(
+                  children: [
+                    Text(
+                      'Promotional Code (Optional)',
+                      style: openSansRegular.copyWith(
+                          color: Theme.of(context).hintColor,
+                          fontSize: Dimensions.fontSize14),
+                    ),
+                    Spacer(),
+                    Checkbox(
+                        checkColor: Colors.blue,
+                        // Tick color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        side: BorderSide(color: Colors.blue),
+                        value: appointmentControl.isPromotionalCode,
+                        onChanged: (value) {
+                          appointmentControl.setPromotionalCode();
+                        })
+                  ],
                 ),
                 sizedBox5(),
-                CustomTextField(
-                  controller: _referralController,
-                  hintText: 'Apply Referral Code',
+                Visibility(
+                  visible: appointmentControl.isPromotionalCode!,
+                  child: CustomTextField(
+                    controller: _referralController,
+                    hintText: 'Apply Referral Code',
+                  ),
                 ),
                 // sizedBoxDefault(),
                 // Text('PAY NOW',style: openSansRegular.copyWith(color: Theme.of(context).hintColor,
@@ -95,17 +142,21 @@ class PaymentScreen extends StatelessWidget {
             child: CustomButtonWidget(
               buttonText: 'Pay via Debit card/credit card/UPI/NetBanking',
               onPressed: () {
-                appointmentControl.bookAppointmentApi(appointmentModel,appointmentControl.ScheduleType,appointmentControl.Scheduleid);
-                 // razorpayImplement(appointmentModel);
+                razorpayImplement(
+                    widget.appointmentModel,
+                    appointmentControl.orderId,
+                    appointmentControl.amount,
+                    appointmentControl.currency,
+                    appointmentControl.razorPayKey);
+                // razorpayImplement(appointmentModel);
 
-                     // if(appointmentControl.selectedPaymentMethod.value == 'Pay via debit/credit card/upi/NetBanking'){
-                     //   // appointmentControl.bookAppointmentApi(appointmentModel);
-                     //   // razorpayImplement(appointmentModel);
-                     //   // appointmentControl.bookAppointmentApi(appointmentModel);
-                     // }else{
-                     //   appointmentControl.bookAppointmentApi(appointmentModel);
-                     // }
-
+                // if(appointmentControl.selectedPaymentMethod.value == 'Pay via debit/credit card/upi/NetBanking'){
+                //   // appointmentControl.bookAppointmentApi(appointmentModel);
+                //   // razorpayImplement(appointmentModel);
+                //   // appointmentControl.bookAppointmentApi(appointmentModel);
+                // }else{
+                //   appointmentControl.bookAppointmentApi(appointmentModel);
+                // }
               },
               fontSize: Dimensions.fontSize14,
               isBold: false,
@@ -118,12 +169,13 @@ class PaymentScreen extends StatelessWidget {
 }
 
 Razorpay _razorpay = Razorpay();
-void razorpayImplement(AppointmentModel appointment,String orderId, String amount, String currency, String key) async {
-  debugPrint('Razorpay Payment ${appointment.mobileNo}');
+
+void razorpayImplement(AppointmentModel appointment, String orderId,
+    String amount, String currency, String key) async {
   try {
     _razorpay.open({
       'key': key,
-      'amount': int.parse(amount)*100, //in the smallest currency sub-unit.
+      'amount': int.parse(amount) * 100, // in the smallest currency sub-unit
       'name': appointment.firstName, // Generate order_id using Orders API
       "order": {
         "id": orderId,
@@ -137,32 +189,39 @@ void razorpayImplement(AppointmentModel appointment,String orderId, String amoun
       },
       'description': 'Demo',
       'timeout': 300, // in seconds
-      'prefill': {
-        'contact': appointment.mobileNo,
-        'email': "yv48183@gmail.com"
-      }
+      'prefill': {'contact': appointment.mobileNo, 'email': "yv48183@gmail.com"}
     });
-    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
-            (PaymentSuccessResponse response) async {
-             debugPrint('Payment Success: ${response.data}');
-             debugPrint('Payment Success: ${response.orderId}');
-             debugPrint('Payment Success: ${response.paymentId}');
-              Get.toNamed(RouteHelper.getBookingSuccessfulRoute(
-                  appointment.appointmentTime,
-                  appointment.appointmentDate
-              ));
-        });
-    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR,
-            (PaymentSuccessResponse response) async {
-              debugPrint(' EVENT_PAYMENT_ERROR: ${response.paymentId}');
-            });
-    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET,
-            (PaymentSuccessResponse response) async {
-              debugPrint('EVENT_EXTERNAL_WALLET: ${response.paymentId}');
-            });
+    // Correct event handlers for success, failure, and external wallet
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
   } catch (e) {
-    _razorpay.clear();
+    debugPrint('Error====>: ${e.toString()}');
+    // _razorpay.clear();
   }
 }
 
+void _handlePaymentSuccess(
+  PaymentSuccessResponse response,
+) {
+  // Do something when payment succeeds
+  Map<String, dynamic> requestBody = {
+    "paymentId": response.paymentId,
+    "orderId": Get.find<AppointmentController>().orderId,
+    "status ": "success"
+  };
+  debugPrint("requestBody==> $requestBody");
+  debugPrint('EVENT_PAYMENT_SUCCESS: ${response.data}');
+  Get.find<AppointmentController>().postDataBack(requestBody);
+  // appointmentControl.postDataBack(response.paymentId);
+}
 
+void _handlePaymentError(PaymentFailureResponse response) {
+  // Do something when payment fails
+  debugPrint('EVENT_PAYMENT_ERROR: ${response.code} - ${response.message}');
+}
+
+void _handleExternalWallet(ExternalWalletResponse response) {
+  // Do something when an external wallet was selected
+  debugPrint('EVENT_EXTERNAL_WALLET: ${response.walletName}');
+}

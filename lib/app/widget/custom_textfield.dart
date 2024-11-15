@@ -106,6 +106,7 @@ class CustomTextFieldState extends State<CustomTextField> {
           textCapitalization: widget.capitalization,
           enabled: widget.isEnabled,
           autofocus: false,
+          minLines: widget.maxLines,
           obscureText: widget.isPassword ? _obscureText : false,
           inputFormatters: widget.isAmount
               ? [FilteringTextInputFormatter.allow(RegExp(r'\d'))]

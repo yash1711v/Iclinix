@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:iclinix/data/api/api_client.dart';
 import 'package:iclinix/data/models/response/add_patient_model.dart';
 import 'package:iclinix/utils/app_constants.dart';
@@ -43,9 +44,11 @@ class AppointmentRepo {
       if (appointment.includePatientType && appointment.mobileNo != null) 'mobileno': appointment.mobileNo,
       if (appointment.includePatientType && appointment.gender != null) 'gender': appointment.gender,
       if (appointment.includePatientType && appointment.dob != null) 'dob': appointment.dob,
+      if (appointment.includePatientType && appointment.address != null) 'address': appointment.address,
       "appointment_date": appointment.appointmentDate!,
       "appointment_time": SimpleTimeConverter.format12HourTo24Hour(appointment.appointmentTime!),
       if (appointment.includePatientType && appointment.diabetesProblem != null) 'diabetes_problem': appointment.diabetesProblem,
+      if (appointment.includePatientType && appointment.complaint != null) 'complaints': appointment.complaint,
       if (appointment.includePatientType && appointment.bpProblem != null) 'bp_problem': appointment.bpProblem,
       if (appointment.includePatientType && appointment.eyeProblem != null) 'eye_problem': appointment.eyeProblem,
       // "other_problem": appointment.otherProblem,
@@ -86,6 +89,9 @@ class AppointmentRepo {
       'eye_problem' : addPatient.eyeProblem
     });
   }
+  Future<Response> postDataBack( Map<String, dynamic> requestBody) {
+    return apiClient.postData(AppConstants.postDataBack,requestBody);
+  }
 
   Future<Response> purchasePlanApi(String? patientId,
       String? planId,
@@ -114,6 +120,10 @@ class AppointmentRepo {
 
   Future<Response> fetchDailySugarCheckUpRepo() {
     return apiClient.getData(AppConstants.dailySugarCheckup,);
+  }
+
+  String whichGender(String? gender) {
+    return "";
   }
 
 }

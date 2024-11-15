@@ -23,8 +23,49 @@ class AppointmentController extends GetxController implements GetxService {
 
   AppointmentController({required this.appointmentRepo, required this.apiClient});
 
+   AppointmentController get appointmentController => Get.find<AppointmentController>();
+
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+
+  bool? _isPromotionalCode = false;
+  bool? get isPromotionalCode => _isPromotionalCode;
+
+  void setPromotionalCode([bool? val]) {
+    _isPromotionalCode = val ?? !isPromotionalCode!;
+    update();
+  }
+
+  String _orderId = "";
+  String get orderId => _orderId;
+
+  void setOrderId(String orderId) {
+    _orderId = orderId;
+    update();
+  }
+
+  String _amount = "";
+  String get amount => _amount;
+
+  void setAmount(String amount) {
+    _amount = amount;
+    update();
+  }
+
+  String _razorPayKey = "";
+  String get razorPayKey => _razorPayKey;
+
+  void setRazorPayKey(String Key) {
+    _razorPayKey = Key;
+    update();
+  }
+  String _currency = "";
+  String get currency => _currency;
+
+  void setCurrency(String Currency) {
+    _currency = Currency;
+    update();
+  }
 
   @override
   void onInit() {
@@ -65,10 +106,10 @@ class AppointmentController extends GetxController implements GetxService {
 
   var selectedInitial = 'Mr';
   var selectedGender = 'Male';
-  final List<String> genderOptions = ['Male', 'Female'];
+  final List<String> genderOptions = ['Male', 'Female', 'Other'];
 
   String getGenderStatus() {
-    return '${selectedGender == 'Male' ? 'M' : 'F'}';
+    return selectedGender == 'Male' ? 'M' : selectedGender =='Female' ? 'F' : 'O';
   }
 
   void updateGender(String gender) {
@@ -206,10 +247,11 @@ class AppointmentController extends GetxController implements GetxService {
     debugPrint('Response: ${response.body}');
     if (response.statusCode == 200) {
       debugPrint("Appointment booked successfully: ${response.body}");
+      Get.find<AppointmentController>().setOrderId(response.body['history_id'].toString());
+      Get.find<AppointmentController>().setAmount(response.body['amount'].toString());
+      Get.find<AppointmentController>().setCurrency(response.body['currency'].toString());
+      Get.find<AppointmentController>().setRazorPayKey(response.body['key'].toString());
 
-      razorpayImplement(appointment,response.body['history_id'].toString(),response.body['amount'],response.body['currency'],response.body['key']);
-
-      showCustomSnackBar('Booking Created Successfully');
     } else {
       _isBookingLoading = false;
       update();
@@ -337,6 +379,27 @@ class AppointmentController extends GetxController implements GetxService {
 
 
       }
+      _isLoading = false;
+      update();
+    } else {
+      _isLoading = false;
+      update();
+    }
+
+
+    _isLoading = false;
+    update();
+  }
+
+  Future<void> postDataBack(Map<String, dynamic> requestBody) async {
+    _isLoading = true;
+    update();
+
+    Response response = await appointmentRepo.postDataBack(requestBody);
+    if(response.statusCode == 200) {
+      var responseData = response.body;
+      debugPrint('Response: $responseData');
+
       _isLoading = false;
       update();
     } else {

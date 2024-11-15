@@ -16,6 +16,8 @@ class AppointmentModel {
   String? initial;
   bool includePatientType;
   String? type;
+  String? complaint;
+  String? address;
 
   AppointmentModel({
     this.patientId,
@@ -35,5 +37,7 @@ class AppointmentModel {
     this.initial,
     this.type,
     required this.includePatientType,
+    this.complaint,
+    this.address,
   });
 }
