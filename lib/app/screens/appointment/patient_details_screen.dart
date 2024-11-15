@@ -31,6 +31,7 @@ class PatientDetailsScreen extends StatelessWidget {
   final _phoneController = TextEditingController();
   final _dateController = TextEditingController();
   final _otherProblemController = TextEditingController();
+  final _addressController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -143,23 +144,52 @@ class PatientDetailsScreen extends StatelessWidget {
                       appointmentControl.selectPatient(firstPatient.id!, '${firstPatient.firstName} ${firstPatient.lastName}');
                     }
 
-                    return CustomRadioButton(
-                      items: patients.map((patient) {
-                        return '${patient.firstName} ${patient.lastName}';
-                      }).toList(),
-                      selectedValue: appointmentControl.selectedPatient.value, // Unwrap RxString
-                      onChanged: (value) {
-                        // Find the selected patient based on the selected name
-                        final selectedPatient = patients.firstWhere(
-                              (patient) => '${patient.firstName} ${patient.lastName}' == value!,
-                        );
+                    return Column(
+                      children: [
+                        CustomRadioButton(
+                          items: patients.map((patient) {
+                            return '${patient.firstName} ${patient.lastName}';
+                          }).toList(),
+                          selectedValue: appointmentControl.selectedPatient.value, // Unwrap RxString
+                          onChanged: (value) {
+                            // Find the selected patient based on the selected name
+                            final selectedPatient = patients.firstWhere(
+                                  (patient) => '${patient.firstName} ${patient.lastName}' == value!,
+                            );
 
-                        // Update the selected patient in the controller
-                        appointmentControl.selectPatient(selectedPatient.id!, value!);
+                            // Update the selected patient in the controller
+                            appointmentControl.selectPatient(selectedPatient.id!, value!);
 
-                        // Print the selected patient ID
-                        print('Selected Patient ID: ${appointmentControl.selectedPatientId.value}');
-                      },
+                            // Print the selected patient ID
+                            print('Selected Patient ID: ${appointmentControl.selectedPatientId.value}');
+                          },
+                        ),
+                        sizedBox10(),
+                        Row(
+                          children: [
+                            Text(
+                              'YOUR COMPLAINT',
+                              style: openSansRegular.copyWith(
+                                  fontSize: Dimensions.fontSize12
+                              ), //,
+                            ),
+                          ],
+                        ),
+                        sizedBox10(),
+                        CustomTextField(
+                          isNumber: false,
+                          inputType: TextInputType.streetAddress,
+                          controller: _otherProblemController,
+                          maxLines: 4,
+                          hintText: "Write here.....",
+                          validation: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your Phone No';
+                            }
+                            return null;
+                          },
+                        ),
+                      ],
                     );
                   })
 
@@ -238,6 +268,26 @@ class PatientDetailsScreen extends StatelessWidget {
                               },
                             ),
                             sizedBox10(),
+                            Text(
+                              'Enter Your Address',
+                              style: openSansRegular.copyWith(
+                                  fontSize: Dimensions.fontSize12
+                              ), //,
+                            ),
+                            sizedBox10(),
+                            CustomTextField(
+                              isNumber: false,
+                              inputType: TextInputType.text,
+                              controller: _addressController,
+                              hintText: "Address",
+                              validation: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your adress';
+                                }
+                                return null;
+                              },
+                            ),
+                            sizedBox10(),
                              Text(
                               'DOB',
                                 style: openSansRegular.copyWith(
@@ -290,20 +340,18 @@ class PatientDetailsScreen extends StatelessWidget {
                             sizedBox10(),
                             CustomTextField(
                               isNumber: false,
-                              inputType: TextInputType.text,
+                              inputType: TextInputType.streetAddress,
                               controller: _otherProblemController,
                               maxLines: 4,
                               hintText: "Write here.....",
                               validation: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Please enter your Phone No';
-                                } else if (!RegExp(r'^\d{10}$')
-                                    .hasMatch(value)) {
-                                  return 'Please enter a valid 10-digit Phone No';
                                 }
                                 return null;
                               },
                             ),
+
 
                           ],
                         ),
@@ -379,7 +427,7 @@ class PatientDetailsScreen extends StatelessWidget {
                             bpProblem: appointmentControl.getBpStatus(),
                             eyeProblem: appointmentControl.getGlassesStatus(),
                             // otherProblem: _otherProblemController.text,
-                              address: ,
+                            address: _addressController.text,
                             complaint: _otherProblemController.text,
                             patientType: 'new',
                             branchId: clinicId.toString(),

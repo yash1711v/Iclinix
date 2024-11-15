@@ -35,6 +35,13 @@ class AppointmentController extends GetxController implements GetxService {
     _isPromotionalCode = val ?? !isPromotionalCode!;
     update();
   }
+  bool? _isPaymentSuccessFull = false;
+  bool? get isPaymentSuccessFull => _isPaymentSuccessFull;
+
+  void setisPaymentSuccessFull([bool? val]) {
+    _isPaymentSuccessFull =  val!;
+    update();
+  }
 
   String _orderId = "";
   String get orderId => _orderId;
@@ -391,7 +398,7 @@ class AppointmentController extends GetxController implements GetxService {
     update();
   }
 
-  Future<void> postDataBack(Map<String, dynamic> requestBody) async {
+  Future<void> postDataBack(Map<String, dynamic> requestBody,) async {
     _isLoading = true;
     update();
 
@@ -399,7 +406,9 @@ class AppointmentController extends GetxController implements GetxService {
     if(response.statusCode == 200) {
       var responseData = response.body;
       debugPrint('Response: $responseData');
-
+   if(responseData['message'] == "Appointment Booked Successfully."){
+     setisPaymentSuccessFull(true);
+   }
       _isLoading = false;
       update();
     } else {

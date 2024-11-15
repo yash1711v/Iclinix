@@ -1,4 +1,4 @@
-import 'dart:math';
+
 
 import 'package:flutter/material.dart';
 import 'package:iclinix/app/screens/appointment/components/booking_summary_widget.dart';
@@ -7,7 +7,7 @@ import 'package:iclinix/app/widget/custom_app_bar.dart';
 import 'package:iclinix/app/widget/custom_button_widget.dart';
 import 'package:iclinix/app/widget/custom_textfield.dart';
 import 'package:iclinix/controller/appointment_controller.dart';
-import 'package:iclinix/controller/auth_controller.dart';
+
 import 'package:iclinix/data/models/body/appointment_model.dart';
 import 'package:iclinix/helper/route_helper.dart';
 import 'package:iclinix/utils/dimensions.dart';
@@ -16,8 +16,8 @@ import 'package:iclinix/utils/styles.dart';
 import 'package:get/get.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
-import '../../widget/custom_snackbar.dart';
-import '../../widget/group_radio_button.dart';
+
+
 
 class PaymentScreen extends StatefulWidget {
   final AppointmentModel appointmentModel;
@@ -45,6 +45,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           widget.appointmentModel,
           Get.find<AppointmentController>().ScheduleType,
           Get.find<AppointmentController>().Scheduleid);
+      Get.find<AppointmentController>().setisPaymentSuccessFull(false);
     });
   }
 
@@ -52,6 +53,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget build(BuildContext context) {
 
     return GetBuilder<AppointmentController>(builder: (appointmentControl) {
+      if(Get.find<AppointmentController>().isPaymentSuccessFull!){
+        Get.toNamed(RouteHelper.getBookingSuccessfulRoute(
+            widget.appointmentModel.appointmentTime,
+            widget.appointmentModel.appointmentDate
+        ));
+      }
       if(Get.find<AppointmentController>().amount.isEmpty){
         return Scaffold(
           body: Center(
@@ -206,13 +213,14 @@ void _handlePaymentSuccess(
 ) {
   // Do something when payment succeeds
   Map<String, dynamic> requestBody = {
-    "paymentId": response.paymentId,
-    "orderId": Get.find<AppointmentController>().orderId,
-    "status ": "success"
+    "paymentId": "${response.paymentId}",
+    "orderId": "${Get.find<AppointmentController>().orderId}",
+    "paymentStatus": "success"
   };
   debugPrint("requestBody==> $requestBody");
   debugPrint('EVENT_PAYMENT_SUCCESS: ${response.data}');
-  Get.find<AppointmentController>().postDataBack(requestBody);
+
+  Get.find<AppointmentController>().postDataBack(requestBody,);
   // appointmentControl.postDataBack(response.paymentId);
 }
 

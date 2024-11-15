@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:iclinix/app/widget/custom_button_widget.dart';
 import 'package:iclinix/app/widget/custom_containers.dart';
@@ -9,10 +10,90 @@ import 'package:iclinix/utils/sizeboxes.dart';
 import 'package:iclinix/utils/styles.dart';
 import 'package:iclinix/utils/themes/light_theme.dart';
 import 'package:get/get.dart';
-class BookingSuccessfulScreen extends StatelessWidget {
+import 'dart:io';
+import 'dart:typed_data' as typedData;
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
+import 'package:path_provider/path_provider.dart';
+
+
+class BookingSuccessfulScreen extends StatefulWidget {
   final String? date;
   final String? time;
   const BookingSuccessfulScreen({super.key, this.date, this.time});
+
+  @override
+  State<BookingSuccessfulScreen> createState() => _BookingSuccessfulScreenState();
+}
+
+class _BookingSuccessfulScreenState extends State<BookingSuccessfulScreen> {
+
+
+  // Function to generate invoice
+  Future<typedData.Uint8List> generateInvoice() async {
+    final pdf = pw.Document();
+
+    pdf.addPage(
+      pw.Page(
+        pageFormat: PdfPageFormat.a4,
+        build: (pw.Context context) {
+          return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text('Invoice', style: pw.TextStyle(fontSize: 32, fontWeight: pw.FontWeight.bold)),
+              pw.SizedBox(height: 20),
+              pw.Text('Invoice #: 12345'),
+              pw.Text('Date: ${DateTime.now().toString().substring(0, 10)}'),
+              pw.SizedBox(height: 20),
+              pw.Text('Billing To:'),
+              pw.Text('John Doe'),
+              pw.Text('123 Main Street'),
+              pw.Text('City, Country'),
+              pw.SizedBox(height: 20),
+              pw.Table.fromTextArray(
+                headers: ['Item', 'Qty', 'Price', 'Total'],
+                data: [
+                  ['Widget A', '2', '\$50', '\$100'],
+                  ['Widget B', '1', '\$75', '\$75'],
+                  ['Widget C', '3', '\$20', '\$60'],
+                ],
+              ),
+              pw.SizedBox(height: 20),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.end,
+                children: [
+                  pw.Text('Grand Total: \$235', style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+                ],
+              ),
+            ],
+          );
+        },
+      ),
+    );
+
+    return pdf.save();
+  }
+
+  // Function to save and download invoice
+  Future<void> saveAndDownloadInvoice(typedData.Uint8List pdfData) async {
+    try {
+      // Get directory for saving the file
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/invoice.pdf');
+
+      // Write the PDF data to the file
+      await file.writeAsBytes(pdfData);
+
+      // Share or download the PDF using the printing package
+      await Printing.sharePdf(bytes: pdfData, filename: 'invoice.pdf');
+
+      // Optionally, show a success message
+      print('Invoice saved to ${file.path}');
+    } catch (e) {
+      print('Error saving invoice: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +129,7 @@ class BookingSuccessfulScreen extends StatelessWidget {
                           Text('On',style: openSansRegular.copyWith(
                             fontSize: Dimensions.fontSize14,
                             color: Theme.of(context).disabledColor.withOpacity(0.70)),),
-                          Text(AppointmentDateTimeConverter.formatDate(date!),
+                          Text(AppointmentDateTimeConverter.formatDate(widget.date!),
                             textAlign: TextAlign.center,
                             style: openSansSemiBold.copyWith(
                                 fontSize: Dimensions.fontSize14,
@@ -65,7 +146,7 @@ class BookingSuccessfulScreen extends StatelessWidget {
                           Text('At',style: openSansRegular.copyWith(
                               fontSize: Dimensions.fontSize14,
                               color: Theme.of(context).disabledColor.withOpacity(0.70)),),
-                          Text('$time',
+                          Text('${widget.time}',
                             textAlign: TextAlign.center,
                             style: openSansSemiBold.copyWith(
                                 fontSize: Dimensions.fontSize14,
@@ -85,8 +166,17 @@ class BookingSuccessfulScreen extends StatelessWidget {
               onPressed: () {
                 Get.toNamed(RouteHelper.getDashboardRoute());
               },),
+             const Spacer(),
+              ElevatedButton(
+                onPressed: () async {
+                  // Generate the invoice
+                  final pdf = await generateInvoice();
 
-
+                  // Save and download the invoice
+                  await saveAndDownloadInvoice(pdf);
+                },
+                child: const Text('Generate and Download Invoice'),
+              ),
 
             ],
           ),
