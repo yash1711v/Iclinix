@@ -184,7 +184,7 @@ class PatientDetailsScreen extends StatelessWidget {
                           hintText: "Write here.....",
                           validation: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your Phone No';
+                              return 'Please enter your complaint';
                             }
                             return null;
                           },
@@ -346,7 +346,7 @@ class PatientDetailsScreen extends StatelessWidget {
                               hintText: "Write here.....",
                               validation: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Please enter your Phone No';
+                                  return 'Please enter your complaint';
                                 }
                                 return null;
                               },
