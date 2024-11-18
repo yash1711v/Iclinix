@@ -37,12 +37,12 @@ class NeedForHelpComponent extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Need Help For?',
-                  style: openSansBold.copyWith(
-                    fontSize: Dimensions.fontSizeDefault,
-                  ),
-                ),
+                // Text(
+                //   'Need Help For?',
+                //   style: openSansBold.copyWith(
+                //     fontSize: Dimensions.fontSizeDefault,
+                //   ),
+                // ),
                 SizedBox(
                   height: 300,
                   child: isLoading
@@ -63,7 +63,7 @@ class NeedForHelpComponent extends StatelessWidget {
                       crossAxisCount: 3,
                       crossAxisSpacing: 10.0,
                       mainAxisSpacing: 10.0,
-                      childAspectRatio: 0.8,
+                      childAspectRatio: 1,
                     ),
                     itemCount: dataList.length,
                     itemBuilder: (context, i) {
@@ -96,7 +96,7 @@ class NeedForHelpComponent extends StatelessWidget {
                     },
                   ),
                 ),
-                sizedBox20(),
+                // sizedBox5(),
                 CustomButtonWidget(
                   buttonText: 'View All Services',
                   onPressed: () {

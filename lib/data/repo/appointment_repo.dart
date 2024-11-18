@@ -72,6 +72,9 @@ class AppointmentRepo {
   Future<Response> getAppointmentList() {
     return apiClient.getData(AppConstants.appointmentListUrl,method: 'GET');
   }
+  Future<Response> getInvoice(String id) {
+    return apiClient.getData(AppConstants.invoiceDownload+"${id}",method: 'GET');
+  }
 
   Future<Response> addPatientDetails(AddPatientModel addPatient) {
     return apiClient.postData(AppConstants.addPatientDetails,{

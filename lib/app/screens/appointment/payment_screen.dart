@@ -16,6 +16,8 @@ import 'package:iclinix/utils/styles.dart';
 import 'package:get/get.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
+import '../../../helper/invoice.dart';
+
 
 
 
@@ -53,12 +55,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget build(BuildContext context) {
 
     return GetBuilder<AppointmentController>(builder: (appointmentControl) {
-      if(Get.find<AppointmentController>().isPaymentSuccessFull!){
-        Get.toNamed(RouteHelper.getBookingSuccessfulRoute(
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if(Get.find<AppointmentController>().isPaymentSuccessFull!){
+          Get.toNamed(RouteHelper.getBookingSuccessfulRoute(
             widget.appointmentModel.appointmentTime,
-            widget.appointmentModel.appointmentDate
-        ));
-      }
+            widget.appointmentModel.appointmentDate,
+            appointmentControl.apptId,
+          ));
+        }
+      });
+
       if(Get.find<AppointmentController>().amount.isEmpty){
         return Scaffold(
           body: Center(
@@ -220,8 +227,7 @@ void _handlePaymentSuccess(
   debugPrint("requestBody==> $requestBody");
   debugPrint('EVENT_PAYMENT_SUCCESS: ${response.data}');
 
-  Get.find<AppointmentController>().postDataBack(requestBody,);
-  // appointmentControl.postDataBack(response.paymentId);
+  Get.find<AppointmentController>().postDataBack(requestBody);
 }
 
 void _handlePaymentError(PaymentFailureResponse response) {

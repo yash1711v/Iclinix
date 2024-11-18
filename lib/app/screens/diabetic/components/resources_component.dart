@@ -12,6 +12,7 @@ import 'package:iclinix/utils/styles.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:easy_image_viewer/easy_image_viewer.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../../../data/models/response/diabetic_dashboard_detail_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
@@ -23,11 +24,50 @@ import 'package:flutter/widgets.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 
-class ResourcesComponent extends StatelessWidget {
+class ResourcesComponent extends StatefulWidget {
   const ResourcesComponent({super.key});
 
   @override
+  State<ResourcesComponent> createState() => _ResourcesComponentState();
+}
+
+class _ResourcesComponentState extends State<ResourcesComponent> {
+  String extractYouTubeVideoId(String url) {
+    final RegExp regExp = RegExp(
+      r"(https?://)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)/(?:[^/]+/)*(?:v|e(?:mbed)?)\/?([^/?&]+)",
+    );
+
+    final match = regExp.firstMatch(url);
+
+    if (match != null) {
+      return match.group(4)!;
+    } else {
+      throw "Invalid YouTube URL";
+    }
+  }
+  void showYouTubeVideoDialog(BuildContext context, String videoId) {
+
+
+    // Show dialog
+    showDialog(
+      context: context,
+      barrierDismissible: true, // Allows closing the dialog by tapping outside
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Container(
+              width: double.infinity,
+              height: 200,
+              child: YoutubePlayerDialog(videoId: videoId)),
+        );
+      },
+    );
+  }
+  @override
   Widget build(BuildContext context) {
+
     return GetBuilder<DiabeticController>(builder: (controller) {
       final data = controller.videoResources;
       final isListEmpty = data.isEmpty;
@@ -109,7 +149,10 @@ class ResourcesComponent extends StatelessWidget {
                         GestureDetector(
                           onTap: () {
                             print('ytUrl');
-                            _launchURL(data[i].ytUrl.toString());
+                            // _launchURL(data[i].ytUrl.toString());
+                            showYouTubeVideoDialog(context, videoId);
+                            // Get.to(() => YoutubePlayerDialog(videoId: videoId));
+
                           },
                           child: CustomNetworkImageWidget(
                             height: 150,
@@ -395,7 +438,6 @@ class ResourcesComponent extends StatelessWidget {
     );
   }
 
-
   Widget _buildDietPlanContent(BuildContext context, DiabeticController controller, DietPlanModel? dietPlan) {
     if (dietPlan == null) {
       return const SizedBox(); // Or any placeholder if no diet plan is available
@@ -437,8 +479,6 @@ class ResourcesComponent extends StatelessWidget {
       ),
     );
   }
-
-
 
   void _launchURL(String url) async {
     if (!await launch(url)) throw 'Could not launch $url';
@@ -497,5 +537,66 @@ class ResourcesComponent extends StatelessWidget {
         'File downloaded to: $filePath',
         platformChannelSpecifics,
         payload: filePath);
+  }
+}
+
+
+class YoutubePlayerDialog extends StatefulWidget {
+  final String videoId;
+
+  YoutubePlayerDialog({required this.videoId});
+
+  @override
+  _YoutubePlayerDialogState createState() => _YoutubePlayerDialogState();
+}
+
+class _YoutubePlayerDialogState extends State<YoutubePlayerDialog> {
+  late YoutubePlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize the YoutubePlayerController
+    _controller = YoutubePlayerController(
+      initialVideoId: widget.videoId,
+      flags: YoutubePlayerFlags(
+        autoPlay: true,
+        mute: false,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    // Dispose the controller when dialog is closed to stop the video
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: [
+          // YouTube player inside the dialog
+          YoutubePlayer(
+            controller: _controller,
+            showVideoProgressIndicator: true,
+            onReady: () {
+              print("Player is ready.");
+            },
+          ),
+          // Button to close the dialog
+          // IconButton(
+          //   icon: Icon(Icons.close),
+          //   onPressed: () {
+          //     // Close the dialog
+          //     Navigator.of(context).pop();
+          //   },
+          // ),
+        ],
+      ),
+    );
   }
 }

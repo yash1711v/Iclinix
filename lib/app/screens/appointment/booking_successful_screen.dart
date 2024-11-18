@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:iclinix/app/widget/custom_button_widget.dart';
 import 'package:iclinix/app/widget/custom_containers.dart';
 import 'package:iclinix/helper/date_converter.dart';
+import 'package:iclinix/helper/invoice.dart';
 import 'package:iclinix/helper/route_helper.dart';
 import 'package:iclinix/utils/dimensions.dart';
 import 'package:iclinix/utils/images.dart';
@@ -21,7 +22,8 @@ import 'package:path_provider/path_provider.dart';
 class BookingSuccessfulScreen extends StatefulWidget {
   final String? date;
   final String? time;
-  const BookingSuccessfulScreen({super.key, this.date, this.time});
+  final String? apptId;
+  const BookingSuccessfulScreen({super.key, this.date, this.time, this.apptId});
 
   @override
   State<BookingSuccessfulScreen> createState() => _BookingSuccessfulScreenState();
@@ -95,6 +97,14 @@ class _BookingSuccessfulScreenState extends State<BookingSuccessfulScreen> {
     }
   }
 
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,6 +114,7 @@ class _BookingSuccessfulScreenState extends State<BookingSuccessfulScreen> {
           child: Column(crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const SizedBox(height: 25,),
               Image.asset(Images.icBookingSuccessful,height: 160,),
               sizedBox10(),
               Text('Booking Successful!',style: openSansBold.copyWith(color: blueColor,
@@ -169,11 +180,13 @@ class _BookingSuccessfulScreenState extends State<BookingSuccessfulScreen> {
              const Spacer(),
               ElevatedButton(
                 onPressed: () async {
+                  Get.to(() => Invoice(htmlContent: widget.apptId!));
                   // Generate the invoice
-                  final pdf = await generateInvoice();
-
-                  // Save and download the invoice
-                  await saveAndDownloadInvoice(pdf);
+                  // InvoiceDownloader().downloadInvoice(context, widget.apptId!);
+                 //  final pdf = await generateInvoice();
+              //
+               // Save and download the invoice
+            // await saveAndDownloadInvoice(pdf);
                 },
                 child: const Text('Generate and Download Invoice'),
               ),

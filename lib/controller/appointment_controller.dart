@@ -15,6 +15,7 @@ import 'package:iclinix/utils/images.dart';
 import '../app/screens/appointment/payment_screen.dart';
 import '../app/widget/loading_widget.dart';
 import '../data/models/body/appointment_model.dart';
+import '../helper/invoice.dart';
 import 'profile_controller.dart';
 
 class AppointmentController extends GetxController implements GetxService {
@@ -37,9 +38,15 @@ class AppointmentController extends GetxController implements GetxService {
   }
   bool? _isPaymentSuccessFull = false;
   bool? get isPaymentSuccessFull => _isPaymentSuccessFull;
+  String? _apptId = "";
+  String? get apptId => _apptId;
 
   void setisPaymentSuccessFull([bool? val]) {
     _isPaymentSuccessFull =  val!;
+    update();
+  }
+  void setapptId([String? val]) {
+    _apptId =  val!;
     update();
   }
 
@@ -406,8 +413,10 @@ class AppointmentController extends GetxController implements GetxService {
     if(response.statusCode == 200) {
       var responseData = response.body;
       debugPrint('Response: $responseData');
+
    if(responseData['message'] == "Appointment Booked Successfully."){
      setisPaymentSuccessFull(true);
+     getInvoice(responseData['appt_id'].toString());
    }
       _isLoading = false;
       update();
@@ -418,6 +427,26 @@ class AppointmentController extends GetxController implements GetxService {
 
 
     _isLoading = false;
+    update();
+  }
+
+  Future<void> getInvoice(String Id,) async {
+    update();
+    Response response = await appointmentRepo.getInvoice(Id);
+    debugPrint('Response: ${response}');
+    setapptId(response.body);
+    // dynamic val = response.body['available_slots'];
+    // debugPrint('Length: ${val}');
+
+    if (response.statusCode == 200) {
+      debugPrint('Response: ${response.body}');
+
+      // showCustomSnackBar('Booking Created Successfully');
+    } else {
+
+      update();
+    }
+
     update();
   }
 

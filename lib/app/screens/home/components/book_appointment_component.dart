@@ -19,8 +19,6 @@ class BookAppointmentComponent extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Book an Appointment',style: openSansBold.copyWith(fontSize: Dimensions.fontSizeDefault,),),
-            sizedBox12(),
             Container(clipBehavior: Clip.hardEdge,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(Dimensions.radius15)

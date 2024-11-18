@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'helper/gi_dart.dart' as di;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,15 +8,64 @@ import 'package:iclinix/helper/route_helper.dart';
 import 'package:iclinix/utils/app_constants.dart';
 import 'package:iclinix/utils/themes/light_theme.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+import 'helper/local_notification.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = MyHttpOverrides();
+  await Firebase.initializeApp();
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   const androidInitialization = AndroidInitializationSettings('@mipmap/ic_launcher');
   const initializationSettings = InitializationSettings(android: androidInitialization);
 
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  // Request permissions for iOS (no effect on Android)
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+  print('User granted permission: ${settings.authorizationStatus}');
+
+  // Get the FCM token
+  String? token = await messaging.getToken();
+  print('FCM Token: $token');
+
+  // Handle foreground messages
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    print('Message received in foreground: ${message.notification?.title}, ${message.notification?.body}');
+    if (message.notification != null) {
+      final notification = message.notification!;
+      final android = message.notification?.android;
+
+      if (android != null) {
+        flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              'channel_id',
+              'channel_name',
+              channelDescription: 'channel_description',
+              importance: Importance.max,
+              priority: Priority.high,
+              showWhen: false,
+            ),
+          ),
+        );
+      }
+    }
+  });
+
+  // Background and terminated message handling
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await di.init();
 
   // AwesomeNotifications().initialize(
@@ -61,3 +112,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// Background message handler
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print('Message received in background: ${message.notification?.title}, ${message.notification?.body}');
+}

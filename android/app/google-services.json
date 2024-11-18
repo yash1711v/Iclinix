@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "286664385442",
+    "project_id": "iclinix-89663",
+    "storage_bucket": "iclinix-89663.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:286664385442:android:61997980fd515e45a188fb",
+        "android_client_info": {
+          "package_name": "com.invoidea.iclinix"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDR9grQBSxftNPVR8vYSkvi6OSE1FciPJc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

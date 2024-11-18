@@ -68,7 +68,7 @@ class RouteHelper {
   static String getAddPatientDetailsRoute(String? appointmentDate,
       String? appointmentTime,String? clinicId,) => '$patientDetails?appointmentDate=$appointmentDate&appointmentTime=$appointmentTime&clinicId=$clinicId';
   static String getPaymentMethodRoute() => paymentMethod;
-  static String getBookingSuccessfulRoute(String? bookingTime,String? bookingDate,) => '$bookingSuccessful?bookingTime=$bookingTime&bookingDate=$bookingDate';
+  static String getBookingSuccessfulRoute(String? bookingTime,String? bookingDate,String? apptId) => '$bookingSuccessful?bookingTime=$bookingTime&bookingDate=$bookingDate&apptId=$apptId';
   static String getAllServicesRoute() => allServices;
   static String getAllClinicRoute({bool isBackButton = false}) => '$clinic?isBackButton=${isBackButton.toString()}';
   static String getNotificationRoute() => notification;
@@ -116,7 +116,7 @@ class RouteHelper {
         return PaymentScreen(appointmentModel: appointmentModel);
       },
     ),
-    GetPage(name: bookingSuccessful, page: () =>  BookingSuccessfulScreen(time : Get.parameters['bookingTime'],date: Get.parameters['bookingDate'],)),
+    GetPage(name: bookingSuccessful, page: () =>  BookingSuccessfulScreen(time : Get.parameters['bookingTime'],date: Get.parameters['bookingDate'],apptId: Get.parameters['apptId'],)),
     GetPage(name: allServices, page: () =>  const ViewAllServicesScreen()),
     GetPage(name: clinic, page: () => AppointmentScreen(isBackButton: Get.parameters['isBackButton'] == 'true')),
     GetPage(name: notification, page: () =>  const NotificationScreen()),

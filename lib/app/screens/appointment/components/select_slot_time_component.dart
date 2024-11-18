@@ -6,6 +6,7 @@ import 'package:iclinix/utils/sizeboxes.dart';
 import 'package:iclinix/utils/styles.dart';
 
 class SelectSlotTimeComponent extends StatelessWidget {
+  final ScrollController _scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AppointmentController>(
@@ -23,48 +24,53 @@ class SelectSlotTimeComponent extends StatelessWidget {
             sizedBox10(),
             SizedBox(
               height: 310,
-              child: GridView.builder(
-                shrinkWrap: true,
-                // physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3, // 3 time slots per row
-                  crossAxisSpacing: 10.0,
-                  mainAxisSpacing: 10.0,
-                  mainAxisExtent: 30,
-                ),
-                itemCount: appointmentControl.timeSlot.length, // Total time slots
-                itemBuilder: (context, index) {
-                  // Compare selected time with the actual time slot
-                  bool isSelected = appointmentControl.selectedTime == appointmentControl.timeSlot[index]['Time'];
-                  return GestureDetector(
-                    onTap: () {
-                      appointmentControl.selectTimeSlot(index); // Update selected time
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 0.5,
-                          color: Theme.of(context).hintColor,
+              child: Scrollbar(
+                controller: _scrollController,
+                thumbVisibility: true,
+                child: GridView.builder(
+                  controller: _scrollController,
+                  shrinkWrap: true,
+                  // physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3, // 3 time slots per row
+                    crossAxisSpacing: 10.0,
+                    mainAxisSpacing: 10.0,
+                    mainAxisExtent: 30,
+                  ),
+                  itemCount: appointmentControl.timeSlot.length, // Total time slots
+                  itemBuilder: (context, index) {
+                    // Compare selected time with the actual time slot
+                    bool isSelected = appointmentControl.selectedTime == appointmentControl.timeSlot[index]['Time'];
+                    return GestureDetector(
+                      onTap: () {
+                        appointmentControl.selectTimeSlot(index); // Update selected time
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 0.5,
+                            color: Theme.of(context).hintColor,
+                          ),
+                          color: isSelected
+                              ? Theme.of(context).primaryColor // Highlight selected slot
+                              : Theme.of(context).cardColor, // Default background color
+                          borderRadius: BorderRadius.circular(Dimensions.radius10),
                         ),
-                        color: isSelected
-                            ? Theme.of(context).primaryColor // Highlight selected slot
-                            : Theme.of(context).cardColor, // Default background color
-                        borderRadius: BorderRadius.circular(Dimensions.radius10),
-                      ),
-                      child: Center(
-                        child: Text(
-                          appointmentControl.timeSlot[index]['Time'], // Display the time slot
-                          style: openSansRegular.copyWith(
-                            fontSize: Dimensions.fontSize12,
-                            color: isSelected
-                                ? Theme.of(context).cardColor // Highlight selected slot text
-                                : Theme.of(context).hintColor, // Default text color
+                        child: Center(
+                          child: Text(
+                            appointmentControl.timeSlot[index]['Time'], // Display the time slot
+                            style: openSansRegular.copyWith(
+                              fontSize: Dimensions.fontSize12,
+                              color: isSelected
+                                  ? Theme.of(context).cardColor // Highlight selected slot text
+                                  : Theme.of(context).hintColor, // Default text color
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
           ],
