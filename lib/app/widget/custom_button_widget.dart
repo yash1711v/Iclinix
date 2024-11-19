@@ -19,7 +19,7 @@ class CustomButtonWidget extends StatelessWidget {
   final bool isBold;
   final Color? borderSideColor;
   final bool useGradient; // Flag to indicate if gradient should be used
-  final LinearGradient? gradient; // Gradient property
+  final LinearGradient? gradient;// Gradient property
 
   const CustomButtonWidget({
     super.key,

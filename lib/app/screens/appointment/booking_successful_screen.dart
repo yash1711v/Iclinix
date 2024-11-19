@@ -20,6 +20,8 @@ import 'package:open_file/open_file.dart';
 import 'package:printing/printing.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../../../controller/appointment_controller.dart';
+
 
 class BookingSuccessfulScreen extends StatefulWidget {
   final String? date;
@@ -32,77 +34,13 @@ class BookingSuccessfulScreen extends StatefulWidget {
 }
 
 class _BookingSuccessfulScreenState extends State<BookingSuccessfulScreen> {
-
-
-  // Function to generate invoice
-  Future<typedData.Uint8List> generateInvoice() async {
-    final pdf = pw.Document();
-
-    pdf.addPage(
-      pw.Page(
-        pageFormat: PdfPageFormat.a4,
-        build: (pw.Context context) {
-          return pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Text('Invoice', style: pw.TextStyle(fontSize: 32, fontWeight: pw.FontWeight.bold)),
-              pw.SizedBox(height: 20),
-              pw.Text('Invoice #: 12345'),
-              pw.Text('Date: ${DateTime.now().toString().substring(0, 10)}'),
-              pw.SizedBox(height: 20),
-              pw.Text('Billing To:'),
-              pw.Text('John Doe'),
-              pw.Text('123 Main Street'),
-              pw.Text('City, Country'),
-              pw.SizedBox(height: 20),
-              pw.Table.fromTextArray(
-                headers: ['Item', 'Qty', 'Price', 'Total'],
-                data: [
-                  ['Widget A', '2', '\$50', '\$100'],
-                  ['Widget B', '1', '\$75', '\$75'],
-                  ['Widget C', '3', '\$20', '\$60'],
-                ],
-              ),
-              pw.SizedBox(height: 20),
-              pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.end,
-                children: [
-                  pw.Text('Grand Total: \$235', style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
-                ],
-              ),
-            ],
-          );
-        },
-      ),
-    );
-
-    return pdf.save();
-  }
-
-  // Function to save and download invoice
-  Future<void> saveAndDownloadInvoice(typedData.Uint8List pdfData) async {
-    try {
-      // Get directory for saving the file
-      final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/invoice.pdf');
-
-      // Write the PDF data to the file
-      await file.writeAsBytes(pdfData);
-
-      // Share or download the PDF using the printing package
-      await Printing.sharePdf(bytes: pdfData, filename: 'invoice.pdf');
-
-      // Optionally, show a success message
-      print('Invoice saved to ${file.path}');
-    } catch (e) {
-      print('Error saving invoice: $e');
-    }
-  }
+  dynamic filePaths = "";
 
   double progress = 0.0; // Track download progress
   bool isDownloading = false;
 
   Future<void> downloadFile(String url, String fileName) async {
+    debugPrint("Downloading file from $Get.find<AppointmentController>().apptId");
     setState(() {
       progress = 0.0;
       isDownloading = true;
@@ -121,7 +59,7 @@ class _BookingSuccessfulScreenState extends State<BookingSuccessfulScreen> {
 
     try {
       await dio.download(
-      url,
+        Get.find<AppointmentController>().apptId,
         filePath,
         onReceiveProgress: (received, total) {
           if (total != -1) {
@@ -136,8 +74,35 @@ class _BookingSuccessfulScreenState extends State<BookingSuccessfulScreen> {
         isDownloading = false;
       });
 
+      filePaths = filePath;
       // Open the downloaded file
-      OpenFile.open(filePath);
+      // OpenFile.open(filePath);
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Download Complete"),
+            content: Text("The file has been downloaded successfully."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("Close"),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  OpenFile.open(filePath);
+                },
+                child: Text("Open File"),
+              ),
+            ],
+          );
+        },
+      );
+
     } catch (e) {
       setState(() {
         isDownloading = false;
@@ -151,7 +116,9 @@ class _BookingSuccessfulScreenState extends State<BookingSuccessfulScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Get.find<AppointmentController>().setisPaymentSuccessFull(false);
+    });
 
   }
   @override

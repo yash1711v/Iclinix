@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -18,40 +17,73 @@ import 'package:iclinix/utils/images.dart';
 import '../app/widget/loading_widget.dart';
 import '../data/models/body/appointment_model.dart';
 
-
 class AppointmentController extends GetxController implements GetxService {
   final AppointmentRepo appointmentRepo;
   final ApiClient apiClient;
 
-  AppointmentController({required this.appointmentRepo, required this.apiClient});
+  AppointmentController(
+      {required this.appointmentRepo, required this.apiClient});
 
-   AppointmentController get appointmentController => Get.find<AppointmentController>();
+  AppointmentController get appointmentController =>
+      Get.find<AppointmentController>();
 
   bool _isLoading = false;
+
   bool get isLoading => _isLoading;
 
   bool? _isPromotionalCode = false;
+
   bool? get isPromotionalCode => _isPromotionalCode;
 
   void setPromotionalCode([bool? val]) {
     _isPromotionalCode = val ?? !isPromotionalCode!;
     update();
   }
+  bool?  _isComing = false;
+
+  bool? get isComing => _isComing;
+
+  void setisComing([bool? val]) {
+    _isComing = val ;
+    update();
+
+  }
+  bool?  _isVisiting = false;
+
+  bool? get isVisiting => _isVisiting;
+
+  void setisVisiting([bool? val]) {
+    _isVisiting = val ;
+    update();
+  }
+  bool?  _isCancelled = false;
+
+  bool? get isCancelled => _isCancelled;
+
+  void setisCancelled([bool? val]) {
+    _isCancelled = val ;
+    update();
+  }
+
   bool? _isPaymentSuccessFull = false;
+
   bool? get isPaymentSuccessFull => _isPaymentSuccessFull;
   dynamic _apptId = "";
+
   dynamic get apptId => _apptId;
 
   void setisPaymentSuccessFull([bool? val]) {
-    _isPaymentSuccessFull =  val!;
+    _isPaymentSuccessFull = val!;
     update();
   }
+
   void setapptId([dynamic val]) {
-    _apptId =  val;
+    _apptId = val;
     update();
   }
 
   String _orderId = "";
+
   String get orderId => _orderId;
 
   void setOrderId(String orderId) {
@@ -60,6 +92,7 @@ class AppointmentController extends GetxController implements GetxService {
   }
 
   String _amount = "";
+
   String get amount => _amount;
 
   void setAmount(String amount) {
@@ -68,13 +101,16 @@ class AppointmentController extends GetxController implements GetxService {
   }
 
   String _razorPayKey = "";
+
   String get razorPayKey => _razorPayKey;
 
   void setRazorPayKey(String Key) {
     _razorPayKey = Key;
     update();
   }
+
   String _currency = "";
+
   String get currency => _currency;
 
   void setCurrency(String Currency) {
@@ -86,30 +122,32 @@ class AppointmentController extends GetxController implements GetxService {
   void onInit() {
     super.onInit();
     formattedDate = SimpleDateConverter.formatDateToCustomFormat(selectedDate);
-
   }
 
-
-  DateTime selectedDate = DateTime.now().add(Duration(days: 1)); // Default to current date
+  DateTime selectedDate =
+      DateTime.now().add(Duration(days: 1)); // Default to current date
   String? formattedDate;
 
   String _scheduleType = "";
+
   String get ScheduleType => _scheduleType;
   String _scheduleid = "";
+
   String get Scheduleid => _scheduleid;
 
-
-  void updateDate(DateTime newDate,String branchId) {
+  void updateDate(DateTime newDate, String branchId) {
     selectedDate = newDate;
     formattedDate = SimpleDateConverter.formatDateToCustomFormat(selectedDate);
-    getAppointmentSlotsApi(branchId, formattedDate!); // Fetch the slots for the selected date
+    getAppointmentSlotsApi(
+        branchId, formattedDate!); // Fetch the slots for the selected date
     update(); // Trigger GetX update to refresh UI if necessary
   }
+
   String selectedValue = '';
 
   String? selectedTime;
-  List<Map<String,dynamic>> timeSlot = [
-    {'Time':"12:00","ScheduleType":"General","ScheduleTypeId":"1"}
+  List<Map<String, dynamic>> timeSlot = [
+    {'Time': "12:00", "ScheduleType": "General", "ScheduleTypeId": "1"}
   ];
 
   void selectTimeSlot(int index) {
@@ -124,7 +162,11 @@ class AppointmentController extends GetxController implements GetxService {
   final List<String> genderOptions = ['Male', 'Female', 'Other'];
 
   String getGenderStatus() {
-    return selectedGender == 'Male' ? 'M' : selectedGender =='Female' ? 'F' : 'O';
+    return selectedGender == 'Male'
+        ? 'M'
+        : selectedGender == 'Female'
+            ? 'F'
+            : 'O';
   }
 
   void updateGender(String gender) {
@@ -138,7 +180,8 @@ class AppointmentController extends GetxController implements GetxService {
 
   void updateDobDate(DateTime newDate) {
     selectedDobDate = newDate;
-    formattedDobDate = SimpleDateConverter.formatDateToCustomFormat(selectedDobDate!);
+    formattedDobDate =
+        SimpleDateConverter.formatDateToCustomFormat(selectedDobDate!);
     update();
   }
 
@@ -179,6 +222,7 @@ class AppointmentController extends GetxController implements GetxService {
   }
 
   bool _isNewPatientEnabled = false;
+
   bool get isNewPatientEnabled => _isNewPatientEnabled;
 
   void toggleNewPatientSelection(bool isNewPatient) {
@@ -187,9 +231,12 @@ class AppointmentController extends GetxController implements GetxService {
   }
 
   bool _isPlanNewPatientEnabled = true;
+
   bool get isPlanNewPatientEnabled => _isPlanNewPatientEnabled;
+
   void togglePlanNewPatientSelection([bool? value]) {
-    _isPlanNewPatientEnabled = value ?? !_isPlanNewPatientEnabled; // If value is provided, set it. Otherwise, toggle.
+    _isPlanNewPatientEnabled = value ??
+        !_isPlanNewPatientEnabled; // If value is provided, set it. Otherwise, toggle.
     update();
   }
 
@@ -198,9 +245,11 @@ class AppointmentController extends GetxController implements GetxService {
   //   update();
   // }
   List<PlanModel>? _planList;
+
   List<PlanModel>? get planList => _planList;
 
   bool _isPlansLoading = false;
+
   bool get isPlansLoading => _isPlansLoading;
 
   Future<void> getPlansList() async {
@@ -210,10 +259,12 @@ class AppointmentController extends GetxController implements GetxService {
       Response response = await appointmentRepo.getPlansList();
       if (response.statusCode == 200) {
         List<dynamic> responseData = response.body['plans'];
-        _planList = responseData.map((json) => PlanModel.fromJson(json)).toList();
+        _planList =
+            responseData.map((json) => PlanModel.fromJson(json)).toList();
         print("Plans fetched successfully: $_planList");
       } else {
-        print("Error while fetching Data Error list: ${response.statusCode} - ${response.statusText}");
+        print(
+            "Error while fetching Data Error list: ${response.statusCode} - ${response.statusText}");
       }
     } catch (error) {
       print("Error while fetching Plans list: $error");
@@ -223,9 +274,11 @@ class AppointmentController extends GetxController implements GetxService {
   }
 
   List<PatientModel>? _patientList;
+
   List<PatientModel>? get patientList => _patientList;
 
   bool _isPatientLoading = false;
+
   bool get isPatientLoading => _isPatientLoading;
 
   Future<void> getPatientList() async {
@@ -236,14 +289,16 @@ class AppointmentController extends GetxController implements GetxService {
       if (response.statusCode == 200) {
         if (response.body != null && response.body['patients'] != null) {
           List<dynamic> responseData = response.body['patients'];
-          _patientList = responseData.map((json) => PatientModel.fromJson(json)).toList();
+          _patientList =
+              responseData.map((json) => PatientModel.fromJson(json)).toList();
           print("Patients fetched successfully: $_patientList");
         } else {
           print("No patients found in the response.");
           _patientList = [];
         }
       } else {
-        print("Error while fetching data. Status code: ${response.statusCode} - ${response.statusText}");
+        print(
+            "Error while fetching data. Status code: ${response.statusCode} - ${response.statusText}");
       }
     } catch (error) {
       print("Error while fetching Patient list: $error");
@@ -253,20 +308,26 @@ class AppointmentController extends GetxController implements GetxService {
   }
 
   bool _isBookingLoading = false;
+
   bool get isBookingLoading => _isBookingLoading;
 
-  Future<void> bookAppointmentApi(AppointmentModel appointment,String schedule_type, String schedule_Id) async {
+  Future<void> bookAppointmentApi(AppointmentModel appointment,
+      String schedule_type, String schedule_Id) async {
     // _isBookingLoading = true;
     update();
-    Response response = await appointmentRepo.bookAppointmentRepo(appointment,schedule_type,schedule_Id);
+    Response response = await appointmentRepo.bookAppointmentRepo(
+        appointment, schedule_type, schedule_Id);
     debugPrint('Response: ${response.body}');
     if (response.statusCode == 200) {
       debugPrint("Appointment booked successfully: ${response.body}");
-      Get.find<AppointmentController>().setOrderId(response.body['history_id'].toString());
-      Get.find<AppointmentController>().setAmount(response.body['amount'].toString());
-      Get.find<AppointmentController>().setCurrency(response.body['currency'].toString());
-      Get.find<AppointmentController>().setRazorPayKey(response.body['key'].toString());
-
+      Get.find<AppointmentController>()
+          .setOrderId(response.body['history_id'].toString());
+      Get.find<AppointmentController>()
+          .setAmount(response.body['amount'].toString());
+      Get.find<AppointmentController>()
+          .setCurrency(response.body['currency'].toString());
+      Get.find<AppointmentController>()
+          .setRazorPayKey(response.body['key'].toString());
     } else {
       _isBookingLoading = false;
       update();
@@ -276,16 +337,16 @@ class AppointmentController extends GetxController implements GetxService {
     update();
   }
 
-
-
   bool _isSlotLoading = false;
+
   bool get isSlotLoading => _isSlotLoading;
+
   Future<void> getAppointmentSlotsApi(String branchId, String date) async {
     _isSlotLoading = true;
     update();
     Response response = await appointmentRepo.getSlotList(branchId, date);
     List<dynamic> val = response.body['available_slots'];
-     // debugPrint('Length: ${val.length}');
+    // debugPrint('Length: ${val.length}');
 
     if (response.statusCode == 200) {
       debugPrint('Response: ${response.body}');
@@ -296,9 +357,11 @@ class AppointmentController extends GetxController implements GetxService {
         String time = slot['ApptTime'].toString();
         String formattedTime = time.substring(0, time.length - 3);
         timeSlot.add({
-          "Time": SimpleTimeConverter.formatTimeToCustomFormat(DateTime.parse("1970-01-01 $formattedTime")).toString(),
-          "ScheduleType":slot['ScheduleType'].toString(),
-          "ScheduleTypeId":slot['PK_ScheduleTypeId'].toString()
+          "Time": SimpleTimeConverter.formatTimeToCustomFormat(
+                  DateTime.parse("1970-01-01 $formattedTime"))
+              .toString(),
+          "ScheduleType": slot['ScheduleType'].toString(),
+          "ScheduleTypeId": slot['PK_ScheduleTypeId'].toString()
         });
       });
       // showCustomSnackBar('Booking Created Successfully');
@@ -311,7 +374,6 @@ class AppointmentController extends GetxController implements GetxService {
     update();
   }
 
-
   var selectedPatient = ''.obs; // RxString
   var selectedPatientId = 0.obs;
 
@@ -320,17 +382,24 @@ class AppointmentController extends GetxController implements GetxService {
     selectedPatientId.value = id; // Update the ID in RxInt
   }
 
-   List<String> paymentMethods = ['Cash', 'Pay via Debit card/credit card/UPI/NetBanking'];
-  List<String> paymentImages= [Images.icCash, Images.icRazorpay];
-  var selectedPaymentMethod = 'Cash'.obs; // RxString for selected payment method
+  List<String> paymentMethods = [
+    'Cash',
+    'Pay via Debit card/credit card/UPI/NetBanking'
+  ];
+  List<String> paymentImages = [Images.icCash, Images.icRazorpay];
+  var selectedPaymentMethod =
+      'Cash'.obs; // RxString for selected payment method
   void selectPaymentMethod(String method) {
     selectedPaymentMethod.value = method; // Update the selected payment method
   }
 
   List<AppointmentHistoryModel>? _appointmentHistoryList;
-  List<AppointmentHistoryModel>? get appointmentHistoryList => _appointmentHistoryList;
+
+  List<AppointmentHistoryModel>? get appointmentHistoryList =>
+      _appointmentHistoryList;
 
   bool _isAppointmentHistoryLoading = false;
+
   bool get isAppointmentHistoryLoading => _isAppointmentHistoryLoading;
 
   Future<void> getAppointmentHistory() async {
@@ -345,28 +414,33 @@ class AppointmentController extends GetxController implements GetxService {
         if (response.body != null && response.body['appointmentData'] != null) {
           List<dynamic> responseData = response.body['appointmentData'];
 
-          _appointmentHistoryList = responseData.map((json) => AppointmentHistoryModel.fromJson(json as Map<String, dynamic>)).toList();
+          _appointmentHistoryList = responseData
+              .map((json) => AppointmentHistoryModel.fromJson(
+                  json as Map<String, dynamic>))
+              .toList();
 
-          print("Appointment appointmentData fetched successfully: $_appointmentHistoryList");
+          print(
+              "Appointment appointmentData fetched successfully: $_appointmentHistoryList");
         } else {
           print("No appointment appointmentData found in the response.");
           _appointmentHistoryList = [];
         }
       } else {
-        print("Error while fetching appointment history. Status code: ${response.statusCode} - ${response.statusText}");
+        print(
+            "Error while fetching appointment history. Status code: ${response.statusCode} - ${response.statusText}");
       }
     } catch (error) {
       print("Error while fetching appointment history: $error");
     } finally {
-
       _isAppointmentHistoryLoading = false;
       LoadingDialog.hideLoading();
       update();
     }
   }
-  bool _bookingDiabeticType = false;
-  bool get bookingDiabeticType => _bookingDiabeticType;
 
+  bool _bookingDiabeticType = false;
+
+  bool get bookingDiabeticType => _bookingDiabeticType;
 
   void selectBookingType(bool val) {
     _bookingDiabeticType = val;
@@ -374,15 +448,15 @@ class AppointmentController extends GetxController implements GetxService {
   }
 
   Future<void> addPatientApi(
-      AddPatientModel addPatient,
-      ) async {
+    AddPatientModel addPatient,
+  ) async {
     _isLoading = true;
     update();
 
     Response response = await appointmentRepo.addPatientDetails(addPatient);
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       var responseData = response.body;
-      if(responseData["message"]  == "Patient added successfully") {
+      if (responseData["message"] == "Patient added successfully") {
         _isPlanNewPatientEnabled = false;
         getPatientList();
         _isLoading = false;
@@ -391,8 +465,6 @@ class AppointmentController extends GetxController implements GetxService {
       } else {
         _isLoading = false;
         update();
-
-
       }
       _isLoading = false;
       update();
@@ -401,24 +473,25 @@ class AppointmentController extends GetxController implements GetxService {
       update();
     }
 
-
     _isLoading = false;
     update();
   }
 
-  Future<void> postDataBack(Map<String, dynamic> requestBody,) async {
+  Future<void> postDataBack(
+    Map<String, dynamic> requestBody,
+  ) async {
     _isLoading = true;
     update();
 
     Response response = await appointmentRepo.postDataBack(requestBody);
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       var responseData = response.body;
       debugPrint('Response: $responseData');
 
-   if(responseData['message'] == "Appointment Booked Successfully."){
-     setisPaymentSuccessFull(true);
-     getInvoice(responseData['appt_id'].toString());
-   }
+      if (responseData['message'] == "Appointment Booked Successfully.") {
+        setisPaymentSuccessFull(true);
+        getInvoice(responseData['appt_id'].toString());
+      }
       _isLoading = false;
       update();
     } else {
@@ -426,23 +499,22 @@ class AppointmentController extends GetxController implements GetxService {
       update();
     }
 
-
     _isLoading = false;
     update();
   }
 
-  Future<void> getInvoice(String Id,) async {
+  Future<void> getInvoice(
+    String Id,
+  ) async {
     update();
     Response response = await appointmentRepo.getInvoice(Id);
-
-    setapptId(response.body);
+    debugPrint('Response: ${response.body['pdfLink']}');
+    setapptId(response.body['pdfLink']);
 
     if (response.statusCode == 200) {
       // debugPrint('Response: ${response.body}');
-
       // showCustomSnackBar('Booking Created Successfully');
     } else {
-
       update();
     }
 
@@ -450,12 +522,17 @@ class AppointmentController extends GetxController implements GetxService {
   }
 
   bool _isPurchasePlanLoading = false;
+
   bool get isPurchasePlanLoading => _isPurchasePlanLoading;
-  Future<void> purchasePlanApi(String? patientId, String? planId, String? paymentMethod) async {
+
+  Future<void> purchasePlanApi(
+      String? patientId, String? planId, String? paymentMethod)
+  async {
     _isPurchasePlanLoading = true;
     update();
 
-    Response response = await appointmentRepo.purchasePlanApi(patientId, planId, paymentMethod);
+    Response response =
+        await appointmentRepo.purchasePlanApi(patientId, planId, paymentMethod);
     if (response.statusCode == 200) {
       var responseData = response.body;
       if (responseData["message"] == "Subscription created successfully") {
@@ -475,5 +552,122 @@ class AppointmentController extends GetxController implements GetxService {
   }
 
 
+  bool _isLoadingRefer = false;
+
+  bool get isLoadingRefer => _isLoadingRefer;
+
+  String _referImage = "";
+
+  String get referImage => _referImage;
+
+  void setReferImage(String val) {
+    _referImage = val;
+    update();
+  }
+
+  Future<void> getReferBanner()
+  async {
+    _isLoadingRefer = true;
+    update();
+
+    Response response =
+    await appointmentRepo.referApi();
+    if (response.statusCode == 200) {
+      var responseData = response.body;
+      debugPrint('refer====>: $responseData');
+      setReferImage(responseData["banners"][0]["image"]);
+      _isLoadingRefer = false;
+      update();
+      // if (responseData["message"] == "Subscription created successfully") {
+      //
+      // } else {
+      //   showCustomSnackBar(responseData["message"], isError: true);
+      // }
+    } else {
+      // showCustomSnackBar('Error occurred: ${response.reasonPhrase}', isError: true);
+    }
+
+    _isLoadingRefer = false;
+    update();
+  }
+
+  bool _isDiscount = false;
+
+  bool get isDiscount => _isDiscount;
+
+  String _discount = "";
+
+  String get discount => _discount;
+
+  void setDiscount(String val) {
+    _discount = val;
+    update();
+  }
+
+
+  Future<void> getisDiscount()
+  async {
+    _isDiscount = true;
+    update();
+
+    Response response =
+    await appointmentRepo.discountApi();
+    if (response.statusCode == 200) {
+      var responseData = response.body;
+      debugPrint('discount====>: $responseData');
+      setDiscount(responseData["banners"][0]["image"]);
+      // if (responseData["message"] == "Subscription created successfully") {
+      //
+      // } else {
+      //   showCustomSnackBar(responseData["message"], isError: true);
+      // }
+    } else {
+      // showCustomSnackBar('Error occurred: ${response.reasonPhrase}', isError: true);
+    }
+
+    _isDiscount = false;
+    update();
+  }
+  bool _isDiabeticBanner = false;
+
+  bool get isDiabeticBanner => _isDiabeticBanner;
+
+
+  String _diabeticBanner = "";
+
+  String get diabeticBanner => _diabeticBanner;
+
+  void setdiabeticBanner(String val) {
+    _diabeticBanner = val;
+    update();
+  }
+
+  Future<void> getisDiabeticBanner()
+  async {
+    _isDiabeticBanner = true;
+    update();
+
+    Response response =
+    await appointmentRepo.diabeticBannerApi();
+    if (response.statusCode == 200) {
+      var responseData = response.body;
+      debugPrint('diabetic====>: $responseData');
+      setdiabeticBanner(responseData["banners"][0]["image"]);
+      // if (responseData["message"] == "Subscription created successfully") {
+      //
+      // } else {
+      //   showCustomSnackBar(responseData["message"], isError: true);
+      // }
+    } else {
+      // showCustomSnackBar('Error occurred: ${response.reasonPhrase}', isError: true);
+    }
+
+    _isDiabeticBanner = false;
+    update();
+  }
+
+
 
 }
+
+

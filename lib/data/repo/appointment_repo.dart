@@ -101,6 +101,16 @@ class AppointmentRepo {
       'payment_method' : paymentMethod,
     });
   }
+  Future<Response> referApi() {
+    return apiClient.getData(AppConstants.referEarn,method: 'GET');
+  }
+
+  Future<Response> discountApi() {
+    return apiClient.getData(AppConstants.discountApi,method: 'GET');
+  }
+Future<Response> diabeticBannerApi() {
+    return apiClient.getData(AppConstants.diabeticBanner,method: 'GET');
+  }
 
 
   Future<Response> dailySugarCheckUpRepo(String? beforeMeal,

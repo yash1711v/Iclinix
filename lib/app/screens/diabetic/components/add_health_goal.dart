@@ -16,42 +16,38 @@ import '../../../widget/custom_dropdown_field.dart';
 import 'health_goal_detail_dialog.dart';
 
 class AddHealthGoal extends StatelessWidget {
-  const AddHealthGoal({super.key});
-
+   AddHealthGoal({super.key});
+  final ScrollController _scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Get.find<DiabeticController>().getHealthGoalApi();
     });
+
     return GetBuilder<DiabeticController>(builder: (controller) {
       return Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Add Health Goal',
-                style: openSansMedium.copyWith(
-                    fontSize: Dimensions.fontSizeDefault),
-              ),
-              DecoratedAddButton(
-                tap: () {
-                  Get.dialog(AddHealthGoalDialog());
-                },
-              ),
-            ],
-          ),
-          sizedBox20(),
           CustomDecoratedContainer(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Goal',
-                  style: openSansRegular.copyWith(
-                      color: Theme.of(context).primaryColor),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Health Goal',
+                      style: openSansMedium.copyWith(
+                          fontSize: Dimensions.fontSizeDefault),
+                    ),
+                    DecoratedAddButton(
+                      tap: () {
+                        Get.dialog(AddHealthGoalDialog());
+                      },
+                    ),
+                  ],
                 ),
-                sizedBoxDefault(),
+               SizedBox(height: 10,),
                 // CustomDropdownField(
                 //   hintText: 'Goal',
                 //   selectedValue: controller.healthGoal?.isEmpty ?? true
@@ -87,38 +83,38 @@ class AddHealthGoal extends StatelessWidget {
                 //   },
                 //   showTitle: false,
                 // ),
-            ListView(
-              padding: EdgeInsets.zero,
-              shrinkWrap: true, // To prevent overflow when inside a scrollable widget
-              physics: NeverScrollableScrollPhysics(),
-              children: controller.healthGoalData?.map((goal) {
-                return  Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: Theme.of(context).cardColor,
-                        side: BorderSide(color: Theme.of(context).primaryColor),
-                      ),
-                      onPressed: (){
-                    // Update the health goal
-
-                  }, child: RadioListTile<String>(
-                    visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                    value: goal.title,
-                    groupValue: controller.healthGoal,
-                    title: Text(goal.title),
-                    onChanged: (String? newValue) {
-                      if (newValue != null) {
-                        controller.updateHealthGoal(newValue);
-                        print(controller.healthGoal);
-                      }
-                    },
-                  )),
-                );
-
-              }).toList() ?? [],
-
-            ),
+                Container(
+                  height: 120,
+                  child: Scrollbar(
+                    controller: _scrollController,
+                    thumbVisibility: true,
+                    child: ListView(
+                      padding: EdgeInsets.zero,
+                      controller: _scrollController,
+                      shrinkWrap: true, //o prevent overflow when inside a scrollable widget
+                      children: controller.healthGoalData?.map((goal) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 4.0),
+                              child: InkWell(
+                                onTap: () {
+                                  Get.dialog(
+                                    HealthGoalDetailDialog(
+                                      title: goal.title,
+                                      description: goal.description,
+                                    ),
+                                  );
+                                },
+                                child: Text(goal.title,style: TextStyle(
+                                  fontSize: Dimensions.fontSizeDefault,
+                                  color: Theme.of(context).disabledColor,
+                                ),),
+                              ),
+                            );
+                          }).toList() ??
+                          [],
+                    ),
+                  ),
+                ),
               ],
             ),
           )
@@ -138,28 +134,30 @@ class AddHealthGoalDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-        insetPadding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSize10),
+        insetPadding:
+            const EdgeInsets.symmetric(horizontal: Dimensions.paddingSize10),
         child: GetBuilder<DiabeticController>(builder: (controller) {
           return SingleChildScrollView(
             child: Form(
               key: _formKey,
               child: Padding(
-                padding: const EdgeInsets.all(Dimensions.paddingSizeDefault,
+                padding: const EdgeInsets.all(
+                  Dimensions.paddingSizeDefault,
                 ),
                 child: Column(
                   children: [
                     Container(
                       width: Get.size.width,
-                      decoration: BoxDecoration(color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.circular(Dimensions.radius5)
-                      ),
+                      decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius:
+                              BorderRadius.circular(Dimensions.radius5)),
                       padding:
                           const EdgeInsets.all(Dimensions.paddingSizeDefault),
-
                       child: Row(
                         children: [
                           Text(
-                            'Health Goal',
+                            'Add Health Goal',
                             style: openSansMedium.copyWith(
                                 fontSize: Dimensions.fontSizeDefault,
                                 color: Theme.of(context).cardColor),
@@ -220,7 +218,7 @@ class AddHealthGoalDialog extends StatelessWidget {
                                       controller.addHealthGoalApi(
                                           titleController.text,
                                           descriptionController.text);
-
+                                      Navigator.pop(context);
                                     }
                                   },
                                 ),

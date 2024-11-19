@@ -164,10 +164,19 @@ class _ResourcesComponentState extends State<ResourcesComponent> {
                           left: 0,
                           right: 0,
                           bottom: 0,
-                          child: Icon(
-                            Icons.play_circle_fill_outlined,
-                            size: 60,
-                            color: Colors.redAccent.withOpacity(0.80),
+                          child: GestureDetector(
+                            onTap: () {
+                              print('ytUrl');
+                              // _launchURL(data[i].ytUrl.toString());
+                              showYouTubeVideoDialog(context, videoId);
+                              // Get.to(() => YoutubePlayerDialog(videoId: videoId));
+
+                            },
+                            child: Icon(
+                              Icons.play_circle_fill_outlined,
+                              size: 60,
+                              color: Colors.redAccent.withOpacity(0.80),
+                            ),
                           ),
                         ),
                       ],

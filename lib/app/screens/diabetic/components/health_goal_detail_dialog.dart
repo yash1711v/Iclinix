@@ -24,14 +24,14 @@ class HealthGoalDetailDialog extends StatelessWidget {
                   ),
                   padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
                   child: Text(
-                    'Health Goal',
+                    title,
                     style: openSansMedium.copyWith(
                         fontSize: Dimensions.fontSizeDefault,
                         color: Theme.of(context).cardColor),
                   ),
                 ),
                 sizedBox20(),
-                Text(title,style: openSansSemiBold.copyWith(fontSize: Dimensions.paddingSizeDefault),),
+                Text("Description",style: openSansSemiBold.copyWith(fontSize: Dimensions.paddingSizeDefault),),
                 sizedBox10(),
                 Text(description,style: openSansRegular.copyWith(fontSize: Dimensions.paddingSizeDefault,
                 color: Theme.of(context).disabledColor.withOpacity(0.70)),),

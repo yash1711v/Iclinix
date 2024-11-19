@@ -156,6 +156,7 @@ class Appointment {
   final String? isDilated;
   final String? fresh;
   final String? review;
+  final int? status;
   final String? adult;
   final String? pediatric;
   final bool? walkIn;
@@ -191,6 +192,7 @@ class Appointment {
     this.visitTime,
     this.returnTime,
     this.otherProblem,
+    this.status,
     required this.createdAt,
     required this.updatedAt,
     required this.branchImage,
@@ -226,6 +228,7 @@ class Appointment {
       updatedAt: DateTime.parse(json['updated_at'] ?? DateTime.now().toString()),
       branchImage: json['branch_image'] ?? '',
       branch: Branch.fromJson(json['branch']),
+      status: json['status'],
     );
   }
 }

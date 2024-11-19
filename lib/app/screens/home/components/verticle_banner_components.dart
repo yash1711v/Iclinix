@@ -8,9 +8,24 @@ import 'package:iclinix/utils/images.dart';
 import 'package:iclinix/utils/sizeboxes.dart';
 import 'package:iclinix/utils/styles.dart';
 import 'package:get/get.dart';
-class VerticalBannerComponents extends StatelessWidget {
+class VerticalBannerComponents extends StatefulWidget {
   const VerticalBannerComponents({super.key});
 
+  @override
+  State<VerticalBannerComponents> createState() => _VerticalBannerComponentsState();
+}
+
+class _VerticalBannerComponentsState extends State<VerticalBannerComponents> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Get.find<AppointmentController>().getReferBanner();
+      Get.find<AppointmentController>().getisDiscount();
+      Get.find<AppointmentController>().getisDiabeticBanner();
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AppointmentController>(builder: (controller) {
@@ -26,19 +41,34 @@ class VerticalBannerComponents extends StatelessWidget {
                 ),
               );
             },
-                child: Image.asset(Images.imgReferHomeBanner)),
+            child: controller.isLoadingRefer?const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(),
+              ],
+            ):Image.network(controller.referImage)),
             sizedBoxDefault(),
             GestureDetector(onTap: () {
               controller.selectBookingType(false);
               Get.toNamed(RouteHelper.getAllClinicRoute(isBackButton: true));
             },
-                child: Image.asset(Images.imgBookAppointmentHomeBanner)),
+                child: controller.isDiscount?const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                  ],
+                ):Image.network(controller.discount)),
             sizedBoxDefault(),
             InkWell(onTap: () {
               controller.selectBookingType(false);
               Get.toNamed(RouteHelper.getAllClinicRoute(isBackButton: true));
             },
-                child: Image.asset(Images.imgDiabetesHomeBanner)),
+                child: controller.isDiabeticBanner?const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                  ],
+                ):Image.network(controller.diabeticBanner)),
 
 
           ],

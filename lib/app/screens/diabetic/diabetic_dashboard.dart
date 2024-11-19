@@ -203,7 +203,7 @@ class DiabeticDashboard extends StatelessWidget {
                         SugarChart(),
                       ],
                       sizedBoxDefault(),
-                      const AddHealthGoal(),
+                       AddHealthGoal(),
 
                       // sizedBoxDefault(),
                       // const RoutineComponent(),
