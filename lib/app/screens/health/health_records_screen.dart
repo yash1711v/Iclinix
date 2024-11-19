@@ -39,7 +39,7 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Get.find<AppointmentController>().getAppointmentHistory();
     });
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -102,9 +102,6 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                           ),
                           Tab(
                             text: 'Prescriptions',
-                          ),
-                          Tab(
-                            text: 'Reports',
                           ),
                         ],
                       ),
@@ -222,7 +219,7 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                                                                   TextSpan(
                                                                     children: [
                                                                       TextSpan(
-                                                                        text: "Patient: ",
+                                                                        text: "Name: ",
                                                                         style: openSansRegular.copyWith(
                                                                           fontSize: Dimensions.fontSize12,
                                                                           color: Theme.of(context).primaryColor,

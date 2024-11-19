@@ -1,3 +1,6 @@
+
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:iclinix/app/widget/custom_snackbar.dart';
@@ -12,11 +15,9 @@ import 'package:iclinix/helper/date_converter.dart';
 import 'package:iclinix/helper/route_helper.dart';
 import 'package:iclinix/utils/images.dart';
 
-import '../app/screens/appointment/payment_screen.dart';
 import '../app/widget/loading_widget.dart';
 import '../data/models/body/appointment_model.dart';
-import '../helper/invoice.dart';
-import 'profile_controller.dart';
+
 
 class AppointmentController extends GetxController implements GetxService {
   final AppointmentRepo appointmentRepo;
@@ -38,15 +39,15 @@ class AppointmentController extends GetxController implements GetxService {
   }
   bool? _isPaymentSuccessFull = false;
   bool? get isPaymentSuccessFull => _isPaymentSuccessFull;
-  String? _apptId = "";
-  String? get apptId => _apptId;
+  dynamic _apptId = "";
+  dynamic get apptId => _apptId;
 
   void setisPaymentSuccessFull([bool? val]) {
     _isPaymentSuccessFull =  val!;
     update();
   }
-  void setapptId([String? val]) {
-    _apptId =  val!;
+  void setapptId([dynamic val]) {
+    _apptId =  val;
     update();
   }
 
@@ -433,13 +434,11 @@ class AppointmentController extends GetxController implements GetxService {
   Future<void> getInvoice(String Id,) async {
     update();
     Response response = await appointmentRepo.getInvoice(Id);
-    debugPrint('Response: ${response}');
+
     setapptId(response.body);
-    // dynamic val = response.body['available_slots'];
-    // debugPrint('Length: ${val}');
 
     if (response.statusCode == 200) {
-      debugPrint('Response: ${response.body}');
+      // debugPrint('Response: ${response.body}');
 
       // showCustomSnackBar('Booking Created Successfully');
     } else {
@@ -474,7 +473,6 @@ class AppointmentController extends GetxController implements GetxService {
     _isPurchasePlanLoading = false;
     update();
   }
-
 
 
 

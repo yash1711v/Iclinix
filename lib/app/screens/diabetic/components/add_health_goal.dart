@@ -52,43 +52,73 @@ class AddHealthGoal extends StatelessWidget {
                       color: Theme.of(context).primaryColor),
                 ),
                 sizedBoxDefault(),
-                CustomDropdownField(
-                  hintText: 'Goal',
-                  selectedValue: controller.healthGoal?.isEmpty ?? true
-                      ? null
-                      : controller.healthGoal,
-                  options: controller.healthGoalData
-                      ?.map((goal) => goal.title)
-                      .toSet() // Remove duplicates by converting to a Set
-                      .toList() ??
-                      [],
-                  onChanged: (String? newValue) {
-                    if (newValue != null) {
-                      // Update the health goal
-                      controller.updateHealthGoal(newValue);
-                      print(controller.healthGoal);
+                // CustomDropdownField(
+                //   hintText: 'Goal',
+                //   selectedValue: controller.healthGoal?.isEmpty ?? true
+                //       ? null
+                //       : controller.healthGoal,
+                //   options: controller.healthGoalData
+                //       ?.map((goal) => goal.title)
+                //       .toSet() // Remove duplicates by converting to a Set
+                //       .toList() ??
+                //       [],
+                //   onChanged: (String? newValue) {
+                //     if (newValue != null) {
+                //       // Update the health goal
+                //       controller.updateHealthGoal(newValue);
+                //       print(controller.healthGoal);
+                //
+                //       // Find the selected goal object by matching the title
+                //       final selectedGoal = controller.healthGoalData?.firstWhere(
+                //             (goal) => goal.title == newValue,
+                //         orElse: () => MedicalRecord(title: '', description: '', ), // Return a default MedicalRecord
+                //       );
+                //
+                //       // Open dialog only if a valid goal is found
+                //       if (selectedGoal!.title.isNotEmpty && selectedGoal.description.isNotEmpty) {
+                //         Get.dialog(
+                //           HealthGoalDetailDialog(
+                //             title: selectedGoal.title,
+                //             description: selectedGoal.description,
+                //           ),
+                //         );
+                //       }
+                //     }
+                //   },
+                //   showTitle: false,
+                // ),
+            ListView(
+              padding: EdgeInsets.zero,
+              shrinkWrap: true, // To prevent overflow when inside a scrollable widget
+              physics: NeverScrollableScrollPhysics(),
+              children: controller.healthGoalData?.map((goal) {
+                return  Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: Theme.of(context).cardColor,
+                        side: BorderSide(color: Theme.of(context).primaryColor),
+                      ),
+                      onPressed: (){
+                    // Update the health goal
 
-                      // Find the selected goal object by matching the title
-                      final selectedGoal = controller.healthGoalData?.firstWhere(
-                            (goal) => goal.title == newValue,
-                        orElse: () => MedicalRecord(title: '', description: '', ), // Return a default MedicalRecord
-                      );
-
-                      // Open dialog only if a valid goal is found
-                      if (selectedGoal!.title.isNotEmpty && selectedGoal.description.isNotEmpty) {
-                        Get.dialog(
-                          HealthGoalDetailDialog(
-                            title: selectedGoal.title,
-                            description: selectedGoal.description,
-                          ),
-                        );
+                  }, child: RadioListTile<String>(
+                    visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                    value: goal.title,
+                    groupValue: controller.healthGoal,
+                    title: Text(goal.title),
+                    onChanged: (String? newValue) {
+                      if (newValue != null) {
+                        controller.updateHealthGoal(newValue);
+                        print(controller.healthGoal);
                       }
-                    }
-                  },
-                  showTitle: false,
-                ),
+                    },
+                  )),
+                );
 
+              }).toList() ?? [],
 
+            ),
               ],
             ),
           )
