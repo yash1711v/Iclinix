@@ -37,7 +37,7 @@ class DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-
+    _drawerCallback();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Get.find<AuthController>().userDataApi();
     });
@@ -59,6 +59,17 @@ class DashboardScreenState extends State<DashboardScreen> {
     setState(() {});
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  void _drawerCallback() {
+    if (_scaffoldKey.currentState?.isDrawerOpen ?? false) {
+      print('Drawer is opened');
+      // Perform action when the drawer is opened
+    } else {
+      print('Drawer is closed');
+      // Perform action when the drawer is closed
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -74,6 +85,7 @@ class DashboardScreenState extends State<DashboardScreen> {
         onWillPop: Get.find<AuthController>().handleOnWillPop,
         child: SafeArea(
           child: Scaffold(
+            key: _scaffoldKey,
             floatingActionButton: FloatingActionButton(
               onPressed: () {
                 Get.toNamed(RouteHelper.getChatRoute());

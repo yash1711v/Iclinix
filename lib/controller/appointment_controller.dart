@@ -689,6 +689,34 @@ class AppointmentController extends GetxController implements GetxService {
     update();
   }
 
+  bool _isCancellingLoading = false;
+
+  bool get isCancellingLoading => _isCancellingLoading;
+
+  Future<void> getCancelling(String id) async {
+    _isCancellingLoading = true;
+    LoadingDialog.showLoading(message: "Please wait...");
+    update();
+
+    try {
+      Response response = await appointmentRepo.cancellationApi(id);
+
+      if (response.statusCode == 200) {
+       debugPrint('Response===>: ${response.body}');
+       _isCancellingLoading = false;
+      } else {
+        _isCancellingLoading = false;
+        print(
+            "Error while fetching appointment history. Status code: ${response.statusCode} - ${response.statusText}");
+      }
+    } catch (error) {
+      print("Error while fetching appointment history: $error");
+    } finally {
+      _isAppointmentHistoryLoading = false;
+      LoadingDialog.hideLoading();
+      update();
+    }
+  }
 
 
 }

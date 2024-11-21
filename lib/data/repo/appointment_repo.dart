@@ -91,6 +91,12 @@ class AppointmentRepo {
   Future<Response> postDataBack( Map<String, dynamic> requestBody) {
     return apiClient.postData(AppConstants.postDataBack,requestBody);
   }
+  Future<Response> cancellationApi(String id) {
+    var body = {
+      'appt_id' : id
+    };
+    return apiClient.postData(AppConstants.cancellation,body);
+  }
 
   Future<Response> purchasePlanApi(String? patientId,
       String? planId,

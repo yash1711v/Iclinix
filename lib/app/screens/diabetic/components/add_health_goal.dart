@@ -1,7 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iclinix/app/widget/custom_button_widget.dart';
-import 'package:iclinix/app/widget/custom_card_container.dart';
+
 import 'package:iclinix/app/widget/custom_containers.dart';
 import 'package:iclinix/app/widget/custom_textfield.dart';
 import 'package:iclinix/app/widget/decorated_add_button.dart';
@@ -11,24 +13,49 @@ import 'package:iclinix/utils/sizeboxes.dart';
 import 'package:iclinix/utils/styles.dart';
 import 'package:get/get.dart';
 
-import '../../../../data/models/response/health_goal_model.dart';
-import '../../../widget/custom_dropdown_field.dart';
 import 'health_goal_detail_dialog.dart';
 
-class AddHealthGoal extends StatelessWidget {
+class AddHealthGoal extends StatefulWidget {
    AddHealthGoal({super.key});
-  final ScrollController _scrollController = ScrollController();
-  @override
-  Widget build(BuildContext context) {
 
+  @override
+  State<AddHealthGoal> createState() => _AddHealthGoalState();
+}
+
+class _AddHealthGoalState extends State<AddHealthGoal> {
+  late ScrollController  _scrollController;
+
+  List<Color> colors = [const Color(0xFFF8F8DF), const Color(0xFFE3FFE1), const Color(0xFFFFE8FC), const Color(0xFFFFE6E9)];
+
+   // Random random = Random();
+   final Random random = Random();
+
+   final Map<String, Color> goalColors = {};
+ // To store goal title and its assigned color
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _scrollController = ScrollController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Get.find<DiabeticController>().getHealthGoalApi();
     });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+  @override
+  Widget build(BuildContext context) {
 
     return GetBuilder<DiabeticController>(builder: (controller) {
       return Column(
         children: [
           CustomDecoratedContainer(
+            height: 200,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -42,12 +69,14 @@ class AddHealthGoal extends StatelessWidget {
                     ),
                     DecoratedAddButton(
                       tap: () {
-                        Get.dialog(AddHealthGoalDialog());
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          Get.dialog(AddHealthGoalDialog());
+                        });
                       },
                     ),
                   ],
                 ),
-               SizedBox(height: 10,),
+               const SizedBox(height: 10,),
                 // CustomDropdownField(
                 //   hintText: 'Goal',
                 //   selectedValue: controller.healthGoal?.isEmpty ?? true
@@ -87,31 +116,54 @@ class AddHealthGoal extends StatelessWidget {
                   height: 120,
                   child: Scrollbar(
                     controller: _scrollController,
-                    thumbVisibility: true,
-                    child: ListView(
+                    thumbVisibility: true, // Always show the scroll indicator
+                    child: ListView.builder(
                       padding: EdgeInsets.zero,
                       controller: _scrollController,
-                      shrinkWrap: true, //o prevent overflow when inside a scrollable widget
-                      children: controller.healthGoalData?.map((goal) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 4.0),
-                              child: InkWell(
-                                onTap: () {
-                                  Get.dialog(
-                                    HealthGoalDetailDialog(
-                                      title: goal.title,
-                                      description: goal.description,
-                                    ),
-                                  );
-                                },
-                                child: Text(goal.title,style: TextStyle(
-                                  fontSize: Dimensions.fontSizeDefault,
-                                  color: Theme.of(context).disabledColor,
-                                ),),
+                      shrinkWrap: true, // Prevent overflow when inside a scrollable widget
+                      itemCount: controller.healthGoalData?.length ?? 0,
+                      itemBuilder: (context, index) {
+                        final goal = controller.healthGoalData![index];
+                        return InkWell(
+                          onTap: () {
+                            Get.dialog(
+                              HealthGoalDetailDialog(
+                                title: goal.title,
+                                description: goal.description,
                               ),
                             );
-                          }).toList() ??
-                          [],
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 10.0,top: 4),
+                            child: Container(
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: colors[index % colors.length], // Cycle through colors
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      goal.title,
+                                      style: TextStyle(
+                                        fontSize: Dimensions.fontSizeDefault,
+                                        color: Theme.of(context).disabledColor,
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    Icon(
+                                      Icons.arrow_forward_ios_rounded,
+                                      color: Theme.of(context).disabledColor,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -217,7 +269,9 @@ class AddHealthGoalDialog extends StatelessWidget {
                                     if (_formKey.currentState!.validate()) {
                                       controller.addHealthGoalApi(
                                           titleController.text,
-                                          descriptionController.text);
+                                          descriptionController.text).then((value) {
+
+                                      });
                                       Navigator.pop(context);
                                     }
                                   },

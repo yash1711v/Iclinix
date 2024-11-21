@@ -42,17 +42,21 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
   bool isDownloading = false;
 
   Future<void> downloadFile(String url, String fileName) async {
+
     debugPrint("Downloading file from $url");
     setState(() {
       progress = 0.0;
       isDownloading = true;
     });
+    LoadingDialog.showLoading(message: "Completed: $progress");
 
     Directory? downloadsDir;
     if (Platform.isAndroid) {
-      downloadsDir = Directory('/storage/emulated/0/Download'); // Android Downloads folder
+      downloadsDir =
+          Directory('/storage/emulated/0/Download'); // Android Downloads folder
     } else if (Platform.isIOS) {
-      downloadsDir = await getApplicationDocumentsDirectory(); // iOS app-specific folder
+      downloadsDir =
+          await getApplicationDocumentsDirectory(); // iOS app-specific folder
     }
 
     final filePath = "${downloadsDir?.path}/${fileName}";
@@ -80,6 +84,7 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
       // Open the downloaded file
       // OpenFile.open(filePath);
 
+      LoadingDialog.hideLoading();
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -104,7 +109,6 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
           );
         },
       );
-
     } catch (e) {
       setState(() {
         isDownloading = false;
@@ -112,7 +116,6 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
       print("Download failed: $e");
     }
   }
-
 
   @override
   void initState() {
@@ -160,144 +163,162 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                 )),
             body: isListEmpty
                 ? Column(
-                  children: [
-                    TabBar(
-                      controller: _tabController,
-                      indicatorColor: Theme.of(context).primaryColor,
-                      labelColor: Theme.of(context).primaryColor,
-                      dividerColor: Colors.grey,
-                      unselectedLabelColor: Colors.grey,
-                      tabs: [
-                        Tab(
-                          text: 'Appointments',
-                        ),
-                        Tab(
-                          text: 'Prescriptions',
-                        ),
-                      ],
-                    ),
-                    Divider(
-                      color: Colors.grey, // Color of the divider
-                      thickness: 1, // Thickness of the divider
-                      height: 1, // Space taken by the divider
-                    ),
-                    sizedBox10(),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 4),
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              appointmentControl.setisComing(!appointmentControl.isComing!);
-                              appointmentControl.setisVisiting(false);
-                              appointmentControl.setisCancelled(false);
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                Get.find<AppointmentController>().getAppointmentHistory();
-                              });
-                            },
-                            child: Container(
-                              width: 83.64,
-                              height: 33,
-                              decoration: ShapeDecoration(
-                                color: Color(0x262CC229),
-                                shape: RoundedRectangleBorder(
-                                  side: BorderSide(
-                                      width: appointmentControl.isComing!?2:0, color: Color(0xFF2CC229)),
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                              ),
-                              child: Center(child: Text(
-                                'Upcoming',
-                                style: TextStyle(
-                                  color: Color(0xFF2CC229),
-                                  fontSize: 13,
-                                  fontFamily: 'Open Sans',
-                                  fontWeight: FontWeight.w400,
-                                  height: 0,
-                                  letterSpacing: -0.26,
-                                ),
-                              )),
-                            ),
+                    children: [
+                      TabBar(
+                        controller: _tabController,
+                        indicatorColor: Theme.of(context).primaryColor,
+                        labelColor: Theme.of(context).primaryColor,
+                        dividerColor: Colors.grey,
+                        unselectedLabelColor: Colors.grey,
+                        tabs: [
+                          Tab(
+                            text: 'Appointments',
                           ),
-                          SizedBox(width: 10,),
-                          GestureDetector(
-                            onTap: () {
-                              appointmentControl.setisVisiting(!appointmentControl.isVisiting!);
-                              appointmentControl.setisComing(false);
-                              appointmentControl.setisCancelled(false);
-                              appointmentControl.setAppointmentHistoryList([]);
-                            },
-                            child: Container(
-                              width: 83.64,
-                              height: 33,
-                              decoration: ShapeDecoration(
-                                color: Color(0x26294BC2),
-                                shape: RoundedRectangleBorder(
-                                  side: BorderSide(width: appointmentControl.isVisiting!?2:0, color: Color(0xFF294BC2)),
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                              ),
-                              child: Center(child: Text(
-                                'Pending',
-                                style: TextStyle(
-                                  color: Color(0xFF294BC2),
-                                  fontSize: 13,
-                                  fontFamily: 'Open Sans',
-                                  fontWeight: FontWeight.w400,
-                                  height: 0,
-                                  letterSpacing: -0.26,
-                                ),
-                              )),
-                            ),
-                          ),
-                          SizedBox(width: 10,),
-                          GestureDetector(
-                            onTap: () {
-                              appointmentControl.setisVisiting(false);
-                              appointmentControl.setisComing(false);
-                              appointmentControl.setisCancelled(!appointmentControl.isCancelled!);
-                              appointmentControl.setAppointmentHistoryList([]);
-                            },
-                            child: Container(
-                              width: 83.64,
-                              height: 33,
-                              decoration: ShapeDecoration(
-                                color: Color(0x26DD2025),
-                                shape: RoundedRectangleBorder(
-                                  side: BorderSide(width: appointmentControl.isCancelled!?2:0, color: Color(0xFFDD2025)),
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                              ),
-                              child: Center(child: Text(
-                                'Cancelled',
-                                style: TextStyle(
-                                  color: Color(0xFFDD2025),
-                                  fontSize: 13,
-                                  fontFamily: 'Open Sans',
-                                  fontWeight: FontWeight.w400,
-                                  height: 0,
-                                  letterSpacing: -0.26,
-                                ),
-                              )),
-                            ),
+                          Tab(
+                            text: 'Prescriptions',
                           ),
                         ],
                       ),
-                    ),
-                    sizedBox20(),
-                    Padding(
-                        padding:
-                            const EdgeInsets.only(top: 200),
+                      Divider(
+                        color: Colors.grey, // Color of the divider
+                        thickness: 1, // Thickness of the divider
+                        height: 1, // Space taken by the divider
+                      ),
+                      sizedBox10(),
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(
+                      //       horizontal: 16.0, vertical: 4),
+                      //   child: Row(
+                      //     children: [
+                      //       GestureDetector(
+                      //         onTap: () {
+                      //           appointmentControl
+                      //               .setisComing(!appointmentControl.isComing!);
+                      //           appointmentControl.setisVisiting(false);
+                      //           appointmentControl.setisCancelled(false);
+                      //
+                      //         },
+                      //         child: Container(
+                      //           width: 83.64,
+                      //           height: 33,
+                      //           decoration: ShapeDecoration(
+                      //             color: Color(0x262CC229),
+                      //             shape: RoundedRectangleBorder(
+                      //               side: BorderSide(
+                      //                   width: appointmentControl.isComing!
+                      //                       ? 2
+                      //                       : 0,
+                      //                   color: Color(0xFF2CC229)),
+                      //               borderRadius: BorderRadius.circular(50),
+                      //             ),
+                      //           ),
+                      //           child: Center(
+                      //               child: Text(
+                      //             'Upcoming',
+                      //             style: TextStyle(
+                      //               color: Color(0xFF2CC229),
+                      //               fontSize: 13,
+                      //               fontFamily: 'Open Sans',
+                      //               fontWeight: FontWeight.w400,
+                      //               height: 0,
+                      //               letterSpacing: -0.26,
+                      //             ),
+                      //           )),
+                      //         ),
+                      //       ),
+                      //       SizedBox(
+                      //         width: 10,
+                      //       ),
+                      //       GestureDetector(
+                      //         onTap: () {
+                      //           appointmentControl.setisVisiting(
+                      //               !appointmentControl.isVisiting!);
+                      //           appointmentControl.setisComing(false);
+                      //           appointmentControl.setisCancelled(false);
+                      //         },
+                      //         child: Container(
+                      //           width: 83.64,
+                      //           height: 33,
+                      //           decoration: ShapeDecoration(
+                      //             color: Color(0x26294BC2),
+                      //             shape: RoundedRectangleBorder(
+                      //               side: BorderSide(
+                      //                   width: appointmentControl.isVisiting!
+                      //                       ? 2
+                      //                       : 0,
+                      //                   color: Color(0xFF294BC2)),
+                      //               borderRadius: BorderRadius.circular(50),
+                      //             ),
+                      //           ),
+                      //           child: Center(
+                      //               child: Text(
+                      //             'Pending',
+                      //             style: TextStyle(
+                      //               color: Color(0xFF294BC2),
+                      //               fontSize: 13,
+                      //               fontFamily: 'Open Sans',
+                      //               fontWeight: FontWeight.w400,
+                      //               height: 0,
+                      //               letterSpacing: -0.26,
+                      //             ),
+                      //           )),
+                      //         ),
+                      //       ),
+                      //       SizedBox(
+                      //         width: 10,
+                      //       ),
+                      //       GestureDetector(
+                      //         onTap: () {
+                      //           appointmentControl.setisVisiting(false);
+                      //           appointmentControl.setisComing(false);
+                      //           appointmentControl.setisCancelled(
+                      //               !appointmentControl.isCancelled!);
+                      //         },
+                      //         child: Container(
+                      //           width: 83.64,
+                      //           height: 33,
+                      //           decoration: ShapeDecoration(
+                      //             color: Color(0x26DD2025),
+                      //             shape: RoundedRectangleBorder(
+                      //               side: BorderSide(
+                      //                   width: appointmentControl.isCancelled!
+                      //                       ? 2
+                      //                       : 0,
+                      //                   color: Color(0xFFDD2025)),
+                      //               borderRadius: BorderRadius.circular(50),
+                      //             ),
+                      //           ),
+                      //           child: Center(
+                      //               child: Text(
+                      //             'Cancelled',
+                      //             style: TextStyle(
+                      //               color: Color(0xFFDD2025),
+                      //               fontSize: 13,
+                      //               fontFamily: 'Open Sans',
+                      //               fontWeight: FontWeight.w400,
+                      //               height: 0,
+                      //               letterSpacing: -0.26,
+                      //             ),
+                      //           )),
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      // sizedBox20(),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 200),
                         child: Center(
                           child: EmptyDataWidget(
-                            text: 'Nothing Available', // Change this text if needed
+                            text:
+                                'Nothing Available', // Change this text if needed
                             image: Images.icEmptyDataHolder,
                             fontColor: Theme.of(context).disabledColor,
                           ),
                         ),
                       ),
-                  ],
-                )
+                    ],
+                  )
                 : Column(
                     children: [
                       TabBar(
@@ -325,110 +346,134 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                         child: SingleChildScrollView(
                           child: Column(
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 4),
-                                child: Row(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        appointmentControl.setisComing(!appointmentControl.isComing!);
-                                        appointmentControl.setisVisiting(false);
-                                        appointmentControl.setisCancelled(false);
-                                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                                          Get.find<AppointmentController>().getAppointmentHistory();
-                                        });
-                                      },
-                                      child: Container(
-                                        width: 83.64,
-                                        height: 33,
-                                        decoration: ShapeDecoration(
-                                          color: Color(0x262CC229),
-                                          shape: RoundedRectangleBorder(
-                                            side: BorderSide(
-                                                width: appointmentControl.isComing!?2:0, color: Color(0xFF2CC229)),
-                                            borderRadius: BorderRadius.circular(50),
-                                          ),
-                                        ),
-                                        child: Center(child: Text(
-                                          'Upcoming',
-                                          style: TextStyle(
-                                            color: Color(0xFF2CC229),
-                                            fontSize: 13,
-                                            fontFamily: 'Open Sans',
-                                            fontWeight: FontWeight.w400,
-                                            height: 0,
-                                            letterSpacing: -0.26,
-                                          ),
-                                        )),
-                                      ),
-                                    ),
-                                    SizedBox(width: 10,),
-                                    GestureDetector(
-                                      onTap: () {
-                                        appointmentControl.setisVisiting(!appointmentControl.isVisiting!);
-                                        appointmentControl.setisComing(false);
-                                        appointmentControl.setisCancelled(false);
-                                        appointmentControl.setAppointmentHistoryList([]);
-                                      },
-                                      child: Container(
-                                        width: 83.64,
-                                        height: 33,
-                                        decoration: ShapeDecoration(
-                                          color: Color(0x26294BC2),
-                                          shape: RoundedRectangleBorder(
-                                            side: BorderSide(width: appointmentControl.isVisiting!?2:0, color: Color(0xFF294BC2)),
-                                            borderRadius: BorderRadius.circular(50),
-                                          ),
-                                        ),
-                                        child: Center(child: Text(
-                                          'Pending',
-                                          style: TextStyle(
-                                            color: Color(0xFF294BC2),
-                                            fontSize: 13,
-                                            fontFamily: 'Open Sans',
-                                            fontWeight: FontWeight.w400,
-                                            height: 0,
-                                            letterSpacing: -0.26,
-                                          ),
-                                        )),
-                                      ),
-                                    ),
-                                    SizedBox(width: 10,),
-                                    GestureDetector(
-                                      onTap: () {
-                                        appointmentControl.setisVisiting(false);
-                                        appointmentControl.setisComing(false);
-                                        appointmentControl.setisCancelled(!appointmentControl.isCancelled!);
-                                        appointmentControl.setAppointmentHistoryList([]);
-                                      },
-                                      child: Container(
-                                        width: 83.64,
-                                        height: 33,
-                                        decoration: ShapeDecoration(
-                                          color: Color(0x26DD2025),
-                                          shape: RoundedRectangleBorder(
-                                            side: BorderSide(width: appointmentControl.isCancelled!?2:0, color: Color(0xFFDD2025)),
-                                            borderRadius: BorderRadius.circular(50),
-                                          ),
-                                        ),
-                                        child: Center(child: Text(
-                                          'Cancelled',
-                                          style: TextStyle(
-                                            color: Color(0xFFDD2025),
-                                            fontSize: 13,
-                                            fontFamily: 'Open Sans',
-                                            fontWeight: FontWeight.w400,
-                                            height: 0,
-                                            letterSpacing: -0.26,
-                                          ),
-                                        )),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              sizedBox20(),
-
+                              // Padding(
+                              //   padding: const EdgeInsets.symmetric(
+                              //       horizontal: 16.0, vertical: 4),
+                              //   child: Row(
+                              //     children: [
+                              //       GestureDetector(
+                              //         onTap: () {
+                              //           appointmentControl.setisComing(
+                              //               !appointmentControl.isComing!);
+                              //           appointmentControl.setisVisiting(false);
+                              //           appointmentControl
+                              //               .setisCancelled(false);
+                              //         },
+                              //         child: Container(
+                              //           width: 83.64,
+                              //           height: 33,
+                              //           decoration: ShapeDecoration(
+                              //             color: Color(0x262CC229),
+                              //             shape: RoundedRectangleBorder(
+                              //               side: BorderSide(
+                              //                   width:
+                              //                       appointmentControl.isComing!
+                              //                           ? 2
+                              //                           : 0,
+                              //                   color: Color(0xFF2CC229)),
+                              //               borderRadius:
+                              //                   BorderRadius.circular(50),
+                              //             ),
+                              //           ),
+                              //           child: Center(
+                              //               child: Text(
+                              //             'Upcoming',
+                              //             style: TextStyle(
+                              //               color: Color(0xFF2CC229),
+                              //               fontSize: 13,
+                              //               fontFamily: 'Open Sans',
+                              //               fontWeight: FontWeight.w400,
+                              //               height: 0,
+                              //               letterSpacing: -0.26,
+                              //             ),
+                              //           )),
+                              //         ),
+                              //       ),
+                              //       SizedBox(
+                              //         width: 10,
+                              //       ),
+                              //       GestureDetector(
+                              //         onTap: () {
+                              //           appointmentControl.setisVisiting(
+                              //               !appointmentControl.isVisiting!);
+                              //           appointmentControl.setisComing(false);
+                              //           appointmentControl
+                              //               .setisCancelled(false);
+                              //         },
+                              //         child: Container(
+                              //           width: 83.64,
+                              //           height: 33,
+                              //           decoration: ShapeDecoration(
+                              //             color: Color(0x26294BC2),
+                              //             shape: RoundedRectangleBorder(
+                              //               side: BorderSide(
+                              //                   width: appointmentControl
+                              //                           .isVisiting!
+                              //                       ? 2
+                              //                       : 0,
+                              //                   color: Color(0xFF294BC2)),
+                              //               borderRadius:
+                              //                   BorderRadius.circular(50),
+                              //             ),
+                              //           ),
+                              //           child: Center(
+                              //               child: Text(
+                              //             'Pending',
+                              //             style: TextStyle(
+                              //               color: Color(0xFF294BC2),
+                              //               fontSize: 13,
+                              //               fontFamily: 'Open Sans',
+                              //               fontWeight: FontWeight.w400,
+                              //               height: 0,
+                              //               letterSpacing: -0.26,
+                              //             ),
+                              //           )),
+                              //         ),
+                              //       ),
+                              //       SizedBox(
+                              //         width: 10,
+                              //       ),
+                              //       GestureDetector(
+                              //         onTap: () {
+                              //           appointmentControl.setisVisiting(false);
+                              //           appointmentControl.setisComing(false);
+                              //           appointmentControl.setisCancelled(
+                              //               !appointmentControl.isCancelled!);
+                              //
+                              //         },
+                              //         child: Container(
+                              //           width: 83.64,
+                              //           height: 33,
+                              //           decoration: ShapeDecoration(
+                              //             color: Color(0x26DD2025),
+                              //             shape: RoundedRectangleBorder(
+                              //               side: BorderSide(
+                              //                   width: appointmentControl
+                              //                           .isCancelled!
+                              //                       ? 2
+                              //                       : 0,
+                              //                   color: Color(0xFFDD2025)),
+                              //               borderRadius:
+                              //                   BorderRadius.circular(50),
+                              //             ),
+                              //           ),
+                              //           child: Center(
+                              //               child: Text(
+                              //             'Cancelled',
+                              //             style: TextStyle(
+                              //               color: Color(0xFFDD2025),
+                              //               fontSize: 13,
+                              //               fontFamily: 'Open Sans',
+                              //               fontWeight: FontWeight.w400,
+                              //               height: 0,
+                              //               letterSpacing: -0.26,
+                              //             ),
+                              //           )),
+                              //         ),
+                              //       ),
+                              //     ],
+                              //   ),
+                              // ),
                               ListView.builder(
                                 padding: EdgeInsets.zero,
                                 // separatorBuilder: (BuildContext context, int index) => sizedBox10(),
@@ -436,37 +481,38 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemCount: appointmentHistoryList.length,
                                 itemBuilder: (_, i) {
-                                  final appointment =
-                                  appointmentHistoryList[i];
+                                  final appointment = appointmentHistoryList[i];
                                   final patientAppointments =
                                       appointment.patientAppointments;
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal:
-                                        Dimensions.paddingSizeDefault),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        patientAppointments.isNotEmpty
-                                            ? ListView.separated(
-                                          padding: EdgeInsets.zero,
-                                          shrinkWrap: true,
-                                          physics:
-                                          const NeverScrollableScrollPhysics(),
-                                          itemCount: patientAppointments
-                                              .length,
-                                          itemBuilder: (_, j) {
-                                            final patientAppointment =
-                                            patientAppointments[j];
-                                            debugPrint(
-                                                'Patient Appointment: ${patientAppointments[j].branchName}');
-                                            return CustomDecoratedContainer(
+                                  return Visibility(
+                                      visible: patientAppointments.isNotEmpty,
+                                      child: ListView.builder(
+                                        padding: EdgeInsets.zero,
+                                        shrinkWrap: true,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemCount: patientAppointments.length,
+                                        itemBuilder: (_, j) {
+                                          final patientAppointment =
+                                              patientAppointments[j];
+                                          if (patientAppointments[j].status !=
+                                              0) {
+                                          } else {}
+
+                                          debugPrint(
+                                              'Patient Appointment: ${patientAppointments[j].branchName}');
+                                          return Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8.0, vertical: 5),
+                                            child: CustomDecoratedContainer(
+                                              verticalPadding: 0,
                                               child: Column(
                                                 crossAxisAlignment:
-                                                CrossAxisAlignment
-                                                    .start,
+                                                    CrossAxisAlignment.start,
                                                 children: [
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
                                                   Row(
                                                     children: [
                                                       Text(
@@ -475,9 +521,9 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                                                             .copyWith(
                                                           fontSize: Dimensions
                                                               .fontSize13,
-                                                          color: Theme.of(
-                                                              context)
-                                                              .primaryColor,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .primaryColor,
                                                         ),
                                                       ),
                                                       // Text(
@@ -493,16 +539,22 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                                                       GestureDetector(
                                                         onTap: () {
                                                           // Get.to(HealthRecordsScreen());
-                                                          // downloadFile();
+                                                          appointmentControl.getInvoice(
+                                                              patientAppointment
+                                                                  .id
+                                                                  .toString()).then((value) {
+                                                                    if(appointmentControl.apptId != null && appointmentControl.apptId != ""){
+                                                                      downloadFile(appointmentControl.apptId, 'invoice.pdf');
+                                                                    }
+
+                                                          });
+
                                                         },
-                                                        child: Text(
-                                                          'Download',
-                                                          style: openSansBold
-                                                              .copyWith(
-                                                            fontSize: Dimensions
-                                                                .fontSize13,
-                                                            color: Colors.red,
-                                                          ),
+                                                        child: Icon(
+                                                          Icons.download,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .primaryColor,
                                                         ),
                                                       ),
                                                     ],
@@ -512,43 +564,52 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                                                     children: [
                                                       Row(
                                                         crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                            CrossAxisAlignment
+                                                                .start,
                                                         children: [
                                                           CustomNetworkImageWidget(
                                                             height: 80,
                                                             width: 80,
-                                                            image: patientAppointment
-                                                                .branchImage,
+                                                            image:
+                                                                patientAppointment
+                                                                    .branchImage,
                                                           ),
                                                           sizedBoxW10(),
                                                           Expanded(
-                                                            child:
-                                                            Column(
+                                                            child: Column(
                                                               crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
+                                                                  CrossAxisAlignment
+                                                                      .start,
                                                               children: [
                                                                 RichText(
-                                                                  maxLines:
-                                                                  1,
+                                                                  maxLines: 1,
                                                                   overflow:
-                                                                  TextOverflow.ellipsis,
+                                                                      TextOverflow
+                                                                          .ellipsis,
                                                                   text:
-                                                                  TextSpan(
+                                                                      TextSpan(
                                                                     children: [
                                                                       TextSpan(
-                                                                        text: "Branch: ",
-                                                                        style: openSansRegular.copyWith(
-                                                                          fontSize: Dimensions.fontSize12,
-                                                                          color: Theme.of(context).primaryColor,
+                                                                        text:
+                                                                            "Branch: ",
+                                                                        style: openSansRegular
+                                                                            .copyWith(
+                                                                          fontSize:
+                                                                              Dimensions.fontSize12,
+                                                                          color:
+                                                                              Theme.of(context).primaryColor,
                                                                         ),
                                                                       ),
                                                                       TextSpan(
-                                                                        text: patientAppointment.branchName,
-                                                                        style: openSansBold.copyWith(
-                                                                          fontSize: Dimensions.fontSize13,
-                                                                          color: Theme.of(context).disabledColor.withOpacity(0.70),
+                                                                        text: patientAppointment
+                                                                            .branchName,
+                                                                        style: openSansBold
+                                                                            .copyWith(
+                                                                          fontSize:
+                                                                              Dimensions.fontSize13,
+                                                                          color: Theme.of(context)
+                                                                              .disabledColor
+                                                                              .withOpacity(0.70),
                                                                         ),
                                                                       ),
                                                                     ],
@@ -556,55 +617,112 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                                                                 ),
                                                                 sizedBox10(),
                                                                 RichText(
-                                                                  maxLines:
-                                                                  1,
+                                                                  maxLines: 1,
                                                                   overflow:
-                                                                  TextOverflow.ellipsis,
+                                                                      TextOverflow
+                                                                          .ellipsis,
                                                                   text:
-                                                                  TextSpan(
+                                                                      TextSpan(
                                                                     children: [
                                                                       TextSpan(
-                                                                        text: "Name: ",
-                                                                        style: openSansRegular.copyWith(
-                                                                          fontSize: Dimensions.fontSize12,
-                                                                          color: Theme.of(context).primaryColor,
+                                                                        text:
+                                                                            "Name: ",
+                                                                        style: openSansRegular
+                                                                            .copyWith(
+                                                                          fontSize:
+                                                                              Dimensions.fontSize12,
+                                                                          color:
+                                                                              Theme.of(context).primaryColor,
                                                                         ),
                                                                       ),
                                                                       TextSpan(
-                                                                        text: '${appointment.firstName} ${appointment.lastName}',
-                                                                        style: openSansBold.copyWith(
-                                                                          fontSize: Dimensions.fontSize13,
-                                                                          color: Theme.of(context).disabledColor.withOpacity(0.70),
+                                                                        text:
+                                                                            '${appointment.firstName} ${appointment.lastName}',
+                                                                        style: openSansBold
+                                                                            .copyWith(
+                                                                          fontSize:
+                                                                              Dimensions.fontSize13,
+                                                                          color: Theme.of(context)
+                                                                              .disabledColor
+                                                                              .withOpacity(0.70),
                                                                         ),
                                                                       ),
                                                                     ],
                                                                   ),
                                                                 ),
                                                                 sizedBox10(),
-                                                                RichText(
-                                                                  maxLines:
-                                                                  1,
-                                                                  overflow:
-                                                                  TextOverflow.ellipsis,
-                                                                  text:
-                                                                  TextSpan(
-                                                                    children: [
-                                                                      TextSpan(
-                                                                        text: "Patient Id: ",
-                                                                        style: openSansRegular.copyWith(
-                                                                          fontSize: Dimensions.fontSize12,
-                                                                          color: Theme.of(context).primaryColor,
+                                                                Row(
+                                                                  children: [
+                                                                    RichText(
+                                                                      maxLines: 1,
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      text:
+                                                                          TextSpan(
+                                                                        children: [
+                                                                          TextSpan(
+                                                                            text:
+                                                                                "Status: ",
+                                                                            style: openSansRegular
+                                                                                .copyWith(
+                                                                              fontSize:
+                                                                                  Dimensions.fontSize12,
+                                                                              color:
+                                                                                  Theme.of(context).primaryColor,
+                                                                            ),
+                                                                          ),
+                                                                          TextSpan(
+                                                                            text: patientAppointment.status ==
+                                                                                    0
+                                                                                ? "Failed"
+                                                                                : patientAppointment.status == 1
+                                                                                    ? "Confirmed"
+                                                                                    : patientAppointment.status == 2
+                                                                                        ? "Cancelled"
+                                                                                        : "Pending",
+                                                                            style: openSansBold
+                                                                                .copyWith(
+                                                                              fontSize:
+                                                                                  Dimensions.fontSize13,
+                                                                              color: patientAppointment.status ==
+                                                                                  0
+                                                                                  ? Colors.red
+                                                                                  : patientAppointment.status == 1
+                                                                                  ? Colors.green
+                                                                                  : patientAppointment.status == 2
+                                                                                  ? Colors.red
+                                                                                  : Theme.of(context)
+                                                                                  .disabledColor
+                                                                                  .withOpacity(0.70),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                    Spacer(),
+                                                                    Visibility(
+                                                                      visible:
+                                                                      patientAppointment
+                                                                          .status !=
+                                                                          2,
+                                                                      child: GestureDetector(
+                                                                        onTap: () {
+                                                                          appointmentControl.getCancelling(
+                                                                              patientAppointment
+                                                                                  .id
+                                                                                  .toString());
+                                                                        },
+                                                                        child: Text("Cancel",
+                                                                          style: TextStyle(
+                                                                            color: Colors.red,
+                                                                            fontSize: 14,
+                                                                            fontWeight: FontWeight.bold,
+                                                                          ),
                                                                         ),
                                                                       ),
-                                                                      TextSpan(
-                                                                        text: patientAppointment.patientId.toString(),
-                                                                        style: openSansBold.copyWith(
-                                                                          fontSize: Dimensions.fontSize13,
-                                                                          color: Theme.of(context).disabledColor.withOpacity(0.70),
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
+                                                                    ),
+                                                                  ],
                                                                 ),
                                                                 sizedBox10(),
 
@@ -640,71 +758,73 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                                                       sizedBoxDefault(),
                                                       Row(
                                                         children: [
-                                                          Expanded(
-                                                            child: CustomButtonWidget(
-                                                              textColor: Theme.of(
-                                                                  context)
-                                                                  .primaryColor,
-                                                              buttonText:
-                                                              'Reschedule',
-                                                              onPressed: () {
-                                                                // Get.to(
-                                                                //     AppointmentDetailsScreen(
-                                                                //       appointmentHistoryModel:
-                                                                //       appointmentHistoryList[
-                                                                //       i],
-                                                                //     ));
-                                                              },
-                                                              height: 40,
-                                                              isBold: false,
-                                                              fontSize: Dimensions
-                                                                  .paddingSizeDefault,
-                                                              color: Colors.white
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            width: 10,
-                                                          ),
-                                                          Expanded(
-                                                            child: CustomButtonWidget(
-                                                              buttonText:
-                                                              'Cancel',
-                                                              onPressed: () {
-                                                              },
-                                                              height: 40,
-                                                              isBold: false,
-                                                              fontSize: Dimensions
-                                                                  .paddingSizeDefault,
-                                                              color: Theme.of(
-                                                                  context)
-                                                                  .primaryColor,
-                                                            ),
-                                                          ),
+                                                          // Expanded(
+                                                          //   child: CustomButtonWidget(
+                                                          //     textColor: Theme.of(
+                                                          //         context)
+                                                          //         .primaryColor,
+                                                          //     buttonText:
+                                                          //     'Reschedule',
+                                                          //     onPressed: () {
+                                                          //       // Get.to(
+                                                          //       //     AppointmentDetailsScreen(
+                                                          //       //       appointmentHistoryModel:
+                                                          //       //       appointmentHistoryList[
+                                                          //       //       i],
+                                                          //       //     ));
+                                                          //     },
+                                                          //     height: 40,
+                                                          //     isBold: false,
+                                                          //     fontSize: Dimensions
+                                                          //         .paddingSizeDefault,
+                                                          //     color: Colors.white
+                                                          //   ),
+                                                          // ),
+                                                          // SizedBox(
+                                                          //   width: 10,
+                                                          // ),
+                                                          // Visibility(
+                                                          //   visible:
+                                                          //   patientAppointment
+                                                          //       .status !=
+                                                          //       2,
+                                                          //   child: Expanded(
+                                                          //     child:
+                                                          //     CustomButtonWidget(
+                                                          //       buttonText:
+                                                          //       'Cancel',
+                                                          //       onPressed:
+                                                          //           () {
+                                                          //         appointmentControl.getCancelling(
+                                                          //             patientAppointment
+                                                          //                 .id
+                                                          //                 .toString());
+                                                          //       },
+                                                          //       height: 40,
+                                                          //       isBold:
+                                                          //       false,
+                                                          //       fontSize:
+                                                          //       Dimensions
+                                                          //           .paddingSizeDefault,
+                                                          //       color: Theme.of(
+                                                          //           context)
+                                                          //           .primaryColor,
+                                                          //     ),
+                                                          //   ),
+                                                          // ),
                                                         ],
                                                       )
                                                     ],
                                                   ),
                                                 ],
                                               ),
-                                            );
-                                          },
-                                          separatorBuilder:
-                                              (BuildContext context,
-                                              int index) =>
-                                              sizedBox10(),
-                                        )
-                                            : const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: Dimensions
-                                                  .paddingSizeDefault),
-                                          child:
-                                          Center(child: Text('')),
-                                        ),
-                                      ],
-                                    ),
-                                  );
+                                            ),
+                                          );
+                                        },
+                                      ));
                                 },
                               ),
+                              SizedBox(height: 100)
                             ],
                           ),
                         ),

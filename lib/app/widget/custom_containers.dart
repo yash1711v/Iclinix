@@ -8,12 +8,14 @@ class CustomDecoratedContainer extends StatelessWidget {
   final Color? color;
   final double ? verticalPadding;
   final double ? horizontalPadding;
-  const CustomDecoratedContainer({super.key, required this.child, this.color, this.verticalPadding, this.horizontalPadding});
+  final double ? height;
+  const CustomDecoratedContainer({super.key, required this.child, this.color, this.verticalPadding, this.horizontalPadding, this.height});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: Get.size.width,
+      height: height??0,
       padding:  EdgeInsets.symmetric(vertical: verticalPadding ?? Dimensions.paddingSizeDefault,
       horizontal:horizontalPadding ?? Dimensions.paddingSizeDefault, ),
       decoration: BoxDecoration(

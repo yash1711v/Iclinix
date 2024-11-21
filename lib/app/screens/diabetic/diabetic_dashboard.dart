@@ -23,15 +23,28 @@ import 'components/health_parameter_dialog.dart';
 import 'components/resources_component.dart';
 
 
-class DiabeticDashboard extends StatelessWidget {
+class DiabeticDashboard extends StatefulWidget {
   DiabeticDashboard({super.key});
-  final GlobalKey<SliderDrawerWidgetState> drawerKey = GlobalKey<SliderDrawerWidgetState>();
+
   @override
-  Widget build(BuildContext context) {
+  State<DiabeticDashboard> createState() => _DiabeticDashboardState();
+}
+
+class _DiabeticDashboardState extends State<DiabeticDashboard> {
+  final GlobalKey<SliderDrawerWidgetState> drawerKey = GlobalKey<SliderDrawerWidgetState>();
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Get.find<DiabeticController>().getDiabeticDashboard();
 
     });
+  }
+  @override
+  Widget build(BuildContext context) {
     return SliderDrawerWidget(
       key: drawerKey,
       option: SliderDrawerOption(

@@ -14,9 +14,14 @@ import 'package:iclinix/utils/sizeboxes.dart';
 import 'package:iclinix/utils/styles.dart';
 import 'package:get/get.dart';
 
-class CustomDrawer extends StatelessWidget {
+class CustomDrawer extends StatefulWidget {
   const CustomDrawer({Key? key}) : super(key: key);
 
+  @override
+  State<CustomDrawer> createState() => _CustomDrawerState();
+}
+
+class _CustomDrawerState extends State<CustomDrawer> {
   Widget _thumbnailPart() {
     return Row(
       children: [
@@ -36,58 +41,73 @@ class CustomDrawer extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Get.to(() => const DashboardScreen(pageIndex: 4));
-                        },
-                        child: Container(padding: const EdgeInsets.all(Dimensions.paddingSize10),
-                          height: 60,width: 60,clipBehavior: Clip.hardEdge,
-                          decoration:  const BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle
+                  GestureDetector(
+                    onTap: () {
+                      Get.to(() => const DashboardScreen(pageIndex: 4));
+                    },
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Get.to(() => const DashboardScreen(pageIndex: 4));
+                          },
+                          child: Container(padding: const EdgeInsets.all(Dimensions.paddingSize10),
+                            height: 60,width: 60,clipBehavior: Clip.hardEdge,
+                            decoration:  const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle
+                            ),
+                            child: Image.asset(Images.icProfilePlaceholder,
+                              height: 50,width: 50,fit: BoxFit.cover,),
                           ),
-                          child: Image.asset(Images.icProfilePlaceholder,
-                            height: 50,width: 50,fit: BoxFit.cover,),
                         ),
-                      ),
-                      sizedBoxW15(),
-                      Flexible(
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              controller.userData != null
-                                  ? '${controller.userData!.firstName} ${controller.userData!.lastName}'
-                                  : 'Iclinix',
-                              style: openSansSemiBold.copyWith(fontSize: Dimensions.fontSize18
-                                  ,
+                        sizedBoxW15(),
+                        GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () {
+                            Get.to(() => const DashboardScreen(pageIndex: 4));
+                          },
+                          child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              GestureDetector(
+                                behavior: HitTestBehavior.translucent,
+                                onTap: () {
+                                  Get.to(() => const DashboardScreen(pageIndex: 4));
+                                },
+                                child: Text(
+                                  controller.userData != null
+                                      ? '${controller.userData!.firstName} ${controller.userData!.lastName}'
+                                      : 'Iclinix',
+                                  style: openSansSemiBold.copyWith(fontSize: Dimensions.fontSize18
+                                      ,
 
-                              color: Colors.white),
-                            ),
-                            GestureDetector(
-                              behavior: HitTestBehavior.translucent,
-                              onTap: () {
-                                Get.to(() => const DashboardScreen(pageIndex: 4));
-                              },
-                              child: Row(
-                                children: [
-                                  Text('Edit Profile',
-                                    style: openSansLight.copyWith(fontSize: Dimensions.fontSize13,
-                                        color: Colors.white.withOpacity(0.80),),
-                                  ),
-                                  sizedBoxW5(),
-                                  Icon(Icons.edit_square ,
-                                    size:  Dimensions.fontSizeDefault,
-                                    color:  Colors.white.withOpacity(0.80), )
-                                ],
+                                  color: Colors.white),
+                                ),
                               ),
-                            ),
-                          ],
+                              GestureDetector(
+                                behavior: HitTestBehavior.translucent,
+                                onTap: () {
+                                  Get.to(() => const DashboardScreen(pageIndex: 4));
+                                },
+                                child: Row(
+                                  children: [
+                                    Text('Edit Profile',
+                                      style: openSansLight.copyWith(fontSize: Dimensions.fontSize13,
+                                          color: Colors.white.withOpacity(0.80),),
+                                    ),
+                                    sizedBoxW5(),
+                                    Icon(Icons.edit_square ,
+                                      size:  Dimensions.fontSizeDefault,
+                                      color:  Colors.white.withOpacity(0.80), )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
 
-                    ],
+                      ],
+                    ),
                   ),
                   // Image.network(height: 80,width: 80,
                   //     controller.userData!.image.toString()),
@@ -105,6 +125,20 @@ class CustomDrawer extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 15),
       height: 1,
       color: Colors.white.withOpacity(0.2));
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Get.find<AuthController>().updateBottomBarVisibility(false);
+  }
+
+  @override
+  void dispose() {
+    Get.find<AuthController>().updateBottomBarVisibility(true);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

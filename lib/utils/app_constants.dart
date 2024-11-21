@@ -22,6 +22,7 @@ class AppConstants {
   static const String serviceDetails = "service/";
   static const String addPatientDetails = "add-patient";
   static const String postDataBack = "android-webhook";
+  static const String cancellation = "cancel-appointment";
   static const String invoiceDownload = "appt-invoice/download/";
   static const String subscriptionCheckout = "subscription-checkout";
   static const String referEarn = "refer-earn/banners";

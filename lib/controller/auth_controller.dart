@@ -94,6 +94,14 @@ class AuthController extends GetxController implements GetxService {
   bool _isLoginLoading = false;
   bool get isLoginLoading => _isLoginLoading;
 
+ bool _isShowingBottomBar = true;
+  bool get isShowingBottomBar => _isShowingBottomBar;
+
+
+  void updateBottomBarVisibility(bool isVisible) {
+    _isShowingBottomBar = isVisible;
+    update();
+  }
   Future<void> sendOtpApi(String? phoneNo) async {
     _isLoginLoading = true;
     update();
