@@ -95,23 +95,31 @@ class DashboardScreenState extends State<DashboardScreen> {
             ),
             extendBody: true,
             resizeToAvoidBottomInset: false,
-            bottomNavigationBar: Container(
-              margin: const EdgeInsets.all(Dimensions.paddingSizeDefault),
-              padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSize8),
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-                borderRadius: BorderRadius.circular(Dimensions.radius20),
-              ),
-              child: Row(children: [
-                BottomNavItem(img: Images.icHome, isSelected: _pageIndex == 0, tap: () => _setPage(0), title: 'Home'),
-                BottomNavItem(img: Images.icDiabetic, isSelected: _pageIndex == 1, tap: () => _setPage(1), title: 'Diabetic'),
-                BottomNavItem(img: Images.icAppointment, isSelected: _pageIndex == 2, tap: () {
-                  Get.find<AppointmentController>().selectBookingType(false);
-                  _setPage(2);
-                }, title: 'Appointment'),
-                BottomNavItem(img: Images.icRecords, isSelected: _pageIndex == 3, tap: () => _setPage(3), title: 'Records'),
-                BottomNavItem(img: Images.icProfile, isSelected: _pageIndex == 4, tap: () => _setPage(4), title: 'Profile'),
-              ]),
+            bottomNavigationBar: GetBuilder<AuthController>(
+              builder: (GetxController controller) {
+                return  Visibility(
+                  visible: Get.find<AuthController>().isShowingBottomBar,
+                  child: Container(
+                    margin: const EdgeInsets.all(Dimensions.paddingSizeDefault),
+                    padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSize8),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.circular(Dimensions.radius20),
+                    ),
+                    child: Row(children: [
+                      BottomNavItem(img: Images.icHome, isSelected: _pageIndex == 0, tap: () => _setPage(0), title: 'Home'),
+                      BottomNavItem(img: Images.icDiabetic, isSelected: _pageIndex == 1, tap: () => _setPage(1), title: 'Diabetic'),
+                      BottomNavItem(img: Images.icAppointment, isSelected: _pageIndex == 2, tap: () {
+                        Get.find<AppointmentController>().selectBookingType(false);
+                        _setPage(2);
+                      }, title: 'Appointment'),
+                      BottomNavItem(img: Images.icRecords, isSelected: _pageIndex == 3, tap: () => _setPage(3), title: 'Records'),
+                      BottomNavItem(img: Images.icProfile, isSelected: _pageIndex == 4, tap: () => _setPage(4), title: 'Profile'),
+                    ]),
+                  ),
+                );
+              },
+
             ),
             body: AnnotatedRegion<SystemUiOverlayStyle>(
               value  : SystemUiOverlayStyle.light.copyWith(

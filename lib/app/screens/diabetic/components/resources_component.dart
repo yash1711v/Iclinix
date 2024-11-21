@@ -23,6 +23,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/widgets.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../appointment/booking_successful_screen.dart';
+
 
 class ResourcesComponent extends StatefulWidget {
   const ResourcesComponent({super.key});
@@ -125,7 +127,7 @@ class _ResourcesComponentState extends State<ResourcesComponent> {
         ),
         sizedBox10(),
         SizedBox(
-          height: 200,
+          height: 220,
           child: ListView.separated(
             padding: EdgeInsets.zero,
             itemCount: data.length,
@@ -134,37 +136,27 @@ class _ResourcesComponentState extends State<ResourcesComponent> {
             itemBuilder: (_, i) {
               final videoId = controller.extractVideoId(data[i].ytUrl!);
               final thumbnailUrl = 'https://img.youtube.com/vi/$videoId/0.jpg';
-              return Container(
-                height: 200,
-                width: 250,
-                clipBehavior: Clip.hardEdge,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).cardColor,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
-                  children: [
-                    Stack(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            print('ytUrl');
-                            // _launchURL(data[i].ytUrl.toString());
-                            showYouTubeVideoDialog(context, videoId);
-                            // Get.to(() => YoutubePlayerDialog(videoId: videoId));
-
-                          },
-                          child: CustomNetworkImageWidget(
-                            height: 150,
-                            image: thumbnailUrl,
-                          ),
-                        ),
-                        Positioned(
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          child: GestureDetector(
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 250,
+                  clipBehavior: Clip.hardEdge,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Theme.of(context).disabledColor.withOpacity(0.20),
+                        blurRadius: 5,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Stack(
+                        children: [
+                          GestureDetector(
                             onTap: () {
                               print('ytUrl');
                               // _launchURL(data[i].ytUrl.toString());
@@ -172,25 +164,47 @@ class _ResourcesComponentState extends State<ResourcesComponent> {
                               // Get.to(() => YoutubePlayerDialog(videoId: videoId));
 
                             },
-                            child: Icon(
-                              Icons.play_circle_fill_outlined,
-                              size: 60,
-                              color: Colors.redAccent.withOpacity(0.80),
+                            child: CustomNetworkImageWidget(
+                              height: 150,
+                              image: thumbnailUrl,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    sizedBox4(),
-                    Text(
-                      data[i].name.toString(),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: openSansMedium.copyWith(
-                        fontSize: Dimensions.fontSize13,
+                          Positioned(
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            child: GestureDetector(
+                              onTap: () {
+                                print('ytUrl');
+                                // _launchURL(data[i].ytUrl.toString());
+                                showYouTubeVideoDialog(context, videoId);
+                                // Get.to(() => YoutubePlayerDialog(videoId: videoId));
+
+                              },
+                              child: Icon(
+                                Icons.play_circle_fill_outlined,
+                                size: 60,
+                                color: Colors.redAccent.withOpacity(0.80),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                      sizedBox4(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Text(
+                          data[i].name.toString(),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: openSansMedium.copyWith(
+                            fontSize: Dimensions.fontSize13,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
@@ -214,61 +228,61 @@ class _ResourcesComponentState extends State<ResourcesComponent> {
         ),
         sizedBox10(),
         SizedBox(
-          height: 250,
+          height: 280,
           child: ListView.separated(
             padding: EdgeInsets.zero,
             itemCount: dataReading.length,
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
             itemBuilder: (_, i) {
-              return GestureDetector(
-                onTap: () {
-                  Get.toNamed(RouteHelper.getResourcesDetailsRoute(dataReading[i].id.toString(), dataReading[i].name.toString()));
-                },
-                child: Container(
-                  height: 200,
-                  width: 250,
-                  padding: const EdgeInsets.all(Dimensions.paddingSize8),
-                  clipBehavior: Clip.hardEdge,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    border: Border.all(
-                      width: 0.5,
-                      color: Theme.of(context).disabledColor,
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onTap: () {
+                    Get.toNamed(RouteHelper.getResourcesDetailsRoute(dataReading[i].id.toString(), dataReading[i].name.toString()));
+                  },
+                  child: Container(
+                    width: 250,
+                    padding: const EdgeInsets.all(Dimensions.paddingSize8),
+                    clipBehavior: Clip.hardEdge,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Theme.of(context).disabledColor.withOpacity(0.20),
+                          blurRadius: 5,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                      border: Border.all(
+                        width: 0.5,
+                        color: Colors.transparent
+                      ),
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-
-                      Text(
-                        dataReading[i].name,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: openSansMedium.copyWith(
-                          fontSize: Dimensions.fontSize13,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Image.asset("assets/images/eyeTestImage.jpeg"),
+                        Text(
+                          dataReading[i].name,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: openSansMedium.copyWith(
+                            fontSize: Dimensions.fontSize13,
+                          ),
                         ),
-                      ),
+                       SizedBox(height: 10,),
+                        CustomButtonWidget(buttonText: 'Read More',
+                        height: 38,fontSize: Dimensions.fontSize14,
+                        onPressed: () {
+                          Get.toNamed(RouteHelper.getResourcesDetailsRoute(dataReading[i].id.toString(), dataReading[i].name.toString()));
 
-                      Text(
-                        dataReading[i].sortDescription,
-                        maxLines: 7,
-                        overflow: TextOverflow.ellipsis,
-                        style: openSansMedium.copyWith(
-                          fontSize: Dimensions.fontSize13,
-                          color: Theme.of(context).disabledColor.withOpacity(0.40),
-                        ),
-                      ),
-                      const Spacer(),
-                      CustomButtonWidget(buttonText: 'Read',
-                      height: 38,fontSize: Dimensions.fontSize14,
-                      onPressed: () {
-                        Get.toNamed(RouteHelper.getResourcesDetailsRoute(dataReading[i].id.toString(), dataReading[i].name.toString()));
-
-                      },isBold: false,
-                      transparent: true,),
-                    ],
+                        },isBold: false,
+                        transparent: true,),
+                        const Spacer(),
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -293,7 +307,7 @@ class _ResourcesComponentState extends State<ResourcesComponent> {
         ),
         sizedBox10(),
         SizedBox(
-          height: 180,
+          height: 200,
           child: ListView.separated(
             itemCount: dataImage.length,
             shrinkWrap: true,
@@ -301,52 +315,65 @@ class _ResourcesComponentState extends State<ResourcesComponent> {
             scrollDirection: Axis.horizontal,
             itemBuilder: (_, i) {
               print('${AppConstants.resourcesImageUrl}${dataImage[i].file}');
-              return GestureDetector(
-                onTap: () {
-                  showImageViewer(
-                    context, Image.network('${AppConstants.resourcesImageUrl}${dataImage[i].file}').image,
-                    swipeDismissible: true,
-                    doubleTapZoomable: true,
-                  );
-                },
-                child: Container(
-                  height: 200,
-                  width: 250,
-                  clipBehavior: Clip.hardEdge,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CustomNetworkImageWidget(
-                        height: 150,
-                        image: '${AppConstants.resourcesImageUrl}${dataImage[i].file}',
-                      ),
-                      sizedBox10(),
-                      Text(
-                        dataImage[i].name,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: openSansMedium.copyWith(
-                          fontSize: Dimensions.fontSize13,
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onTap: () {
+                    showImageViewer(
+                      context, Image.network('${AppConstants.resourcesImageUrl}${dataImage[i].file}').image,
+                      swipeDismissible: true,
+                      doubleTapZoomable: true,
+                    );
+                  },
+                  child: Container(
+                    height: 200,
+                    width: 250,
+                    clipBehavior: Clip.hardEdge,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Theme.of(context).disabledColor.withOpacity(0.20),
+                          blurRadius: 5,
+                          offset: const Offset(0, 2),
                         ),
-                      ),
-                      // TextButton(
-                      //   onPressed: () => controller.downloadImage(dataImage[i].fileUrl, dataImage[i].name),
-                      //   child: Text(
-                      //     'Download',
-                      //     maxLines: 1,
-                      //     overflow: TextOverflow.ellipsis,
-                      //     style: openSansBold.copyWith(
-                      //       fontSize: Dimensions.fontSize14,
-                      //       decoration: TextDecoration.underline,
-                      //       color: Colors.redAccent,
-                      //     ),
-                      //   ),
-                      // ),
-                    ],
+                      ],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomNetworkImageWidget(
+                          height: 150,
+                          image: '${AppConstants.resourcesImageUrl}${dataImage[i].file}',
+                        ),
+                        sizedBox10(),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Text(
+                            dataImage[i].name,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: openSansMedium.copyWith(
+                              fontSize: Dimensions.fontSize13,
+                            ),
+                          ),
+                        ),
+                        // TextButton(
+                        //   onPressed: () => controller.downloadImage(dataImage[i].fileUrl, dataImage[i].name),
+                        //   child: Text(
+                        //     'Download',
+                        //     maxLines: 1,
+                        //     overflow: TextOverflow.ellipsis,
+                        //     style: openSansBold.copyWith(
+                        //       fontSize: Dimensions.fontSize14,
+                        //       decoration: TextDecoration.underline,
+                        //       color: Colors.redAccent,
+                        //     ),
+                        //   ),
+                        // ),
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -371,7 +398,7 @@ class _ResourcesComponentState extends State<ResourcesComponent> {
         ),
         sizedBox10(),
         SizedBox(
-          height: 250,
+          height: 300,
           child: ListView.separated(
             itemCount: dataPdf.length,
             shrinkWrap: true,
@@ -382,60 +409,71 @@ class _ResourcesComponentState extends State<ResourcesComponent> {
                 onTap: () {
                   // controller.openPDF(dataPdf[i].fileUrl);
                 },
-                child: Container(
-                  height: 200,
-                  width: 250,
-                  padding: const EdgeInsets.all(Dimensions.paddingSize8),
-                  clipBehavior: Clip.hardEdge,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    border: Border.all(
-                      width: 0.5,
-                      color: Theme.of(context).disabledColor,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    width: 250,
+                    padding: const EdgeInsets.all(Dimensions.paddingSize8),
+                    clipBehavior: Clip.hardEdge,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Theme.of(context).disabledColor.withOpacity(0.20),
+                          blurRadius: 5,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                      border: Border.all(
+                        width: 0.5,
+                        color: Colors.transparent,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Flexible(
-                        child: Text(
-                          dataPdf[i].name,
-                          maxLines: 2,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+
+                        Image.asset("assets/images/pdfIcon.png",scale: 1.25,),
+                        Flexible(
+                          child: Text(
+                            dataPdf[i].name,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: openSansMedium.copyWith(
+                              fontSize: Dimensions.fontSize13,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          dataPdf[i].sortDescription,
+                          maxLines: 3,
                           overflow: TextOverflow.ellipsis,
                           style: openSansMedium.copyWith(
                             fontSize: Dimensions.fontSize13,
+                            color: Theme.of(context).disabledColor.withOpacity(0.40),
                           ),
                         ),
-                      ),
-                      Text(
-                        dataPdf[i].sortDescription,
-                        maxLines: 10,
-                        overflow: TextOverflow.ellipsis,
-                        style: openSansMedium.copyWith(
-                          fontSize: Dimensions.fontSize13,
-                          color: Theme.of(context).disabledColor.withOpacity(0.40),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          print('check');
-                          final url = '${AppConstants.resourcesImageUrl}${dataPdf[i].file}';
-                          downloadFile(url);
+                        TextButton(
+                          onPressed: () async {
+                            print('check');
+                            final url = '${AppConstants.resourcesImageUrl}${dataPdf[i].file}';
+                            downloadFile(url);
 
-                        },
-                        child: Text(
-                          'Download',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: openSansBold.copyWith(
-                            fontSize: Dimensions.fontSize14,
-                            decoration: TextDecoration.underline,
-                            color: Colors.redAccent,
+                          },
+                          child: Text(
+                            'Download',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: openSansBold.copyWith(
+                              fontSize: Dimensions.fontSize14,
+                              decoration: TextDecoration.underline,
+                              color: Colors.redAccent,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -524,7 +562,7 @@ class _ResourcesComponentState extends State<ResourcesComponent> {
         await file.writeAsBytes(bytes);
         showCustomSnackBar("File Saved to download folder", isError: false);
         print('File downloaded to: $filePath');
-        _showNotification(fileName, filePath);
+        showNotification(fileName, filePath);
       } catch (e) {
         print('Error downloading file: $e');
       }

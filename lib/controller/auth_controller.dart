@@ -100,6 +100,7 @@ class AuthController extends GetxController implements GetxService {
 
   void updateBottomBarVisibility(bool isVisible) {
     _isShowingBottomBar = isVisible;
+    debugPrint('Bottom bar visibility: $isVisible');
     update();
   }
   Future<void> sendOtpApi(String? phoneNo) async {

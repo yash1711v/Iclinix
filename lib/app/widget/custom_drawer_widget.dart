@@ -131,109 +131,138 @@ class _CustomDrawerState extends State<CustomDrawer> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Get.find<AuthController>().updateBottomBarVisibility(false);
+debugPrint("Drawer Opened");
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   Get.find<AuthController>().updateBottomBarVisibility(false);
+    // });
   }
 
   @override
   void dispose() {
-    Get.find<AuthController>().updateBottomBarVisibility(true);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Container(
-        color: Theme.of(context).primaryColor,
-        padding: const EdgeInsets.all(25),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _thumbnailPart(),
-            const SizedBox(height: 20),
-            _line,
-            // TextButton(
-            //   onPressed: () {  },
-            //   child: Text(
-            //     "Records",
-            //     style: openSansRegular.copyWith(fontSize: Dimensions.fontSize28,color: Theme.of(context).cardColor)
-            //   ),
-            // ),
-            Align(alignment: Alignment.centerLeft,
-              child: TextButton(
-                onPressed: () {
-                  Get.to(() => const DashboardScreen(pageIndex: 3));
-                },
-                child: Text(
-                    "Appointments",
-                    style: openSansRegular.copyWith(fontSize: Dimensions.fontSize18,color: Theme.of(context).cardColor)
-                ),
-              ),
-            ),
-            // Align(alignment: Alignment.centerLeft,
-            //   child: TextButton(
-            //     onPressed: () {
-            //       Get.to(() => const DashboardScreen(pageIndex: 4));
-            //     },
-            //     child: Text(
-            //         "Profile",
-            //         style: openSansRegular.copyWith(fontSize: Dimensions.fontSize28,color: Theme.of(context).cardColor)
-            //     ),
-            //   ),
-            // ),
-            Align(alignment: Alignment.centerLeft,
-              child: TextButton(
-                onPressed: () {
-                  Get.toNamed(RouteHelper.getHelpRoute());
-                },
-                child: Text(
-                    "Contact Us",
-                    style: openSansRegular.copyWith(fontSize: Dimensions.fontSize18,color: Theme.of(context).cardColor)
-                ),
-              ),
-            ),
-            Align(alignment: Alignment.centerLeft,
-              child: TextButton(
-                onPressed: () {},
-                child: Text(
-                    "Privacy Policy",
-                    style: openSansRegular.copyWith(fontSize: Dimensions.fontSize18,color: Theme.of(context).cardColor)
-                ),
-              ),
-            ),
-            Align(alignment: Alignment.centerLeft,
-              child: TextButton(
-                onPressed: () {},
-                child: Text(
-                    "Terms & Condition",
-                    style: openSansRegular.copyWith(fontSize: Dimensions.fontSize18,color: Theme.of(context).cardColor)
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: TextButton(
-                onPressed: () {
-                  Get.dialog(
-                    ConfirmationDialog(
-                      icon: Images.icLogout,
-                      description: 'Are You Sure To Logout',
-                      onYesPressed: () {
-                       Get.toNamed(RouteHelper.getLoginRoute());
-                      },
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Spacer(),
+          Container(
+            color: Theme.of(context).primaryColor,
+            padding: const EdgeInsets.all(25),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _thumbnailPart(),
+                const SizedBox(height: 20),
+                _line,
+                // TextButton(
+                //   onPressed: () {  },
+                //   child: Text(
+                //     "Records",
+                //     style: openSansRegular.copyWith(fontSize: Dimensions.fontSize28,color: Theme.of(context).cardColor)
+                //   ),
+                // ),
+                Align(alignment: Alignment.centerLeft,
+                  child: TextButton(
+                    onPressed: () {
+                      Get.to(() => const DashboardScreen(pageIndex: 3));
+                    },
+                    child: Text(
+                        "Appointments",
+                        style: openSansRegular.copyWith(fontSize: Dimensions.fontSize18,color: Theme.of(context).cardColor)
                     ),
-                  );
-                },
-                child: Text(
-                  "Log Out",
-                  style: openSansRegular.copyWith(fontSize: Dimensions.fontSize18, color: Theme.of(context).cardColor),
+                  ),
                 ),
-              ),
+                // Align(alignment: Alignment.centerLeft,
+                //   child: TextButton(
+                //     onPressed: () {
+                //       Get.to(() => const DashboardScreen(pageIndex: 4));
+                //     },
+                //     child: Text(
+                //         "Profile",
+                //         style: openSansRegular.copyWith(fontSize: Dimensions.fontSize28,color: Theme.of(context).cardColor)
+                //     ),
+                //   ),
+                // ),
+                Align(alignment: Alignment.centerLeft,
+                  child: TextButton(
+                    onPressed: () {
+                      Get.toNamed(RouteHelper.getHelpRoute());
+                    },
+                    child: Text(
+                        "Contact Us",
+                        style: openSansRegular.copyWith(fontSize: Dimensions.fontSize18,color: Theme.of(context).cardColor)
+                    ),
+                  ),
+                ),
+                Align(alignment: Alignment.centerLeft,
+                  child: TextButton(
+                    onPressed: () {},
+                    child: Text(
+                        "Privacy Policy",
+                        style: openSansRegular.copyWith(fontSize: Dimensions.fontSize18,color: Theme.of(context).cardColor)
+                    ),
+                  ),
+                ),
+                Align(alignment: Alignment.centerLeft,
+                  child: TextButton(
+                    onPressed: () {},
+                    child: Text(
+                        "Terms & Condition",
+                        style: openSansRegular.copyWith(fontSize: Dimensions.fontSize18,color: Theme.of(context).cardColor)
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton(
+                    onPressed: () {
+                      Get.dialog(
+                        ConfirmationDialog(
+                          icon: Images.icLogout,
+                          description: 'Are You Sure To Logout',
+                          onYesPressed: () {
+                           Get.toNamed(RouteHelper.getLoginRoute());
+                          },
+                        ),
+                      );
+                    },
+                    child: Text(
+                      "Log Out",
+                      style: openSansRegular.copyWith(fontSize: Dimensions.fontSize18, color: Theme.of(context).cardColor),
+                    ),
+                  ),
+                ),
+              ],
             ),
-
-          ],
-        ),
+          ),
+          Spacer(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              GestureDetector(
+                  onTap: () {
+                    // Add action here
+                  },
+                  child: Image.asset("assets/images/Facebook.png",scale: 3,)),
+              GestureDetector(
+                  onTap: () {
+                    // Add action here
+                  },
+                  child: Image.asset("assets/images/Instagram.png",scale: 3,)),
+              GestureDetector(
+                  onTap: () {
+                    // Add action here
+                  },
+                  child: Image.asset("assets/images/Twitter.png",scale: 3,)),
+            ],
+          ),
+          Spacer(),
+        ],
       ),
     );
   }

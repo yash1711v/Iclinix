@@ -17,6 +17,7 @@ import 'package:get/get.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import '../../../helper/invoice.dart';
+import '../../widget/group_radio_button.dart';
 
 
 
@@ -55,7 +56,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget build(BuildContext context) {
 
     return GetBuilder<AppointmentController>(builder: (appointmentControl) {
-
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if(Get.find<AppointmentController>().isPaymentSuccessFull!){
           Get.toNamed(RouteHelper.getBookingSuccessfulRoute(

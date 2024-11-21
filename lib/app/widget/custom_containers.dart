@@ -15,7 +15,7 @@ class CustomDecoratedContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: Get.size.width,
-      height: height??0,
+      height: height,
       padding:  EdgeInsets.symmetric(vertical: verticalPadding ?? Dimensions.paddingSizeDefault,
       horizontal:horizontalPadding ?? Dimensions.paddingSizeDefault, ),
       decoration: BoxDecoration(

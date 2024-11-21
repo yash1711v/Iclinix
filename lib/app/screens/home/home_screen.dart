@@ -32,9 +32,21 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    _drawerCallback();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Get.find<AuthController>().userDataApi();
     });
+    _drawerCallback();
+  }
+
+  void _drawerCallback() {
+    if (drawerKey.currentState?.isOpened ?? false) {
+      print('Drawer is opened');
+      // Perform action when the drawer is opened
+    } else {
+      print('Drawer is closed');
+      // Perform action when the drawer is closed
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -54,6 +66,8 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () {
               if (drawerKey.currentState?.isOpened ?? false) {
                 drawerKey.currentState?.closeDrawer();
+                  debugPrint("Drawer is closed");
+
               }
             },
             child: CustomScrollView(

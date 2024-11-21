@@ -1,6 +1,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:iclinix/app/widget/custom_button_widget.dart';
 import 'package:iclinix/app/widget/custom_containers.dart';
 import 'package:iclinix/helper/date_converter.dart';
@@ -22,6 +23,7 @@ import 'package:printing/printing.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../../controller/appointment_controller.dart';
+import '../../../helper/local_notification.dart';
 
 
 class BookingSuccessfulScreen extends StatefulWidget {
@@ -34,11 +36,15 @@ class BookingSuccessfulScreen extends StatefulWidget {
   State<BookingSuccessfulScreen> createState() => _BookingSuccessfulScreenState();
 }
 
+
+
+
 class _BookingSuccessfulScreenState extends State<BookingSuccessfulScreen> {
   dynamic filePaths = "";
 
   double progress = 0.0; // Track download progress
   bool isDownloading = false;
+
 
   Future<void> downloadFile(String url, String fileName) async {
     debugPrint("Downloading file from ${Get.find<AppointmentController>().apptId}");
@@ -84,7 +90,7 @@ class _BookingSuccessfulScreenState extends State<BookingSuccessfulScreen> {
       filePaths = filePath;
       // Open the downloaded file
       // OpenFile.open(filePath);
-
+      showNotification(fileName, filePath);
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -245,4 +251,31 @@ class _BookingSuccessfulScreenState extends State<BookingSuccessfulScreen> {
       ),
     );
   }
+}
+
+Future<void> showNotification(String fileName, String filePath) async {
+  const AndroidNotificationDetails androidPlatformChannelSpecifics =
+  AndroidNotificationDetails(
+    'iClinix',
+    'iClinix',
+    color: Colors.black,
+    enableLights: true,
+    enableVibration: true,
+    playSound: true,
+    icon: 'ic_launcher',
+    colorized: true,
+    largeIcon: DrawableResourceAndroidBitmap('ic_launcher'),
+    channelDescription: "This is Notification is to give  you alert to start and check your daily steps ",
+      importance: Importance.max, priority: Priority.high, ticker: 'ticker'
+  );
+
+  const NotificationDetails platformChannelSpecifics =
+  NotificationDetails(android: androidPlatformChannelSpecifics);
+
+  await flutterLocalNotificationsPlugin.show(
+      0,
+      'Download Complete',
+      'File downloaded to: $filePath',
+      platformChannelSpecifics,
+      payload: filePath);
 }

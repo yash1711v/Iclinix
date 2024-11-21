@@ -703,6 +703,7 @@ class AppointmentController extends GetxController implements GetxService {
 
       if (response.statusCode == 200) {
        debugPrint('Response===>: ${response.body}');
+         Get.find<AppointmentController>().getAppointmentHistory();
        _isCancellingLoading = false;
       } else {
         _isCancellingLoading = false;
