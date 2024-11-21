@@ -17,6 +17,7 @@ import 'dart:typed_data' as typedData;
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:open_file/open_file.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:printing/printing.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -40,7 +41,13 @@ class _BookingSuccessfulScreenState extends State<BookingSuccessfulScreen> {
   bool isDownloading = false;
 
   Future<void> downloadFile(String url, String fileName) async {
-    debugPrint("Downloading file from $Get.find<AppointmentController>().apptId");
+    debugPrint("Downloading file from ${Get.find<AppointmentController>().apptId}");
+    // await Permission.storage.request();
+    if (await Permission.storage.isDenied) {
+      await Permission.manageExternalStorage.request();
+      await Permission.storage.request();
+    }
+
     setState(() {
       progress = 0.0;
       isDownloading = true;

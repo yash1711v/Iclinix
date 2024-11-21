@@ -159,17 +159,145 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                   ],
                 )),
             body: isListEmpty
-                ? Padding(
-                    padding:
-                        const EdgeInsets.only(top: Dimensions.paddingSize100),
-                    child: Center(
-                      child: EmptyDataWidget(
-                        text: 'Nothing Available', // Change this text if needed
-                        image: Images.icEmptyDataHolder,
-                        fontColor: Theme.of(context).disabledColor,
+                ? Column(
+                  children: [
+                    TabBar(
+                      controller: _tabController,
+                      indicatorColor: Theme.of(context).primaryColor,
+                      labelColor: Theme.of(context).primaryColor,
+                      dividerColor: Colors.grey,
+                      unselectedLabelColor: Colors.grey,
+                      tabs: [
+                        Tab(
+                          text: 'Appointments',
+                        ),
+                        Tab(
+                          text: 'Prescriptions',
+                        ),
+                      ],
+                    ),
+                    Divider(
+                      color: Colors.grey, // Color of the divider
+                      thickness: 1, // Thickness of the divider
+                      height: 1, // Space taken by the divider
+                    ),
+                    sizedBox10(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 4),
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              appointmentControl.setisComing(!appointmentControl.isComing!);
+                              appointmentControl.setisVisiting(false);
+                              appointmentControl.setisCancelled(false);
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                Get.find<AppointmentController>().getAppointmentHistory();
+                              });
+                            },
+                            child: Container(
+                              width: 83.64,
+                              height: 33,
+                              decoration: ShapeDecoration(
+                                color: Color(0x262CC229),
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                      width: appointmentControl.isComing!?2:0, color: Color(0xFF2CC229)),
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                              ),
+                              child: Center(child: Text(
+                                'Upcoming',
+                                style: TextStyle(
+                                  color: Color(0xFF2CC229),
+                                  fontSize: 13,
+                                  fontFamily: 'Open Sans',
+                                  fontWeight: FontWeight.w400,
+                                  height: 0,
+                                  letterSpacing: -0.26,
+                                ),
+                              )),
+                            ),
+                          ),
+                          SizedBox(width: 10,),
+                          GestureDetector(
+                            onTap: () {
+                              appointmentControl.setisVisiting(!appointmentControl.isVisiting!);
+                              appointmentControl.setisComing(false);
+                              appointmentControl.setisCancelled(false);
+                              appointmentControl.setAppointmentHistoryList([]);
+                            },
+                            child: Container(
+                              width: 83.64,
+                              height: 33,
+                              decoration: ShapeDecoration(
+                                color: Color(0x26294BC2),
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(width: appointmentControl.isVisiting!?2:0, color: Color(0xFF294BC2)),
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                              ),
+                              child: Center(child: Text(
+                                'Pending',
+                                style: TextStyle(
+                                  color: Color(0xFF294BC2),
+                                  fontSize: 13,
+                                  fontFamily: 'Open Sans',
+                                  fontWeight: FontWeight.w400,
+                                  height: 0,
+                                  letterSpacing: -0.26,
+                                ),
+                              )),
+                            ),
+                          ),
+                          SizedBox(width: 10,),
+                          GestureDetector(
+                            onTap: () {
+                              appointmentControl.setisVisiting(false);
+                              appointmentControl.setisComing(false);
+                              appointmentControl.setisCancelled(!appointmentControl.isCancelled!);
+                              appointmentControl.setAppointmentHistoryList([]);
+                            },
+                            child: Container(
+                              width: 83.64,
+                              height: 33,
+                              decoration: ShapeDecoration(
+                                color: Color(0x26DD2025),
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(width: appointmentControl.isCancelled!?2:0, color: Color(0xFFDD2025)),
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                              ),
+                              child: Center(child: Text(
+                                'Cancelled',
+                                style: TextStyle(
+                                  color: Color(0xFFDD2025),
+                                  fontSize: 13,
+                                  fontFamily: 'Open Sans',
+                                  fontWeight: FontWeight.w400,
+                                  height: 0,
+                                  letterSpacing: -0.26,
+                                ),
+                              )),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  )
+                    sizedBox20(),
+                    Padding(
+                        padding:
+                            const EdgeInsets.only(top: 200),
+                        child: Center(
+                          child: EmptyDataWidget(
+                            text: 'Nothing Available', // Change this text if needed
+                            image: Images.icEmptyDataHolder,
+                            fontColor: Theme.of(context).disabledColor,
+                          ),
+                        ),
+                      ),
+                  ],
+                )
                 : Column(
                     children: [
                       TabBar(
@@ -197,6 +325,110 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                         child: SingleChildScrollView(
                           child: Column(
                             children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 4),
+                                child: Row(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        appointmentControl.setisComing(!appointmentControl.isComing!);
+                                        appointmentControl.setisVisiting(false);
+                                        appointmentControl.setisCancelled(false);
+                                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                                          Get.find<AppointmentController>().getAppointmentHistory();
+                                        });
+                                      },
+                                      child: Container(
+                                        width: 83.64,
+                                        height: 33,
+                                        decoration: ShapeDecoration(
+                                          color: Color(0x262CC229),
+                                          shape: RoundedRectangleBorder(
+                                            side: BorderSide(
+                                                width: appointmentControl.isComing!?2:0, color: Color(0xFF2CC229)),
+                                            borderRadius: BorderRadius.circular(50),
+                                          ),
+                                        ),
+                                        child: Center(child: Text(
+                                          'Upcoming',
+                                          style: TextStyle(
+                                            color: Color(0xFF2CC229),
+                                            fontSize: 13,
+                                            fontFamily: 'Open Sans',
+                                            fontWeight: FontWeight.w400,
+                                            height: 0,
+                                            letterSpacing: -0.26,
+                                          ),
+                                        )),
+                                      ),
+                                    ),
+                                    SizedBox(width: 10,),
+                                    GestureDetector(
+                                      onTap: () {
+                                        appointmentControl.setisVisiting(!appointmentControl.isVisiting!);
+                                        appointmentControl.setisComing(false);
+                                        appointmentControl.setisCancelled(false);
+                                        appointmentControl.setAppointmentHistoryList([]);
+                                      },
+                                      child: Container(
+                                        width: 83.64,
+                                        height: 33,
+                                        decoration: ShapeDecoration(
+                                          color: Color(0x26294BC2),
+                                          shape: RoundedRectangleBorder(
+                                            side: BorderSide(width: appointmentControl.isVisiting!?2:0, color: Color(0xFF294BC2)),
+                                            borderRadius: BorderRadius.circular(50),
+                                          ),
+                                        ),
+                                        child: Center(child: Text(
+                                          'Pending',
+                                          style: TextStyle(
+                                            color: Color(0xFF294BC2),
+                                            fontSize: 13,
+                                            fontFamily: 'Open Sans',
+                                            fontWeight: FontWeight.w400,
+                                            height: 0,
+                                            letterSpacing: -0.26,
+                                          ),
+                                        )),
+                                      ),
+                                    ),
+                                    SizedBox(width: 10,),
+                                    GestureDetector(
+                                      onTap: () {
+                                        appointmentControl.setisVisiting(false);
+                                        appointmentControl.setisComing(false);
+                                        appointmentControl.setisCancelled(!appointmentControl.isCancelled!);
+                                        appointmentControl.setAppointmentHistoryList([]);
+                                      },
+                                      child: Container(
+                                        width: 83.64,
+                                        height: 33,
+                                        decoration: ShapeDecoration(
+                                          color: Color(0x26DD2025),
+                                          shape: RoundedRectangleBorder(
+                                            side: BorderSide(width: appointmentControl.isCancelled!?2:0, color: Color(0xFFDD2025)),
+                                            borderRadius: BorderRadius.circular(50),
+                                          ),
+                                        ),
+                                        child: Center(child: Text(
+                                          'Cancelled',
+                                          style: TextStyle(
+                                            color: Color(0xFFDD2025),
+                                            fontSize: 13,
+                                            fontFamily: 'Open Sans',
+                                            fontWeight: FontWeight.w400,
+                                            height: 0,
+                                            letterSpacing: -0.26,
+                                          ),
+                                        )),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              sizedBox20(),
+
                               ListView.builder(
                                 padding: EdgeInsets.zero,
                                 // separatorBuilder: (BuildContext context, int index) => sizedBox10(),
@@ -216,101 +448,6 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                                       crossAxisAlignment:
                                       CrossAxisAlignment.start,
                                       children: [
-
-                                        Row(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                appointmentControl.setisComing(!appointmentControl.isComing!);
-                                                appointmentControl.setisVisiting(false);
-                                              },
-                                              child: Container(
-                                                width: 83.64,
-                                                height: 33,
-                                                decoration: ShapeDecoration(
-                                                  color: Color(0x262CC229),
-                                                  shape: RoundedRectangleBorder(
-                                                    side: BorderSide(
-                                                        width: appointmentControl.isComing!?2:0, color: Color(0xFF2CC229)),
-                                                    borderRadius: BorderRadius.circular(50),
-                                                  ),
-                                                ),
-                                                child: Center(child: Text(
-                                                  'Upcoming',
-                                                  style: TextStyle(
-                                                    color: Color(0xFF2CC229),
-                                                    fontSize: 13,
-                                                    fontFamily: 'Open Sans',
-                                                    fontWeight: FontWeight.w400,
-                                                    height: 0,
-                                                    letterSpacing: -0.26,
-                                                  ),
-                                                )),
-                                              ),
-                                            ),
-                                            SizedBox(width: 10,),
-                                            GestureDetector(
-                                              onTap: () {
-                                                appointmentControl.setisVisiting(!appointmentControl.isVisiting!);
-                                                appointmentControl.setisComing(false);
-                                              },
-                                              child: Container(
-                                                width: 83.64,
-                                                height: 33,
-                                                decoration: ShapeDecoration(
-                                                  color: Color(0x26294BC2),
-                                                  shape: RoundedRectangleBorder(
-                                                    side: BorderSide(width: appointmentControl.isVisiting!?2:0, color: Color(0xFF294BC2)),
-                                                    borderRadius: BorderRadius.circular(50),
-                                                  ),
-                                                ),
-                                                child: Center(child: Text(
-                                                  'Pending',
-                                                  style: TextStyle(
-                                                    color: Color(0xFF294BC2),
-                                                    fontSize: 13,
-                                                    fontFamily: 'Open Sans',
-                                                    fontWeight: FontWeight.w400,
-                                                    height: 0,
-                                                    letterSpacing: -0.26,
-                                                  ),
-                                                )),
-                                              ),
-                                            ),
-                                            SizedBox(width: 10,),
-                                            GestureDetector(
-                                              onTap: () {
-                                                appointmentControl.setisVisiting(false);
-                                                appointmentControl.setisComing(false);
-                                                appointmentControl.setisCancelled(!appointmentControl.isCancelled!);
-                                              },
-                                              child: Container(
-                                                width: 83.64,
-                                                height: 33,
-                                                decoration: ShapeDecoration(
-                                                  color: Color(0x26DD2025),
-                                                  shape: RoundedRectangleBorder(
-                                                    side: BorderSide(width: appointmentControl.isCancelled!?1:0, color: Color(0xFFDD2025)),
-                                                    borderRadius: BorderRadius.circular(50),
-                                                  ),
-                                                ),
-                                                child: Center(child: Text(
-                                                  'Cancelled',
-                                                  style: TextStyle(
-                                                    color: Color(0xFFDD2025),
-                                                    fontSize: 13,
-                                                    fontFamily: 'Open Sans',
-                                                    fontWeight: FontWeight.w400,
-                                                    height: 0,
-                                                    letterSpacing: -0.26,
-                                                  ),
-                                                )),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        sizedBox20(),
-
                                         patientAppointments.isNotEmpty
                                             ? ListView.separated(
                                           padding: EdgeInsets.zero,
@@ -322,6 +459,8 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                                           itemBuilder: (_, j) {
                                             final patientAppointment =
                                             patientAppointments[j];
+                                            debugPrint(
+                                                'Patient Appointment: ${patientAppointments[j].branchName}');
                                             return CustomDecoratedContainer(
                                               child: Column(
                                                 crossAxisAlignment:

@@ -39,6 +39,22 @@ class AppointmentController extends GetxController implements GetxService {
     _isPromotionalCode = val ?? !isPromotionalCode!;
     update();
   }
+
+  dynamic _patientAppointments = [];
+
+  dynamic get patientAppointment => _patientAppointments;
+
+  void setPatientAppointment(dynamic val) {
+    if(val.isEmpty){
+      debugPrint("empty");
+      _patientAppointments.clear;
+    } else {
+      _patientAppointments = val;
+    }
+    update();
+  }
+
+
   bool?  _isComing = false;
 
   bool? get isComing => _isComing;
@@ -398,6 +414,10 @@ class AppointmentController extends GetxController implements GetxService {
   List<AppointmentHistoryModel>? get appointmentHistoryList =>
       _appointmentHistoryList;
 
+  void setAppointmentHistoryList(List<AppointmentHistoryModel> list) {
+    _appointmentHistoryList = list; // Update the selected payment method
+  }
+
   bool _isAppointmentHistoryLoading = false;
 
   bool get isAppointmentHistoryLoading => _isAppointmentHistoryLoading;
@@ -413,11 +433,14 @@ class AppointmentController extends GetxController implements GetxService {
       if (response.statusCode == 200) {
         if (response.body != null && response.body['appointmentData'] != null) {
           List<dynamic> responseData = response.body['appointmentData'];
-
-          _appointmentHistoryList = responseData
+          setAppointmentHistoryList(responseData
               .map((json) => AppointmentHistoryModel.fromJson(
                   json as Map<String, dynamic>))
-              .toList();
+              .toList());
+          // _appointmentHistoryList = responseData
+          //     .map((json) => AppointmentHistoryModel.fromJson(
+          //         json as Map<String, dynamic>))
+          //     .toList();
 
           print(
               "Appointment appointmentData fetched successfully: $_appointmentHistoryList");
