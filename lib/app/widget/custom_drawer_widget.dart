@@ -259,6 +259,16 @@ debugPrint("Drawer Opened");
                     // Add action here
                   },
                   child: Image.asset("assets/images/Twitter.png",scale: 3,)),
+              GestureDetector(
+                  onTap: () {
+                    // Add action here
+                  },
+                  child: Image.asset("assets/images/Linkdin.png",scale: 3,)),
+              GestureDetector(
+                  onTap: () {
+                    // Add action here
+                  },
+                  child: Image.asset("assets/images/youtube.png",scale: 3,)),
             ],
           ),
           Spacer(),
