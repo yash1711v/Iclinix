@@ -11,6 +11,8 @@ import 'package:iclinix/utils/styles.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:html/parser.dart' as htmlParser;
 import '../../../../utils/dimensions.dart';
+import '../../../helper/route_helper.dart';
+import '../dashboard/dashboard_screen.dart';
 class ServiceDetailsScreen extends StatelessWidget {
   final String? id;
   final String? title;
@@ -22,7 +24,15 @@ class ServiceDetailsScreen extends StatelessWidget {
       Get.find<ClinicController>().getServiceDetailsApi(id);
     });
     return Scaffold(
-        appBar: CustomAppBar(title: title,isBackButtonExist: true,),
+        appBar: CustomAppBar(title: title,isBackButtonExist: true,
+        menuWidget:  Row(
+          children: [
+           ElevatedButton(onPressed: (){
+             Get.to(const DashboardScreen(pageIndex: 2));
+           }, child: Text("Book Now",)),
+          ],
+        ),
+        ),
         body: GetBuilder<ClinicController>(builder: (clinicControl) {
           final dataList = clinicControl.serviceDetails;
           final isListEmpty = dataList == null ;
@@ -50,8 +60,8 @@ class ServiceDetailsScreen extends StatelessWidget {
                   ),
                   child: CustomNetworkImageWidget(
                     radius: 0,
-                    image: '${AppConstants.serviceImageUrl}${dataList.image}',
-                    fit: BoxFit.fitWidth,
+                    image: '${dataList.bannerUrl}',
+                    fit: BoxFit.cover,
                   ),
                 ),
                 Padding(

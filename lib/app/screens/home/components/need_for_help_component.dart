@@ -65,7 +65,7 @@ class NeedForHelpComponent extends StatelessWidget {
                       mainAxisSpacing: 10.0,
                       childAspectRatio: 1,
                     ),
-                    itemCount: dataList.length,
+                    itemCount: 6,
                     itemBuilder: (context, i) {
                       return GestureDetector(
                         onTap: () {

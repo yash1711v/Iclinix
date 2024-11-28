@@ -40,10 +40,12 @@ class DashboardScreenState extends State<DashboardScreen> {
     _drawerCallback();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Get.find<AuthController>().userDataApi();
+      Get.find<AuthController>().updateBottomBarVisibility(true);
     });
     _pageIndex = widget.pageIndex;
     _pageController = PageController(initialPage: widget.pageIndex);
     _initializeScreens();
+
   }
 
 
