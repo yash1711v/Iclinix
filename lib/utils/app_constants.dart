@@ -24,6 +24,7 @@ class AppConstants {
   static const String postDataBack = "android-webhook";
   static const String cancellation = "cancel-appointment";
   static const String invoiceDownload = "appt-invoice/download/";
+  static const String prescription = "prescription/download/";
   static const String subscriptionCheckout = "subscription-checkout";
   static const String referEarn = "refer-earn/banners";
   static const String discountApi = "book-appointment/banners";

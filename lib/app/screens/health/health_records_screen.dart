@@ -713,7 +713,7 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                                                                         visible:
                                                                         patientAppointment
                                                                             .status !=
-                                                                            2,
+                                                                            2 && patientAppointment.status != 1,
                                                                         child: GestureDetector(
                                                                           onTap: () {
                                                                             appointmentControl.getCancelling(
@@ -843,14 +843,369 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                           visible: index == 1,
                           child: SizedBox(
                             height: MediaQuery.of(context).size.height-200,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                EmptyDataWidget(text: 'Nothing Available',
-                                  image: Images.icEmptyDataHolder,
-                                  fontColor: Theme.of(context).disabledColor,),
-                              ],
+                            child: SingleChildScrollView(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  ListView.builder(
+                                    padding: EdgeInsets.zero,
+                                    // separatorBuilder: (BuildContext context, int index) => sizedBox10(),
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    itemCount: appointmentHistoryList.length,
+                                    itemBuilder: (_, i) {
+                                      final appointment = appointmentHistoryList[i];
+                                      final patientAppointments =
+                                          appointment.patientAppointments;
+                                      return Visibility(
+                                          visible: patientAppointments.isNotEmpty && index == 1 && patientAppointments[i].apiVisitId != null,
+                                          child: ListView.builder(
+                                            padding: EdgeInsets.zero,
+                                            shrinkWrap: true,
+                                            physics:
+                                            const NeverScrollableScrollPhysics(),
+                                            itemCount: patientAppointments.length,
+                                            itemBuilder: (_, j) {
+                                              final patientAppointment =
+                                              patientAppointments[j];
+                                              debugPrint(
+                                                  'Patient Appointment: ${patientAppointments[j].branchName}');
+                                              return Padding(
+                                                padding: const EdgeInsets.symmetric(
+                                                    horizontal: 8.0, vertical: 5),
+                                                child: CustomDecoratedContainer(
+                                                  // verticalPadding: 0,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                    children: [
+                                                      SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            '${AppointmentDateTimeConverter.formatDate(patientAppointment.opdDate.toString())} - ${patientAppointment.opdTime.toString()}',
+                                                            style: openSansBold
+                                                                .copyWith(
+                                                              fontSize: Dimensions
+                                                                  .fontSize13,
+                                                              color:
+                                                              Theme.of(context)
+                                                                  .primaryColor,
+                                                            ),
+                                                          ),
+                                                          // Text(
+                                                          //   ' (${patientAppointment.status == 0? "Not Visited" : "Visited"})',
+                                                          //   style: openSansBold
+                                                          //       .copyWith(
+                                                          //     fontSize: Dimensions
+                                                          //         .fontSize13,
+                                                          //     color: patientAppointment.status == 0 ? Colors.red : Colors.green,
+                                                          //   ),
+                                                          // ),
+                                                          Spacer(),
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              // Get.to(HealthRecordsScreen());
+                                                              appointmentControl.getInvoice(
+                                                                  patientAppointment
+                                                                      .id
+                                                                      .toString()).then((value) {
+                                                                if(appointmentControl.apptId != null && appointmentControl.apptId != ""){
+                                                                  downloadFile(appointmentControl.apptId, 'invoice.pdf');
+                                                                }
+
+                                                              });
+                              
+                                                            },
+                                                            child: Icon(
+                                                              Icons.download,
+                                                              color:
+                                                              Theme.of(context)
+                                                                  .primaryColor,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      sizedBox20(),
+                                                      Column(
+                                                        children: [
+                                                          Row(
+                                                            crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                            children: [
+                                                              CustomNetworkImageWidget(
+                                                                height: 80,
+                                                                width: 80,
+                                                                image:
+                                                                patientAppointment
+                                                                    .branchImage,
+                                                              ),
+                                                              sizedBoxW10(),
+                                                              Expanded(
+                                                                child: Column(
+                                                                  crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                                  children: [
+                                                                    RichText(
+                                                                      maxLines: 1,
+                                                                      overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                      text:
+                                                                      TextSpan(
+                                                                        children: [
+                                                                          TextSpan(
+                                                                            text:
+                                                                            "Branch: ",
+                                                                            style: openSansRegular
+                                                                                .copyWith(
+                                                                              fontSize:
+                                                                              Dimensions.fontSize12,
+                                                                              color:
+                                                                              Theme.of(context).primaryColor,
+                                                                            ),
+                                                                          ),
+                                                                          TextSpan(
+                                                                            text:
+                                                                            // "b",
+                                                                            patientAppointment
+                                                                                .branchName,
+                                                                            style: openSansBold
+                                                                                .copyWith(
+                                                                              fontSize:
+                                                                              Dimensions.fontSize13,
+                                                                              color: Theme.of(context)
+                                                                                  .disabledColor
+                                                                                  .withOpacity(0.70),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                    sizedBox10(),
+                                                                    RichText(
+                                                                      maxLines: 1,
+                                                                      overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                      text:
+                                                                      TextSpan(
+                                                                        children: [
+                                                                          TextSpan(
+                                                                            text:
+                                                                            "Name: ",
+                                                                            style: openSansRegular
+                                                                                .copyWith(
+                                                                              fontSize:
+                                                                              Dimensions.fontSize12,
+                                                                              color:
+                                                                              Theme.of(context).primaryColor,
+                                                                            ),
+                                                                          ),
+                                                                          TextSpan(
+                                                                            text:
+                                                                            // "fndl",
+                                                                            '${appointment.firstName} ${appointment.lastName}',
+                                                                            style: openSansBold
+                                                                                .copyWith(
+                                                                              fontSize:
+                                                                              Dimensions.fontSize13,
+                                                                              color: Theme.of(context)
+                                                                                  .disabledColor
+                                                                                  .withOpacity(0.70),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                    sizedBox10(),
+                                                                    Row(
+                                                                      children: [
+                                                                        RichText(
+                                                                          maxLines: 1,
+                                                                          overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                          text:
+                                                                          TextSpan(
+                                                                            children: [
+                                                                              TextSpan(
+                                                                                text:
+                                                                                "Status: ",
+                                                                                style: openSansRegular
+                                                                                    .copyWith(
+                                                                                  fontSize:
+                                                                                  Dimensions.fontSize12,
+                                                                                  color:
+                                                                                  Theme.of(context).primaryColor,
+                                                                                ),
+                                                                              ),
+                                                                              TextSpan(
+                                                                                text: patientAppointment.status ==
+                                                                                    0
+                                                                                    ? "Failed"
+                                                                                    : patientAppointment.status == 1
+                                                                                    ? "Confirmed"
+                                                                                    : patientAppointment.status == 2
+                                                                                    ? "Cancelled"
+                                                                                    : "Pending",
+                                                                                style: openSansBold
+                                                                                    .copyWith(
+                                                                                  fontSize:
+                                                                                  Dimensions.fontSize13,
+                                                                                  color: patientAppointment.status ==
+                                                                                      0
+                                                                                      ? Colors.red
+                                                                                      : patientAppointment.status == 1
+                                                                                      ? Colors.green
+                                                                                      : patientAppointment.status == 2
+                                                                                      ? Colors.red
+                                                                                      : Theme.of(context)
+                                                                                      .disabledColor
+                                                                                      .withOpacity(0.70),
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                    //     Spacer(),
+                                                                    //     Visibility(
+                                                                    //       visible:
+                                                                    //       patientAppointment
+                                                                    //           .status !=
+                                                                    //           2,
+                                                                    //       child: GestureDetector(
+                                                                    //         onTap: () {
+                                                                    //           appointmentControl.getCancelling(
+                                                                    //               patientAppointment
+                                                                    //                   .id
+                                                                    //                   .toString());
+                                                                    //         },
+                                                                    //         child: Text("Cancel",
+                                                                    //           style: TextStyle(
+                                                                    //             color: Colors.red,
+                                                                    //             fontSize: 14,
+                                                                    //             fontWeight: FontWeight.bold,
+                                                                    //           ),
+                                                                    //         ),
+                                                                    //       ),
+                                                                    //     ),
+                                                                    //   ],
+                                                                    // ),
+                                                                    // sizedBox10(),
+                              
+                                                                    // Align(
+                                                                    //   alignment: Alignment.centerRight,
+                                                                    //   child: GestureDetector(
+                                                                    //     onTap: () {
+                                                                    //       Get.to(AppointmentDetailsScreen(appointmentHistoryModel: appointmentHistoryList[i],));
+                                                                    //     },
+                                                                    //     child: Container(
+                                                                    //       decoration: BoxDecoration(
+                                                                    //         color: Theme.of(context).primaryColor ,
+                                                                    //         borderRadius: BorderRadius.circular(Dimensions.radius10),
+                                                                    //       ),
+                                                                    //       child: Padding(
+                                                                    //         padding: const EdgeInsets.all(8.0),
+                                                                    //         child: Text(
+                                                                    //           'View Details',
+                                                                    //           style: openSansSemiBold.copyWith(
+                                                                    //             fontSize: Dimensions.fontSize14,
+                                                                    //             color: Theme.of(context).cardColor,
+                                                                    //           ),
+                                                                    //         ),
+                                                                    //       ),
+                                                                    //     ),
+                                                                    //   ),
+                                                                    // )
+                                                                  ],
+                                                                ),
+                                                              ]),)
+                                                            ],
+                                                          ),
+                                                          sizedBoxDefault(),
+                                                          Row(
+                                                            children: [
+                                                              Expanded(
+                                                                child: CustomButtonWidget(
+                                                                  textColor: Theme.of(
+                                                                      context)
+                                                                      .primaryColor,
+                                                                  buttonText:
+                                                                  'Download Prescription',
+                                                                  onPressed: () {
+                                                                    appointmentControl.getPrescription(
+                                                                        patientAppointment
+                                                                            .id
+                                                                            .toString()).then((value) {
+                                                                      if(appointmentControl.prescription != null && appointmentControl.prescription != ""){
+                                                                        downloadFile(appointmentControl.prescription, 'prescription.pdf');
+                                                                      }
+
+                                                                    });
+                                                                  },
+                                                                  height: 40,
+                                                                  isBold: false,
+                                                                  fontSize: Dimensions
+                                                                      .paddingSizeDefault,
+                                                                  color: Colors.white
+                                                                ),
+                                                              ),
+                                                              // SizedBox(
+                                                              //   width: 10,
+                                                              // ),
+                                                              // Visibility(
+                                                              //   visible:
+                                                              //   patientAppointment
+                                                              //       .status !=
+                                                              //       2,
+                                                              //   child: Expanded(
+                                                              //     child:
+                                                              //     CustomButtonWidget(
+                                                              //       buttonText:
+                                                              //       'Cancel',
+                                                              //       onPressed:
+                                                              //           () {
+                                                              //         appointmentControl.getCancelling(
+                                                              //             patientAppointment
+                                                              //                 .id
+                                                              //                 .toString());
+                                                              //       },
+                                                              //       height: 40,
+                                                              //       isBold:
+                                                              //       false,
+                                                              //       fontSize:
+                                                              //       Dimensions
+                                                              //           .paddingSizeDefault,
+                                                              //       color: Theme.of(
+                                                              //           context)
+                                                              //           .primaryColor,
+                                                              //     ),
+                                                              //   ),
+                                                              // ),
+                                                            ],
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ));
+                              
+                                    },
+                                  ),
+                                  // EmptyDataWidget(text: 'Nothing Available',
+                                  //   image: Images.icEmptyDataHolder,
+                                  //   fontColor: Theme.of(context).disabledColor,),
+                                ],
+                              ),
                             ),
                           ))
                     ],

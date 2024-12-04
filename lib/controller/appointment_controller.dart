@@ -98,6 +98,17 @@ class AppointmentController extends GetxController implements GetxService {
     update();
   }
 
+  dynamic _prescription = "";
+
+  dynamic get prescription => _prescription;
+
+
+  void setPrescription([dynamic val]) {
+    _prescription = val;
+    update();
+  }
+
+
   String _orderId = "";
 
   String get orderId => _orderId;
@@ -433,6 +444,7 @@ class AppointmentController extends GetxController implements GetxService {
       if (response.statusCode == 200) {
         if (response.body != null && response.body['appointmentData'] != null) {
           List<dynamic> responseData = response.body['appointmentData'];
+          debugPrint("Response patient: ${response.body['appointmentData'][0]["patient_appointments"]}");
           setAppointmentHistoryList(responseData
               .map((json) => AppointmentHistoryModel.fromJson(
                   json as Map<String, dynamic>))
@@ -543,6 +555,26 @@ class AppointmentController extends GetxController implements GetxService {
 
     update();
   }
+
+
+  Future<void> getPrescription(
+      String Id,
+      ) async {
+    update();
+    Response response = await appointmentRepo.getPrescription(Id);
+    debugPrint('Response: ${response.body['pdfLink']}');
+    setPrescription(response.body['pdfLink']);
+
+    if (response.statusCode == 200) {
+      // debugPrint('Response: ${response.body}');
+      // showCustomSnackBar('Booking Created Successfully');
+    } else {
+      update();
+    }
+
+    update();
+  }
+
 
   bool _isPurchasePlanLoading = false;
 
