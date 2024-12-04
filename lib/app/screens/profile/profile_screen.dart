@@ -15,6 +15,8 @@ import 'package:get/get.dart';
 import 'package:iclinix/utils/sizeboxes.dart';
 import 'package:iclinix/utils/styles.dart';
 
+import '../../widget/custom_button_widget.dart';
+
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({super.key});
 
@@ -215,13 +217,14 @@ class ProfileScreen extends StatelessWidget {
                               context: context,
                               initialDate: profileControl.selectedDate ??
                                   DateTime.now(),
-                              firstDate: DateTime(2000),
-                              lastDate: DateTime(2100),
+                              firstDate: DateTime(1940),
+                              lastDate: DateTime(2018),
                             );
                             if (pickedDate != null) {
                               profileControl.updateDate(pickedDate);
-                              _dateController.text =
-                                  profileControl.formattedDate.toString();
+                              profileControl.formattedDate.toString();
+                              print(profileControl.formattedDate.toString());
+                              _dateController.text = profileControl.formattedDate.toString();
                             }
                           },
                           validation: (value) {
@@ -240,10 +243,8 @@ class ProfileScreen extends StatelessWidget {
                           },
                           hintText: 'Date of Birth',
                           isCalenderIcon: true,
-                          // editText: true,
                         ),
                         sizedBox10(),
-
                         // CustomTextField(
                         //   showTitle: true,
                         //   maxLines: 3,
@@ -256,74 +257,74 @@ class ProfileScreen extends StatelessWidget {
                         //   controller: _addressController,
                         //   hintText: 'Address',
                         // ),
-                        sizedBox20(),
-                        Text(
-                          'ACCOUNT DETAILS',
-                          style: openSansSemiBold.copyWith(
-                              fontSize: Dimensions.fontSize14,
-                              color: Theme.of(context).hintColor),
-                        ),
-                        sizedBox10(),
-
-                        CustomDropdownField(
-                          hintText: 'Gender',
-                          selectedValue: profileControl.selectedGender.isEmpty
-                              ? null
-                              : profileControl.selectedGender,
-                          options: profileControl.genderOptions,
-                          onChanged: (String? newValue) {
-                            if (newValue != null) {
-                              profileControl.updateGender(
-                                  newValue); // Update controller
-                            }
-                          },
-                          showTitle: true, // Set to true to show title
-                        ),
-                        sizedBox10(),
-                        CustomDropdownField(
-                          hintText: 'Do you have diabetes?',
-                          selectedValue:
-                          profileControl.selectedDiabetes.isEmpty
-                              ? null
-                              : profileControl.selectedDiabetes,
-                          options: profileControl.diabetesOptions,
-                          onChanged: (String? newValue) {
-                            if (newValue != null) {
-                              profileControl.updateDiabetes(newValue);
-                              print(profileControl.selectedDiabetes);
-                            }
-                          },
-                          showTitle: true, // Set to true to show title
-                        ),
-                        sizedBox10(),
-                        CustomDropdownField(
-                          hintText: 'Do you wear glasses?',
-                          selectedValue:
-                          profileControl.selectedGlasses.isEmpty
-                              ? null
-                              : profileControl.selectedGlasses,
-                          options: profileControl.glassesOptions,
-                          onChanged: (String? newValue) {
-                            if (newValue != null) {
-                              profileControl.updateGlasses(newValue);
-                            }
-                          },
-                          showTitle: true,
-                        ),
-                        sizedBox10(),
-                        CustomDropdownField(
-                          hintText: 'Any Previous Health Issue',
-                          selectedValue: profileControl.selectedBp,
-                          // Use selectedBp directly
-                          options: profileControl.bpOptions,
-                          onChanged: (String? newValue) {
-                            if (newValue != null) {
-                              profileControl.updateBp(newValue);
-                              print(profileControl.selectedBp);
-                            }
-                          },
-                          showTitle: true,
-                        ),
+                        // sizedBox20(),
+                        // Text(
+                        //   'ACCOUNT DETAILS',
+                        //   style: openSansSemiBold.copyWith(
+                        //       fontSize: Dimensions.fontSize14,
+                        //       color: Theme.of(context).hintColor),
+                        // ),
+                        // sizedBox10(),
+                        //
+                        // CustomDropdownField(
+                        //   hintText: 'Gender',
+                        //   selectedValue: profileControl.selectedGender.isEmpty
+                        //       ? null
+                        //       : profileControl.selectedGender,
+                        //   options: profileControl.genderOptions,
+                        //   onChanged: (String? newValue) {
+                        //     if (newValue != null) {
+                        //       profileControl.updateGender(
+                        //           newValue); // Update controller
+                        //     }
+                        //   },
+                        //   showTitle: true, // Set to true to show title
+                        // ),
+                        // sizedBox10(),
+                        // CustomDropdownField(
+                        //   hintText: 'Do you have diabetes?',
+                        //   selectedValue:
+                        //   profileControl.selectedDiabetes.isEmpty
+                        //       ? null
+                        //       : profileControl.selectedDiabetes,
+                        //   options: profileControl.diabetesOptions,
+                        //   onChanged: (String? newValue) {
+                        //     if (newValue != null) {
+                        //       profileControl.updateDiabetes(newValue);
+                        //       print(profileControl.selectedDiabetes);
+                        //     }
+                        //   },
+                        //   showTitle: true, // Set to true to show title
+                        // ),
+                        // sizedBox10(),
+                        // CustomDropdownField(
+                        //   hintText: 'Do you wear glasses?',
+                        //   selectedValue:
+                        //   profileControl.selectedGlasses.isEmpty
+                        //       ? null
+                        //       : profileControl.selectedGlasses,
+                        //   options: profileControl.glassesOptions,
+                        //   onChanged: (String? newValue) {
+                        //     if (newValue != null) {
+                        //       profileControl.updateGlasses(newValue);
+                        //     }
+                        //   },
+                        //   showTitle: true,
+                        // ),
+                        // sizedBox10(),
+                        // CustomDropdownField(
+                        //   hintText: 'Any Previous Health Issue',
+                        //   selectedValue: profileControl.selectedBp,
+                        //   // Use selectedBp directly
+                        //   options: profileControl.bpOptions,
+                        //   onChanged: (String? newValue) {
+                        //     if (newValue != null) {
+                        //       profileControl.updateBp(newValue);
+                        //       print(profileControl.selectedBp);
+                        //     }
+                        //   },
+                        //   showTitle: true,
+                        // ),
                         // CustomDropdownField(
                         //   hintText: 'Any Previous Health Issue',
                         //   selectedValue: profileControl.selectedBp.isEmpty
@@ -338,38 +339,40 @@ class ProfileScreen extends StatelessWidget {
                         //   },
                         //   showTitle: true,
                         // ),
-                        sizedBox20(),
-                        // CustomButtonWidget(
-                        //   buttonText: "Continue",
-                        //   onPressed: () {
-                        //     if (_formKey.currentState!.validate()) {
-                        //       print(
-                        //           'first name == ${_firstnameController.text}');
-                        //       print(
-                        //           'lastNameController name == ${_lastNameController.text}');
-                        //       print(
-                        //           'dateController name == ${_dateController.text}');
-                        //       print(
-                        //           'diabaties name == ${profileControl.getDiabetesStatus()}');
-                        //       print(
-                        //           'selectedGlasses name == ${profileControl.getGlassesStatus()}');
-                        //       print(
-                        //           'selectedHealth name == ${profileControl.getBpStatus()}');
-                        //       print(
-                        //           'selectedGender name == ${profileControl.getGenderStatus()}');
-                        //       // profileControl.updateProfileApi(
-                        //       //     _firstnameController.text,
-                        //       //     _lastNameController.text,
-                        //       //     _dateController.text,
-                        //       //     authControl.selectedDiabetes == 'No' ? '0' : '1',
-                        //       //     authControl.selectedBp == 'No' ? '0' : '1',
-                        //       //     authControl.selectedGlasses == 'No' ? '0' : '1',
-                        //       //     authControl.selectedGender == 'Male' ? 'M' : 'F'
-                        //       // );
-                        //     }
-                        //   },
-                        // ),
-
+                        sizedBox30(),
+                        profileControl.isProfileLoading ?
+                            const Center(child: CircularProgressIndicator()) :
+                        CustomButtonWidget(
+                          buttonText: "Update",
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              print(
+                                  'first name == ${_firstnameController.text}');
+                              print(
+                                  'lastNameController name == ${_lastNameController.text}');
+                              print(
+                                  'dateController name == ${_dateController.text}');
+                              print(
+                                  'diabaties name == ${profileControl.getDiabetesStatus()}');
+                              print(
+                                  'selectedGlasses name == ${profileControl.getGlassesStatus()}');
+                              print(
+                                  'selectedHealth name == ${profileControl.getBpStatus()}');
+                              print(
+                                  'selectedGender name == ${profileControl.getGenderStatus()}');
+                              profileControl.updateProfileApi(
+                                  _firstnameController.text,
+                                  _lastNameController.text,
+                                  _dateController.text,
+                                  authControl.selectedDiabetes == 'No' ? '0' : '1',
+                                  authControl.selectedBp == 'No' ? '0' : '1',
+                                  authControl.selectedGlasses == 'No' ? '0' : '1',
+                                  authControl.selectedGender == 'Male' ? 'M' : 'F'
+                              );
+                            }
+                          },
+                        ),
+                        sizedBox100(),
                         sizedBox100(),
                       ],
                     ),
@@ -378,9 +381,6 @@ class ProfileScreen extends StatelessWidget {
               );
             });
           })
-
-
-
           ));
   }
 }

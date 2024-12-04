@@ -62,47 +62,51 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           ),
                         ),
                         sizedBoxW15(),
-                        GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          onTap: () {
-                            Get.to(() => const DashboardScreen(pageIndex: 4));
-                          },
-                          child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              GestureDetector(
-                                behavior: HitTestBehavior.translucent,
-                                onTap: () {
-                                  Get.to(() => const DashboardScreen(pageIndex: 4));
-                                },
-                                child: Text(
-                                  controller.userData != null
-                                      ? '${controller.userData!.firstName} ${controller.userData!.lastName}'
-                                      : 'Iclinix',
-                                  style: openSansSemiBold.copyWith(fontSize: Dimensions.fontSize18
-                                      ,
-
-                                  color: Colors.white),
+                        Expanded(
+                          child: GestureDetector(
+                            behavior: HitTestBehavior.translucent,
+                            onTap: () {
+                              Get.to(() => const DashboardScreen(pageIndex: 4));
+                            },
+                            child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  onTap: () {
+                                    Get.to(() => const DashboardScreen(pageIndex: 4));
+                                  },
+                                  child: Text(
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    controller.userData != null
+                                        ? '${controller.userData!.firstName} ${controller.userData!.lastName}'
+                                        : 'Iclinix',
+                                    style: openSansSemiBold.copyWith(fontSize: Dimensions.fontSize18
+                                        ,
+                          
+                                    color: Colors.white),
+                                  ),
                                 ),
-                              ),
-                              GestureDetector(
-                                behavior: HitTestBehavior.translucent,
-                                onTap: () {
-                                  Get.to(() => const DashboardScreen(pageIndex: 4));
-                                },
-                                child: Row(
-                                  children: [
-                                    Text('Edit Profile',
-                                      style: openSansLight.copyWith(fontSize: Dimensions.fontSize13,
-                                          color: Colors.white.withOpacity(0.80),),
-                                    ),
-                                    sizedBoxW5(),
-                                    Icon(Icons.edit_square ,
-                                      size:  Dimensions.fontSizeDefault,
-                                      color:  Colors.white.withOpacity(0.80), )
-                                  ],
+                                GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  onTap: () {
+                                    Get.to(() => const DashboardScreen(pageIndex: 4));
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Text('Edit Profile',
+                                        style: openSansLight.copyWith(fontSize: Dimensions.fontSize13,
+                                            color: Colors.white.withOpacity(0.80),),
+                                      ),
+                                      sizedBoxW5(),
+                                      Icon(Icons.edit_square ,
+                                        size:  Dimensions.fontSizeDefault,
+                                        color:  Colors.white.withOpacity(0.80), )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
 

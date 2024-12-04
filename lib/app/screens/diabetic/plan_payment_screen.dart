@@ -79,7 +79,6 @@ class PlanPaymentScreen extends StatelessWidget {
                           ),
                         );
                       } else {
-                        // Update selected payment method
                         appointmentControl.selectPaymentMethod(value!);
                       }
                     },

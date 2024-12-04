@@ -128,7 +128,10 @@ class ProfileController extends GetxController implements GetxService {
 
 
 
-  Future<void> updateProfileApi( String? firstname,
+  bool _isProfileLoading = false;
+  bool get isProfileLoading => _isProfileLoading;
+  Future<void> updateProfileApi(
+      String? firstname,
       String? lastname,
       String? dob,
       String? diabetesProblem,
@@ -136,31 +139,40 @@ class ProfileController extends GetxController implements GetxService {
       String? eyeProblem,
       String? gender,
       ) async {
-    _isLoading = true;
-    update();
-
-    Response response = await profileRepo.updateProfileRepo(firstname, lastname, dob, diabetesProblem, bpProblem, eyeProblem,gender);
-    if(response.statusCode == 200) {
-      var responseData = response.body;
-      if(responseData["Msg"]  == "Data Updated Successfully") {
-        Get.toNamed(RouteHelper.getDashboardRoute());
-        _isLoading = false;
-        update();
-        return showCustomSnackBar('Saved Successfully', isError: true);
-      } else {
-        _isLoading = false;
-        update();
-        print('update profile failed');
-
-      }
-      _isLoading = false;
+    try {
+      _isProfileLoading = true;
       update();
-    } else {
-      _isLoading = false;
+
+      Response response = await profileRepo.updateProfileRepo(
+        firstname,
+        lastname,
+        dob,
+        diabetesProblem,
+        bpProblem,
+        eyeProblem,
+        gender,
+      );
+
+      if (response.statusCode == 200) {
+        var responseData = response.body;
+        if (responseData["Msg"] == "Data Updated Successfully") {
+          Get.toNamed(RouteHelper.getDashboardRoute());
+          showCustomSnackBar('Saved Successfully', isError: false);
+        } else {
+          showCustomSnackBar('Update profile failed', isError: true);
+          print('Update profile failed');
+        }
+      } else {
+        showCustomSnackBar('Server error: ${response.statusCode}', isError: true);
+      }
+    } catch (e) {
+      showCustomSnackBar('An error occurred: $e', isError: true);
+      print('Exception: $e');
+    } finally {
+      Get.find<AuthController>().userDataApi();
+      _isProfileLoading = false;
       update();
     }
-    _isLoading = false;
-    update();
   }
 
 

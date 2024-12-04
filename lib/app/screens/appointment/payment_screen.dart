@@ -218,16 +218,16 @@ void razorpayImplement(AppointmentModel appointment, String orderId,
 void _handlePaymentSuccess(
   PaymentSuccessResponse response,
 ) {
-  // Do something when payment succeeds
   Map<String, dynamic> requestBody = {
     "paymentId": "${response.paymentId}",
-    "orderId": "${Get.find<AppointmentController>().orderId}",
+    "orderId": Get.find<AppointmentController>().orderId,
     "paymentStatus": "success"
   };
   debugPrint("requestBody==> $requestBody");
   debugPrint('EVENT_PAYMENT_SUCCESS: ${response.data}');
 
   Get.find<AppointmentController>().postDataBack(requestBody);
+
 }
 
 void _handlePaymentError(PaymentFailureResponse response) {

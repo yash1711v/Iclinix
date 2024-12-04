@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slide_drawer/flutter_slide_widget.dart';
 import 'package:iclinix/app/widget/custom_drawer_widget.dart';
+import 'package:iclinix/app/widget/custom_snackbar.dart';
 
 import 'package:iclinix/app/widget/loading_widget.dart';
 import 'package:iclinix/controller/appointment_controller.dart';
@@ -170,7 +171,7 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                 drawerButton: CustomMenuButton(tap: () {
                   drawerKey.currentState!.toggleDrawer();
                 }),
-                menuWidget: Row(
+                menuWidget: const Row(
                   children: [
                     NotificationButton(),
                   ],
@@ -184,7 +185,7 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                         labelColor: Theme.of(context).primaryColor,
                         dividerColor: Colors.grey,
                         unselectedLabelColor: Colors.grey,
-                        tabs: [
+                        tabs: const [
                           Tab(
                             text: 'Appointments',
                           ),
@@ -193,7 +194,7 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                           ),
                         ],
                       ),
-                      Divider(
+                      const Divider(
                         color: Colors.grey, // Color of the divider
                         thickness: 1, // Thickness of the divider
                         height: 1, // Space taken by the divider
@@ -366,7 +367,15 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                     Visibility(
                       visible: index == 0,
                       child: Expanded(
-                          child: SingleChildScrollView(
+                          child:    appointmentHistoryList.isEmpty ||
+                              appointmentHistoryList.every((appointment) => appointment.patientAppointments.isEmpty)
+                              ? EmptyDataWidget(
+                            text: 'Nothing Available',
+                            image: Images.icEmptyDataHolder,
+                            fontColor: Theme.of(context).disabledColor,
+                          )
+                              :
+                          SingleChildScrollView(
                             child: Column(
                               children: [
                                 // Padding(
@@ -497,6 +506,7 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                                 //     ],
                                 //   ),
                                 // ),
+
                                 ListView.builder(
                                   padding: EdgeInsets.zero,
                                   // separatorBuilder: (BuildContext context, int index) => sizedBox10(),
@@ -505,8 +515,7 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                                   itemCount: appointmentHistoryList.length,
                                   itemBuilder: (_, i) {
                                     final appointment = appointmentHistoryList[i];
-                                    final patientAppointments =
-                                        appointment.patientAppointments;
+                                    final patientAppointments = appointment.patientAppointments;
                                     return Visibility(
                                         visible: patientAppointments.isNotEmpty,
                                         child: ListView.builder(
@@ -529,13 +538,13 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       height: 10,
                                                     ),
                                                     Row(
                                                       children: [
                                                         Text(
-                                                          '${AppointmentDateTimeConverter.formatDate(patientAppointment.opdDate.toString())} - ${patientAppointment.opdTime.toString()}',
+                                                          '${AppointmentDateTimeConverter.formatDate(patientAppointment.opdDate.toString())}  ${patientAppointment.opdTime == null || patientAppointment.opdTime!.isEmpty ? '' : patientAppointment.opdTime}',
                                                           style: openSansBold
                                                               .copyWith(
                                                             fontSize: Dimensions
@@ -555,19 +564,25 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                                                         //   ),
                                                         // ),
                                                         Spacer(),
+                                                        appointmentControl.apptId == null  ?
+                                                        SizedBox() :
                                                         GestureDetector(
-                                                          onTap: () {
-                                                            // Get.to(HealthRecordsScreen());
-                                                            appointmentControl.getInvoice(
-                                                                patientAppointment
-                                                                    .id
-                                                                    .toString()).then((value) {
-                                                                      if(appointmentControl.apptId != null && appointmentControl.apptId != ""){
-                                                                        downloadFile(appointmentControl.apptId, 'invoice.pdf');
-                                                                      }
+                                                          onTap: () async {
+                                                            try {
+                                                              print(appointmentControl.apptId);
+                                                              var response = await appointmentControl.getInvoice(
+                                                                patientAppointment.id.toString(),
+                                                              );
+                                                              if (appointmentControl.apptId != null && appointmentControl.apptId!.isNotEmpty) {
+                                                                downloadFile(appointmentControl.apptId!, 'invoice.pdf');
+                                                              } else {
+                                                                showCustomSnackBar("Invoice not available");
+                                                              }
+                                                            } catch (e) {
+                                                              print("Error: $e");
+                                                              showCustomSnackBar("Invoice not available");
 
-                                                            });
-
+                                                            }
                                                           },
                                                           child: Icon(
                                                             Icons.download,

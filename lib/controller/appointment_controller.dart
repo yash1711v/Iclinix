@@ -516,13 +516,13 @@ class AppointmentController extends GetxController implements GetxService {
     Map<String, dynamic> requestBody,
   ) async {
     _isLoading = true;
+    LoadingDialog.showLoading(message: "Please wait...");
     update();
 
     Response response = await appointmentRepo.postDataBack(requestBody);
     if (response.statusCode == 200) {
       var responseData = response.body;
       debugPrint('Response: $responseData');
-
       if (responseData['message'] == "Appointment Booked Successfully.") {
         setisPaymentSuccessFull(true);
         getInvoice(responseData['appt_id'].toString());
@@ -534,6 +534,7 @@ class AppointmentController extends GetxController implements GetxService {
       update();
     }
 
+    LoadingDialog.hideLoading();
     _isLoading = false;
     update();
   }
@@ -591,10 +592,8 @@ class AppointmentController extends GetxController implements GetxService {
     if (response.statusCode == 200) {
       var responseData = response.body;
       if (responseData["message"] == "Subscription created successfully") {
-        // Fetch user data to update the subscription status
         await Get.find<AuthController>().userDataApi();
-        // Navigate to the successful payment route
-        Get.toNamed(RouteHelper.getPlanPaymentSuccessfulRoute());
+        // Get.toNamed(RouteHelper.getPlanPaymentSuccessfulRoute());
       } else {
         showCustomSnackBar(responseData["message"], isError: true);
       }

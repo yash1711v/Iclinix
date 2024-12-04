@@ -3,6 +3,7 @@ import 'package:iclinix/app/widget/common_widgets.dart';
 import 'package:iclinix/app/widget/custom_app_bar.dart';
 import 'package:iclinix/app/widget/custom_button_widget.dart';
 import 'package:iclinix/app/widget/custom_dropdown_field.dart';
+import 'package:iclinix/app/widget/custom_snackbar.dart';
 import 'package:iclinix/app/widget/custom_textfield.dart';
 import 'package:iclinix/controller/appointment_controller.dart';
 import 'package:iclinix/data/models/body/appointment_model.dart';
@@ -168,7 +169,7 @@ class PatientDetailsScreen extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              'YOUR COMPLAINT',
+                              'YOUR Appointment Details',
                               style: openSansRegular.copyWith(
                                   fontSize: Dimensions.fontSize12
                               ), //,
@@ -184,7 +185,7 @@ class PatientDetailsScreen extends StatelessWidget {
                           hintText: "Write here.....",
                           validation: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your complaint';
+                              return 'Please enter your appointment Details';
                             }
                             return null;
                           },
@@ -332,7 +333,7 @@ class PatientDetailsScreen extends StatelessWidget {
                             ),
                             sizedBox10(),
                             Text(
-                              'YOUR COMPLAINT',
+                              'YOUR Appointment Details',
                               style: openSansRegular.copyWith(
                                   fontSize: Dimensions.fontSize12
                               ), //,
@@ -346,7 +347,7 @@ class PatientDetailsScreen extends StatelessWidget {
                               hintText: "Write here.....",
                               validation: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Please enter your complaint';
+                                  return 'Please enter your appointment Details';
                                 }
                                 return null;
                               },
@@ -387,63 +388,69 @@ class PatientDetailsScreen extends StatelessWidget {
                       fontSize: Dimensions.fontSize14,
                       buttonText: 'Proceed to Pay',
                       onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          print('Print clinicId  ${clinicId}');
-                          print(
-                              'Print _firstnameController  ${_firstnameController.text}');
-                          print(
-                              'Print _lastnameController  ${_lastnameController.text}');
-                          print(
-                              'Print _phoneController  ${_phoneController.text}');
-                          print(
-                              'Print selectedGender  ${appointmentControl.getGenderStatus()}');
-                          print(
-                              'Print _dateController  ${_dateController.text}');
-                          print('Print appointmentDate  ${appointmentDate}');
-                          print('Print appointmentTime  ${appointmentTime}');
-                          print(
-                              'Print getDiabetesStatus  ${appointmentControl.getDiabetesStatus()}');
-                          print(
-                              'Print selectedBp  ${appointmentControl.getBpStatus()}');
-                          print(
-                              'Print selectedGlasses  ${appointmentControl.getGlassesStatus()}');
-                          print(
-                              'Print _otherProblemController  ${_otherProblemController.text}');
-                          print(
-                              'Print selectedPatientId  ${appointmentControl.selectedPatientId.value.toString()}');
 
-                          print('print bool ${appointmentControl.bookingDiabeticType}');
+                        if(_otherProblemController.text.isEmpty) {
+                          showCustomSnackBar('Please Enter Appointment Details');
+                        } else {
+                          if (_formKey.currentState!.validate()) {
+                            print('Print clinicId  ${clinicId}');
+                            print(
+                                'Print _firstnameController  ${_firstnameController.text}');
+                            print(
+                                'Print _lastnameController  ${_lastnameController.text}');
+                            print(
+                                'Print _phoneController  ${_phoneController.text}');
+                            print(
+                                'Print selectedGender  ${appointmentControl.getGenderStatus()}');
+                            print(
+                                'Print _dateController  ${_dateController.text}');
+                            print('Print appointmentDate  ${appointmentDate}');
+                            print('Print appointmentTime  ${appointmentTime}');
+                            print(
+                                'Print getDiabetesStatus  ${appointmentControl.getDiabetesStatus()}');
+                            print(
+                                'Print selectedBp  ${appointmentControl.getBpStatus()}');
+                            print(
+                                'Print selectedGlasses  ${appointmentControl.getGlassesStatus()}');
+                            print(
+                                'Print _otherProblemController  ${_otherProblemController.text}');
+                            print(
+                                'Print selectedPatientId  ${appointmentControl.selectedPatientId.value.toString()}');
 
-                          AppointmentModel appointmentModel = AppointmentModel(
-                            patientId: appointmentControl.selectedPatientId.value.toString(),
-                            firstName: _firstnameController.text,
-                            lastName: _lastnameController.text,
-                            mobileNo: _phoneController.text,
-                            gender: appointmentControl.getGenderStatus(),
-                            dob: _dateController.text,
-                            appointmentDate: appointmentDate,
-                            appointmentTime: appointmentTime,
-                            diabetesProblem: appointmentControl.getDiabetesStatus(),
-                            bpProblem: appointmentControl.getBpStatus(),
-                            eyeProblem: appointmentControl.getGlassesStatus(),
-                            // otherProblem: _otherProblemController.text,
-                            address: _addressController.text,
-                            complaint: _otherProblemController.text,
-                            patientType: 'new',
-                            branchId: clinicId.toString(),
-                            initial: appointmentControl.selectedInitial,
-                            includePatientType: appointmentControl.isNewPatientEnabled,
-                            type: appointmentControl.bookingDiabeticType == true ? "2" : "1"
-                          );
+                            print('print bool ${appointmentControl.bookingDiabeticType}');
 
-                          Get.toNamed(RouteHelper.getPaymentMethodRoute(), arguments: appointmentModel);
+                            AppointmentModel appointmentModel = AppointmentModel(
+                                patientId: appointmentControl.selectedPatientId.value.toString(),
+                                firstName: _firstnameController.text,
+                                lastName: _lastnameController.text,
+                                mobileNo: _phoneController.text,
+                                gender: appointmentControl.getGenderStatus(),
+                                dob: _dateController.text,
+                                appointmentDate: appointmentDate,
+                                appointmentTime: appointmentTime,
+                                diabetesProblem: appointmentControl.getDiabetesStatus(),
+                                bpProblem: appointmentControl.getBpStatus(),
+                                eyeProblem: appointmentControl.getGlassesStatus(),
+                                // otherProblem: _otherProblemController.text,
+                                address: _addressController.text,
+                                complaint: _otherProblemController.text,
+                                patientType: 'new',
+                                branchId: clinicId.toString(),
+                                initial: appointmentControl.selectedInitial,
+                                includePatientType: appointmentControl.isNewPatientEnabled,
+                                type: appointmentControl.bookingDiabeticType == true ? "2" : "1"
+                            );
+
+                            Get.toNamed(RouteHelper.getPaymentMethodRoute(), arguments: appointmentModel);
 
 
 
-                          // appointmentControl.bookAppointmentApi(
-                          //     appointmentModel
-                          // );
+                            // appointmentControl.bookAppointmentApi(
+                            //     appointmentModel
+                            // );
+                          }
                         }
+
                       },
                     ),
             ),
