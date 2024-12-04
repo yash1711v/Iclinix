@@ -10,6 +10,7 @@ import 'package:iclinix/controller/appointment_controller.dart';
 import 'package:get/get.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../helper/date_converter.dart';
 import '../../../utils/dimensions.dart';
@@ -44,7 +45,17 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
 
   Future<void> downloadFile(String url, String fileName) async {
 
-    debugPrint("Downloading file from $url");
+    if (await Permission.storage.isDenied) {
+      await Permission.manageExternalStorage.request();
+      await Permission.storage.request();
+    }
+
+    setState(() {
+      progress = 0.0;
+      isDownloading = true;
+    });
+
+
     setState(() {
       progress = 0.0;
       isDownloading = true;
