@@ -47,7 +47,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       Get.find<AppointmentController>().bookAppointmentApi(
           widget.appointmentModel,
           Get.find<AppointmentController>().ScheduleType,
-          Get.find<AppointmentController>().Scheduleid);
+          Get.find<AppointmentController>().Scheduleid,);
       Get.find<AppointmentController>().setisPaymentSuccessFull(false);
     });
   }

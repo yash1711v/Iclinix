@@ -13,6 +13,7 @@ import 'package:iclinix/utils/sizeboxes.dart';
 import 'package:iclinix/utils/styles.dart';
 import 'package:get/get.dart';
 
+import '../../../widget/loading_widget.dart';
 import 'health_goal_detail_dialog.dart';
 
 class AddHealthGoal extends StatefulWidget {
@@ -69,9 +70,8 @@ class _AddHealthGoalState extends State<AddHealthGoal> {
                     ),
                     DecoratedAddButton(
                       tap: () {
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
+
                           Get.dialog(AddHealthGoalDialog());
-                        });
                       },
                     ),
                   ],
@@ -180,11 +180,14 @@ class AddHealthGoalDialog extends StatelessWidget {
   AddHealthGoalDialog({super.key});
 
   final titleController = TextEditingController();
+
   final descriptionController = TextEditingController();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    print("=====>Hello");
     return Dialog(
         insetPadding:
             const EdgeInsets.symmetric(horizontal: Dimensions.paddingSize10),
@@ -266,13 +269,15 @@ class AddHealthGoalDialog extends StatelessWidget {
                                   isBold: false,
                                   fontSize: Dimensions.fontSize14,
                                   onPressed: () {
+                                    LoadingDialog.showLoading(message: "Please wait...");
                                     if (_formKey.currentState!.validate()) {
                                       controller.addHealthGoalApi(
                                           titleController.text,
                                           descriptionController.text).then((value) {
 
                                       });
-                                      Navigator.pop(context);
+                                      Get.back();
+
                                     }
                                   },
                                 ),

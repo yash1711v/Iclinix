@@ -127,6 +127,7 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
                           //   ),
                           // );
                           Get.find<AppointmentController>().selectBookingType(true);
+                          debugPrint("value====>"+Get.find<AppointmentController>().bookingDiabeticType.toString());
                           Get.toNamed(RouteHelper.getAllClinicRoute(isBackButton: true));
                         },
                       ),

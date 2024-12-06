@@ -33,8 +33,9 @@ class AppointmentRepo {
     return apiClient.postData(AppConstants.slotListUrl,requestBody);
   }
 
-  Future<Response> bookAppointmentRepo(AppointmentModel appointment,String schedule_type, String schedule_Id) async {
+  Future<Response> bookAppointmentRepo(bool bookingType,AppointmentModel appointment,String schedule_type, String schedule_Id) async {
     // Prepare the data to be sent in the request body
+    debugPrint('appointment.appointmentDate: ${bookingType}');
     final requestBody = {
       "branchid": appointment.branchId,
       if (!appointment.includePatientType && appointment.patientId != null) 'patientId': appointment.patientId,
@@ -53,7 +54,7 @@ class AppointmentRepo {
       "pay_method": "razorpay",
       "schedule_type": schedule_type,
       "schedule_type_id": schedule_Id,
-      "doctor_id": 3
+      "doctor_id": bookingType?72:3,
     };
 
     // Print the request body for debugging

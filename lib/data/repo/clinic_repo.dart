@@ -27,6 +27,17 @@ class ClinicRepo {
     return await apiClient.getData('${AppConstants.serviceDetails}$id',method: 'GET');
   }
 
+  Future<Response> sendMessageRepo(
+      String? subject,
+      String? description,
+      String? type,
+      ) async {
+    return await apiClient.postData('add-ticket', {
+      "subject" :subject,
+      "message" :description,
+      "type": type,
+    });
+  }
 
 }
 

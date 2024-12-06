@@ -339,10 +339,11 @@ class AppointmentController extends GetxController implements GetxService {
   bool get isBookingLoading => _isBookingLoading;
 
   Future<void> bookAppointmentApi(AppointmentModel appointment,
-      String schedule_type, String schedule_Id) async {
+      String schedule_type, String schedule_Id,) async {
     // _isBookingLoading = true;
     update();
     Response response = await appointmentRepo.bookAppointmentRepo(
+       bookingDiabeticType,
         appointment, schedule_type, schedule_Id);
     debugPrint('Response: ${response.body}');
     if (response.statusCode == 200) {
