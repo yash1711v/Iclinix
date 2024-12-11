@@ -24,11 +24,15 @@ class _SplashScreenState extends State<SplashScreen> {
   void _route() {
     final AuthController authController = Get.find<AuthController>();
     Timer(const Duration(seconds: 1), () async {
-      if (Get.find<AuthController>().isLoggedIn()) {
-        Get.offNamed(RouteHelper.getDashboardRoute());
-      } else {
-        Get.offNamed(RouteHelper.getLoginRoute());
-      }
+      await Get.find<AuthController>().isLoggedIn().then((value){
+        debugPrint("isTokenAvailable: $value");
+        if (value ?? false) {
+          Get.offNamed(RouteHelper.getDashboardRoute());
+        } else {
+          Get.offNamed(RouteHelper.getLoginRoute());
+        }
+      });
+
     });
   }
   @override

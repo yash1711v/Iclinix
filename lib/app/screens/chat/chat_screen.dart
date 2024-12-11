@@ -43,7 +43,7 @@ class ChatScreen extends StatelessWidget {
                     child: CustomDropdownField(
                       selectedValue: chatControl.type == 1 ? "Question" : "Problem",
                       hintText: 'Select Type',
-                      options: ["Question", "Problem"],
+                      options: ["Question", "Problem","Urgent"],
                       onChanged: (String? newValue) {
                         chatControl.setType(newValue == "Question" ? 1 : 2);
                       },

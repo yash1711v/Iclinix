@@ -22,6 +22,7 @@ import 'package:iclinix/app/screens/onboard/splash.dart';
 import 'package:iclinix/app/screens/search/search_screen.dart';
 
 import '../app/screens/appointment/appointment_screen.dart';
+import '../app/screens/chat/all_Tickets_screen.dart';
 import '../app/screens/diabetic/plan_payment_screen.dart';
 import '../data/models/body/appointment_model.dart';
 import '../data/models/response/clinic_model.dart';
@@ -44,6 +45,7 @@ class RouteHelper {
   static const String notification = '/notification';
   static const String search = '/search';
   static const String help = '/help';
+  static const String message = '/message';
   static const String serviceDetail = '/service-detail';
   static const String planPatientDetails = '/plan-patient-details';
   static const String diabeticDashboard = '/diabetic-dashboard';
@@ -74,6 +76,7 @@ class RouteHelper {
   static String getNotificationRoute() => notification;
   static String getSearchRoute() => search;
    static String getHelpRoute() => help;
+   static String getMessageRoute() => message;
    static String getServiceDetailRoute(String? id,String? title,) => '$serviceDetail?id=$id&title=$title';
   static String getAddPlanPatientDetailsRoute(String? planId) => '$planPatientDetails?planId=$planId';
   static String getDiabeticDashboardRoute() => diabeticDashboard;
@@ -130,7 +133,8 @@ class RouteHelper {
     GetPage(name: planPayment, page: () =>  PlanPaymentScreen(patientId : Get.parameters['patientId'],planId: Get.parameters['planId'],)),
     GetPage(name: planPaymentSuccessful, page: () =>   const PlanBookingSuccessfulScreen()),
     GetPage(name: resourcesDetails, page: () =>  ResourceDetailsScreen(id : Get.parameters['id'],name: Get.parameters['name'],)),
-    GetPage(name: chat, page: () =>   ChatScreen())
+    GetPage(name: chat, page: () =>   ChatScreen()),
+    GetPage(name: message, page: () =>   AllTicketsScreen())
 
 
 

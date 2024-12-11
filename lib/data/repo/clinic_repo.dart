@@ -38,6 +38,17 @@ class ClinicRepo {
       "type": type,
     });
   }
+  Future<Response> getTickets(
+      ) async {
+    return await apiClient.getData('tickets',method: "GET");
+  }
+  Future<Response> getSingleTicketReplies(
+      String id
+      ) async {
+    return await apiClient.getData('get-ticket',method: "POST",body: {
+      "id": 2
+    });
+  }
 
 }
 

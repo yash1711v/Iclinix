@@ -7,6 +7,7 @@ import 'package:iclinix/app/widget/confirmation_dialog.dart';
 import 'package:iclinix/app/widget/custom_image_widget.dart';
 import 'package:iclinix/controller/auth_controller.dart';
 import 'package:iclinix/controller/profile_controller.dart';
+import 'package:iclinix/data/repo/auth_repo.dart';
 import 'package:iclinix/helper/route_helper.dart';
 import 'package:iclinix/utils/dimensions.dart';
 import 'package:iclinix/utils/images.dart';
@@ -205,6 +206,17 @@ debugPrint("Drawer Opened");
                 ),
                 Align(alignment: Alignment.centerLeft,
                   child: TextButton(
+                    onPressed: () {
+                      Get.toNamed(RouteHelper.getMessageRoute());
+                    },
+                    child: Text(
+                        "Messages",
+                        style: openSansRegular.copyWith(fontSize: Dimensions.fontSize18,color: Theme.of(context).cardColor)
+                    ),
+                  ),
+                ),
+                Align(alignment: Alignment.centerLeft,
+                  child: TextButton(
                     onPressed: () {},
                     child: Text(
                         "Privacy Policy",
@@ -230,6 +242,7 @@ debugPrint("Drawer Opened");
                           icon: Images.icLogout,
                           description: 'Are You Sure To Logout',
                           onYesPressed: () {
+                          Get.find<AuthController>().authRepo.saveUserToken("");
                            Get.toNamed(RouteHelper.getLoginRoute());
                           },
                         ),

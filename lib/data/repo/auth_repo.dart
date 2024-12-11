@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:iclinix/data/api/api_client.dart';
 import 'package:iclinix/utils/app_constants.dart';
 import 'package:get/get.dart';
@@ -16,8 +17,10 @@ class AuthRepo {
     return await sharedPreferences.setString(AppConstants.token, token);
   }
 
-  bool isLoggedIn() {
-    return sharedPreferences.containsKey(AppConstants.token);
+  Future<bool> isLoggedIn() async {
+    final String? isTokenAvailable = await sharedPreferences.getString(AppConstants.token);
+    debugPrint("isTokenAvailable: $isTokenAvailable");
+    return isTokenAvailable != null && isTokenAvailable.isNotEmpty;
   }
 
 

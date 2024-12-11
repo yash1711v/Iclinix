@@ -19,8 +19,9 @@ class AuthController extends GetxController implements GetxService {
   final SharedPreferences sharedPreferences;
   AuthController({required this.authRepo,required this.sharedPreferences, }) ;
 
-  bool isLoggedIn() {
-    return authRepo.isLoggedIn();
+  Future<bool> isLoggedIn() async {
+    bool value = await  authRepo.isLoggedIn();
+    return value;
   }
   DateTime? selectedDate;
   String? formattedDate;
@@ -148,7 +149,10 @@ class AuthController extends GetxController implements GetxService {
 
     _isLoginLoading = true;
     update();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
+    final String? deviceToken = await prefs.getString('FCM');
+    debugPrint('Device token: $deviceToken');
     try {
       // Create a multipart request
       var request = http.MultipartRequest(
@@ -160,6 +164,7 @@ class AuthController extends GetxController implements GetxService {
       request.fields.addAll({
         'mobile': phoneNo,
         'otp': otp,
+        "device_token": deviceToken ?? "",
       });
 
       http.StreamedResponse response = await request.send();

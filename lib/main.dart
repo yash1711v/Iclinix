@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'helper/gi_dart.dart' as di;
 import 'package:flutter/material.dart';
@@ -21,6 +22,7 @@ Future<void> main() async {
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   const androidInitialization = AndroidInitializationSettings('@mipmap/ic_launcher');
   const initializationSettings = InitializationSettings(android: androidInitialization);
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -36,6 +38,7 @@ Future<void> main() async {
   // Get the FCM token
   String? token = await messaging.getToken();
   print('FCM Token: $token');
+  await sharedPreferences.setString("FCM", token!);
 
   // Handle foreground messages
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
