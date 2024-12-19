@@ -31,6 +31,7 @@ class AppointmentController extends GetxController implements GetxService {
   bool _isLoading = false;
 
   bool get isLoading => _isLoading;
+
   bool _isPlanRenewingDone = false;
 
   bool get isPlanRenewingDone => _isPlanRenewingDone;
@@ -54,6 +55,23 @@ class AppointmentController extends GetxController implements GetxService {
 
   void setPromotionalCode([bool? val]) {
     _isPromotionalCode = val ?? !isPromotionalCode!;
+    update();
+  }
+
+  bool? _isRenew = false;
+
+  bool? get isRenew => _isRenew;
+
+  void setisRenew(bool? val) {
+    _isRenew = val;
+    update();
+  }
+  bool? _isOld = false;
+
+  bool? get isOld => _isOld;
+
+  void setisOld(bool val) {
+    _isOld = val ;
     update();
   }
 

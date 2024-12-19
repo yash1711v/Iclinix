@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iclinix/app/widget/custom_snackbar.dart';
 import 'package:iclinix/app/widget/loading_widget.dart';
+import 'package:iclinix/controller/appointment_controller.dart';
 import 'package:iclinix/data/api/api_client.dart';
 import 'package:iclinix/data/models/response/diabetic_dashboard_detail_model.dart';
 import 'package:iclinix/data/models/response/health_goal_model.dart';
@@ -283,7 +284,13 @@ class DiabeticController extends GetxController implements GetxService {
 
       if (response.statusCode == 200) {
         var data = response.body['data'];
+         var renewOption = response.body["renew_option"];
+         var oldSubs = response.body["old_subs"];
+         Get.find<AppointmentController>().setisRenew(renewOption);
+         Get.find<AppointmentController>().setisOld(oldSubs);
 
+        print("Full API Response: ${renewOption}");
+        print("Full API Response: ${oldSubs}");
         if (data != null) {
           // Process monthly sugar values if they exist
           if (data.containsKey('monthlySugerValues') && data['monthlySugerValues'] != null) {
@@ -308,7 +315,7 @@ class DiabeticController extends GetxController implements GetxService {
 
           if(data['subscription'] != null) {
             var subscriptionData = data["subscription"];
-            debugPrint("Subscription Data: $subscriptionData");
+            debugPrint("Subscription Data: ${data["subscription"]}");
             _subscriptionModel = SubscriptionModel.fromJson(subscriptionData);
           } else {
             print("No subscription key found in the response.");

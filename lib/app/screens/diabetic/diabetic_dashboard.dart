@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iclinix/app/screens/diabetic/components/add_health_goal.dart';
@@ -74,6 +76,10 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
 
   @override
   Widget build(BuildContext context) {
+    log("renew==>${Get.find<AppointmentController>()
+        .isRenew}",);
+    log("old==>${Get.find<AppointmentController>()
+        .isOld}",);
     return SliderDrawerWidget(
       key: drawerKey,
       option: SliderDrawerOption(
@@ -225,22 +231,24 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
                           ),
                           const Spacer(),
                           Visibility(
-                            visible:  () {
+                             visible:  () {
                               final expiredAt = diabeticControl.subscriptionModel?.expiredAt ??
                                   "${DateTime.now()}";
-                              final timeLeft = calculateTimeLeft(expiredAt);
-
-                              // Validate the result of `calculateTimeLeft`
-                              final firstPart = timeLeft.split(" ").first;
                               int daysLeft = 0;
 
-                              // Safely parse the value
                               try {
-                                daysLeft = int.parse(firstPart);
+                                final DateTime expiry = DateTime.parse(expiredAt);
+                                final DateTime now = DateTime.now();
+
+                                if (expiry.isAfter(now)) {
+                                  daysLeft = expiry.difference(now).inDays;
+                                } else {
+                                  daysLeft = 0; // Expired case
+                                }
                               } catch (e) {
-                                // Handle the case where `firstPart` is not a valid number
-                                debugPrint("Error parsing time left: $e");
-                                daysLeft = 0; // Or any fallback value
+                                // Handle invalid date
+                                debugPrint("Error parsing expiration date: $e");
+                                daysLeft = 0; // Default fallback
                               }
 
                               return daysLeft <= 7;
