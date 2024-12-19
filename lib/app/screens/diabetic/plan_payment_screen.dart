@@ -98,7 +98,8 @@ class PlanPaymentScreen extends StatelessWidget {
             child: !appointmentControl.isPurchasePlanLoading ?  CustomButtonWidget(
               buttonText: 'Purchase Plan',
               onPressed: () {
-                appointmentControl.purchasePlanApi(patientId,planId,'razorpay');
+                appointmentControl.setPlanRenewing(false);
+                appointmentControl.purchasePlanApi(patientId,planId,'razorpay',false);
               },
               fontSize: Dimensions.fontSize14,
               isBold: false,

@@ -529,7 +529,7 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                                                 patientAppointments[j];
                                             debugPrint(
                                                 'Patient Appointment: ${patientAppointments[j].branchName}');
-                                            return Padding(
+                                            return patientAppointment.status == 1?null:Padding(
                                               padding: const EdgeInsets.symmetric(
                                                   horizontal: 8.0, vertical: 5),
                                               child: CustomDecoratedContainer(
@@ -710,11 +710,9 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                                                                               text: patientAppointment.status ==
                                                                                       0
                                                                                   ? "Failed"
-                                                                                  : patientAppointment.status == 1
-                                                                                      ? "Confirmed"
-                                                                                      : patientAppointment.status == 2
+                                                                                  : patientAppointment.status == 2
                                                                                           ? "Cancelled"
-                                                                                          : "Pending",
+                                                                                          : patientAppointment.status == 3?"Booked":"",
                                                                               style: openSansBold
                                                                                   .copyWith(
                                                                                 fontSize:
@@ -898,7 +896,7 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                                               debugPrint(
                                                   'Patient Appointment: ${patientAppointments[j].branchName}');
                                               return Visibility(
-                                                visible:  patientAppointments[j].apiVisitId != null,
+                                                visible:  patientAppointments[j].status == 1,
                                                 child: Padding(
                                                   padding: const EdgeInsets.symmetric(
                                                       horizontal: 8.0, vertical: 5),

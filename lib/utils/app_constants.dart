@@ -23,10 +23,12 @@ class AppConstants {
   static const String addPatientDetails = "add-patient";
   static const String postDataBack = "android-webhook";
   static const String postDataBackPlans = "subs-android-webhook";
+  static const String postDataBackPlansRenew = "renew-subs-android-webhook";
   static const String cancellation = "cancel-appointment";
   static const String invoiceDownload = "appt-invoice/download/";
   static const String prescription = "prescription/download/";
   static const String subscriptionCheckout = "subscription-checkout";
+  static const String subscriptionCheckoutRenew = "renew-subscription-checkout";
   static const String referEarn = "refer-earn/banners";
   static const String discountApi = "book-appointment/banners";
   static const String diabeticBanner = "schedule-appointment/banners";

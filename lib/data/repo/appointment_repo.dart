@@ -24,11 +24,12 @@ class AppointmentRepo {
   Future<Response> getPatientList() {
     return apiClient.getData(AppConstants.patientListUrl,method: 'GET');
   }
- Future<Response> getSlotList(String branchId, String date) {
+ Future<Response> getSlotList(String branchId, String date, bool bookingType) {
 
    final requestBody = {
       "branchID": branchId,
-      "appt_date": date
+      "appt_date": date,
+      "doctor_id": bookingType?72:3,
    };
     return apiClient.postData(AppConstants.slotListUrl,requestBody);
   }
@@ -95,8 +96,8 @@ class AppointmentRepo {
   Future<Response> postDataBack( Map<String, dynamic> requestBody) {
     return apiClient.postData(AppConstants.postDataBack,requestBody);
   }
-  Future<Response> postDataBackPlans( Map<String, dynamic> requestBody) {
-    return apiClient.postData(AppConstants.postDataBackPlans,requestBody);
+  Future<Response> postDataBackPlans( Map<String, dynamic> requestBody, bool? renew) {
+    return apiClient.postData((renew ?? false)?AppConstants.postDataBackPlansRenew:AppConstants.postDataBackPlans,requestBody);
   }
   Future<Response> cancellationApi(String id) {
     var body = {
@@ -107,8 +108,10 @@ class AppointmentRepo {
 
   Future<Response> purchasePlanApi(String? patientId,
       String? planId,
-      String? paymentMethod) {
-    return apiClient.postData(AppConstants.subscriptionCheckout,{
+      String? paymentMethod,
+      bool? isRenewal
+      ) {
+    return apiClient.postData((isRenewal ?? false)?AppConstants.subscriptionCheckoutRenew:AppConstants.subscriptionCheckout,{
       'patient_id' : patientId,
       'plan_id' :planId,
       'payment_method' : paymentMethod,

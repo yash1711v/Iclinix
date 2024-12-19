@@ -97,7 +97,7 @@ class _PlanPaymentRenewScreenState extends State<PlanPaymentRenewScreen> {
     return GetBuilder<AppointmentController>(builder: (appointmentControl)
         {
           if(appointmentControl.isPlanRenewingDone){
-            appointmentControl.purchasePlanApi(widget.patientId,planId,'cod').then((value){
+            appointmentControl.purchasePlanApi(widget.patientId,planId,'cod',true).then((value){
               LoadingDialog.hideLoading();
               Get.back();
             });
@@ -268,10 +268,10 @@ class _PlanPaymentRenewScreenState extends State<PlanPaymentRenewScreen> {
                       buttonText: 'Purchase Plan',
                       onPressed: () {
                         LoadingDialog.showLoading();
-                        appointmentControl.purchasePlanApi(widget.patientId,planId,'razorpay');
+                        debugPrint("Plan id: rzorpay");
+                        appointmentControl.setPlanRenewing(true);
+                        appointmentControl.purchasePlanApi(widget.patientId,planId,'razorpay',true);
                         // razorpayImplement(name, price, planId);
-
-
                       },
                       fontSize: Dimensions.fontSize14,
                       isBold: false,
@@ -330,8 +330,9 @@ void _handlePaymentSuccess(
   };
   debugPrint("requestBody==> $requestBody");
   debugPrint('EVENT_PAYMENT_SUCCESS: ${response.data}');
-
-  Get.find<AppointmentController>().postDataBackPlans(requestBody);
+  bool? value = Get.find<AppointmentController>().isPlanRenewing;
+  debugPrint("value==> $value");
+  Get.find<AppointmentController>().postDataBackPlans(requestBody,Get.find<AppointmentController>().isPlanRenewing);
 }
 
 void _handlePaymentError(PaymentFailureResponse response) {

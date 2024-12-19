@@ -69,6 +69,7 @@ class _DiabeticEyeCarePlansComponentState
                               return GestureDetector(
                                 onTap: () {
                                   setState(() {
+                                    selectedList.clear();
                                     if (selectedList.contains(j)) {
                                       selectedList.remove(j);
                                       widget.onPlanSelected!(PlanModel(

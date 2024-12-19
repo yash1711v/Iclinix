@@ -39,6 +39,14 @@ class AppointmentController extends GetxController implements GetxService {
     _isPlanRenewingDone = val ?? false;
     update();
   }
+  bool _isPlanRenewing = false;
+
+  bool get isPlanRenewing => _isPlanRenewing;
+
+  void setPlanRenewing([bool? val]) {
+    _isPlanRenewing = val ?? false;
+    update();
+  }
 
   bool? _isPromotionalCode = false;
 
@@ -389,7 +397,7 @@ class AppointmentController extends GetxController implements GetxService {
   Future<void> getAppointmentSlotsApi(String branchId, String date) async {
     _isSlotLoading = true;
     update();
-    Response response = await appointmentRepo.getSlotList(branchId, date);
+    Response response = await appointmentRepo.getSlotList(branchId, date,bookingDiabeticType);
     List<dynamic> val = response.body['available_slots'];
     // debugPrint('Length: ${val.length}');
 
@@ -560,16 +568,17 @@ class AppointmentController extends GetxController implements GetxService {
 
   Future<void> postDataBackPlans(
       Map<String, dynamic> requestBody,
+      bool? renew
       ) async {
     _isLoading = true;
-    LoadingDialog.showLoading(message: "Please wait...");
+    LoadingDialog.showLoading(message: "Please wait...$renew");
     update();
 
-    Response response = await appointmentRepo.postDataBackPlans(requestBody);
+    Response response = await appointmentRepo.postDataBackPlans(requestBody,renew);
     if (response.statusCode == 200) {
       var responseData = response.body;
       debugPrint('Response: $responseData');
-      if (responseData['message'] == "Subscription created successfully.") {
+      if (responseData['message'] == "Subscription renewed successfully.") {
       Get.offAllNamed(RouteHelper.splash);
       }
       _isLoading = false;
@@ -627,13 +636,13 @@ class AppointmentController extends GetxController implements GetxService {
   bool get isPurchasePlanLoading => _isPurchasePlanLoading;
 
   Future<void> purchasePlanApi(
-      String? patientId, String? planId, String? paymentMethod)
+      String? patientId, String? planId, String? paymentMethod,bool? renew)
   async {
     _isPurchasePlanLoading = true;
     update();
 
     Response response =
-        await appointmentRepo.purchasePlanApi(patientId, planId, paymentMethod);
+        await appointmentRepo.purchasePlanApi(patientId, planId, paymentMethod,renew);
     if (response.statusCode == 200) {
       var responseData = response.body;
       debugPrint('Response: ${response.body}');
