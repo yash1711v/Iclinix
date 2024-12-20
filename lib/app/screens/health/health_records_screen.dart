@@ -912,7 +912,7 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                                                         Row(
                                                           children: [
                                                             Text(
-                                                              '${AppointmentDateTimeConverter.formatDate(patientAppointment.opdDate.toString())} - ${patientAppointment.opdTime.toString()}',
+                                                              '${AppointmentDateTimeConverter.formatDate(patientAppointment.opdDate.toString())} ${patientAppointment.opdTime != null ?"-":""} ${(patientAppointment.opdTime ?? "").toString()}',
                                                               style: openSansBold
                                                                   .copyWith(
                                                                 fontSize: Dimensions

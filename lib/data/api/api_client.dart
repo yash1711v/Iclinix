@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
@@ -64,7 +65,7 @@ class ApiClient extends GetxService {
       }) async {
     try {
       final uriWithQuery = query != null ? Uri.parse('$appBaseUrl$uri').replace(queryParameters: query) : Uri.parse('$appBaseUrl$uri');
-      debugPrint('====> API Call: $uriWithQuery\nHeader: ${headers ?? _mainHeaders}');
+      log('====> API Call: $uriWithQuery\nHeader: ${headers ?? _mainHeaders}');
 
       http.Response response;
 
@@ -114,7 +115,7 @@ class ApiClient extends GetxService {
           throw UnsupportedError('HTTP method not supported');
       }
 
-      print('====> API Response: ${response.body}');
+      log('====> API Response: ${response.body}');
       return handleResponse(response, uri);
     } catch (e) {
       return const Response(statusCode: 1, statusText: noInternetMessage);

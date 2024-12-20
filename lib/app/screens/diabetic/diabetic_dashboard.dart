@@ -13,6 +13,7 @@ import 'package:flutter_slide_drawer/flutter_slide_widget.dart';
 import 'package:iclinix/app/widget/custom_button_widget.dart';
 import 'package:iclinix/app/widget/custom_containers.dart';
 import 'package:iclinix/app/widget/custom_drawer_widget.dart';
+import 'package:iclinix/app/widget/empty_data_widget.dart';
 import 'package:iclinix/controller/appointment_controller.dart';
 import 'package:iclinix/controller/diabetic_controller.dart';
 import 'package:iclinix/data/models/response/diabetic_dashboard_detail_model.dart';
@@ -259,15 +260,10 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
                             }(),
                             child: ElevatedButton(
                                 onPressed: () {
+
+                                debugPrint("${diabeticControl.subscriptionModel?.patientId}");
                                   Get.to(() => PlanPaymentRenewScreen(
-                                        patientId: ((diabeticControl
-                                                            .patientData ??
-                                                        PatientData(
-                                                            diabetesProblem: 0,
-                                                            bpProblem: 0,
-                                                            eyeProblem: 0,
-                                                            id: 0))
-                                                    .id ??
+                                        patientId: (diabeticControl.subscriptionModel?.patientId ??
                                                 "")
                                             .toString(),
                                         planId: ((diabeticControl.planDetails ??
@@ -510,11 +506,18 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
                       .expiredAt ??
                       "") ==
                       "Expired")
-                    Center(
-                        child: Text(
-                      "Renew Plan",
-                      style: openSansSemiBold,
-                    )),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        EmptyDataWidget(
+                          text:
+                          'Nothing Available', // Change this text if needed
+                          image: Images.icEmptyDataHolder,
+                          fontColor: Theme.of(context).disabledColor,
+                        ),
+                      ],
+                    ),
                   sizedBox100(),
                 ],
               );

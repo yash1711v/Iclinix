@@ -215,6 +215,20 @@ debugPrint("Drawer Opened");
                     ),
                   ),
                 ),
+
+                Align(alignment: Alignment.centerLeft,
+                  child: TextButton(
+                    onPressed: () {
+                      Get.toNamed(RouteHelper.subsHistory);
+                    },
+                    child: Text(
+                        "Subscription History",
+                        style: openSansRegular.copyWith(fontSize: Dimensions.fontSize18,color: Theme.of(context).cardColor)
+                    ),
+                  ),
+                ),
+
+
                 Align(alignment: Alignment.centerLeft,
                   child: TextButton(
                     onPressed: () {},

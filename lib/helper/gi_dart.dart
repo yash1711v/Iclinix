@@ -4,6 +4,7 @@ import 'package:iclinix/controller/appointment_controller.dart';
 import 'package:iclinix/controller/auth_controller.dart';
 import 'package:iclinix/controller/clinic_controller.dart';
 import 'package:iclinix/controller/profile_controller.dart';
+import 'package:iclinix/controller/subshistory_controller.dart';
 import 'package:iclinix/data/api/api_client.dart';
 import 'package:iclinix/data/repo/appointment_repo.dart';
 import 'package:iclinix/data/repo/auth_repo.dart';
@@ -41,6 +42,7 @@ Future<void>   init() async {
   Get.lazyPut(() => ProfileController(profileRepo: Get.find(), apiClient: Get.find()));
   Get.lazyPut(() => DiabeticController(diabeticRepo: Get.find(), apiClient: Get.find()));
     Get.lazyPut(() => ChatController(clinicRepo: Get.find(), apiClient: Get.find()));
+    Get.lazyPut(() => SubsHistoryController(clinicRepo: Get.find(), apiClient: Get.find()));
 
 
 

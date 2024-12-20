@@ -123,6 +123,10 @@ class AppointmentController extends GetxController implements GetxService {
 
   dynamic get apptId => _apptId;
 
+  dynamic _invoiceId = "";
+
+  dynamic get invoiceId => _invoiceId;
+
   void setisPaymentSuccessFull([bool? val]) {
     _isPaymentSuccessFull = val!;
     update();
@@ -130,6 +134,11 @@ class AppointmentController extends GetxController implements GetxService {
 
   void setapptId([dynamic val]) {
     _apptId = val;
+    update();
+  }
+
+  void setInvoiceId([dynamic val]) {
+    _invoiceId = val;
     update();
   }
 
@@ -618,6 +627,24 @@ class AppointmentController extends GetxController implements GetxService {
     Response response = await appointmentRepo.getInvoice(Id);
     debugPrint('Response: ${response.body['pdfLink']}');
     setapptId(response.body['pdfLink']);
+
+    if (response.statusCode == 200) {
+      // debugPrint('Response: ${response.body}');
+      // showCustomSnackBar('Booking Created Successfully');
+    } else {
+      update();
+    }
+
+    update();
+  }
+
+  Future<void> getInvoiceSubs(
+    String Id,
+  ) async {
+    update();
+    Response response = await appointmentRepo.getInvoiceSubs(Id);
+    debugPrint('Response: ${response.body['pdfLink']}');
+    setInvoiceId(response.body['pdfLink']);
 
     if (response.statusCode == 200) {
       // debugPrint('Response: ${response.body}');

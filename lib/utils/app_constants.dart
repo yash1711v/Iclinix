@@ -26,6 +26,7 @@ class AppConstants {
   static const String postDataBackPlansRenew = "renew-subs-android-webhook";
   static const String cancellation = "cancel-appointment";
   static const String invoiceDownload = "appt-invoice/download/";
+  static const String invoiceDownloadSubs = "subscription-invoice/download/";
   static const String prescription = "prescription/download/";
   static const String subscriptionCheckout = "subscription-checkout";
   static const String subscriptionCheckoutRenew = "renew-subscription-checkout";

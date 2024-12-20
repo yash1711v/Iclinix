@@ -75,6 +75,10 @@ class ClinicRepo {
       ) async {
     return await apiClient.getData('get-tickets',method: "GET");
   }
+  Future<Response> getSubs(
+      ) async {
+    return await apiClient.getData('subscription-history',method: "GET");
+  }
   Future<Response>
   getSingleTicketReplies(
       String id

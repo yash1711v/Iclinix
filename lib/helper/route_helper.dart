@@ -23,6 +23,7 @@ import 'package:iclinix/app/screens/onboard/splash.dart';
 import 'package:iclinix/app/screens/search/search_screen.dart';
 import 'package:iclinix/data/models/response/ticket_model.dart';
 
+import '../app/screens/SubsScriptionHistory/susb_history.dart';
 import '../app/screens/appointment/appointment_screen.dart';
 import '../app/screens/chat/all_Tickets_screen.dart';
 import '../app/screens/diabetic/plan_payment_screen.dart';
@@ -46,6 +47,7 @@ class RouteHelper {
   static const String notification = '/notification';
   static const String search = '/search';
   static const String help = '/help';
+  static const String subsHistory = '/subsHistory';
   static const String message = '/message';
   static const String serviceDetail = '/service-detail';
   static const String planPatientDetails = '/plan-patient-details';
@@ -106,6 +108,7 @@ class RouteHelper {
   static String getSearchRoute() => search;
 
   static String getHelpRoute() => help;
+  static String getSubsHistoryRoute() => subsHistory;
 
   static String getMessageRoute() => message;
 
@@ -197,6 +200,7 @@ class RouteHelper {
     GetPage(name: notification, page: () => const NotificationScreen()),
     GetPage(name: search, page: () => SearchScreen()),
     GetPage(name: help, page: () => const HelpScreen()),
+    GetPage(name: subsHistory, page: () => const SubsHistory()),
     GetPage(
         name: serviceDetail,
         page: () => ServiceDetailsScreen(
