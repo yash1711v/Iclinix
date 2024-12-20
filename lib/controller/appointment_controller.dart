@@ -596,9 +596,9 @@ class AppointmentController extends GetxController implements GetxService {
     if (response.statusCode == 200) {
       var responseData = response.body;
       debugPrint('Response: $responseData');
-      if (responseData['message'] == "Subscription renewed successfully.") {
-      Get.offAllNamed(RouteHelper.splash);
-      }
+    await Get.find<AuthController>().userDataApi();
+
+      Get.offAllNamed(RouteHelper.dashboard);
       _isLoading = false;
       update();
     } else {

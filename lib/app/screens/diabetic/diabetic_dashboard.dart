@@ -76,10 +76,12 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
 
   @override
   Widget build(BuildContext context) {
-    log("renew==>${Get.find<AppointmentController>()
-        .isRenew}",);
-    log("old==>${Get.find<AppointmentController>()
-        .isOld}",);
+    log(
+      "renew==>${Get.find<AppointmentController>().isRenew}",
+    );
+    log(
+      "old==>${Get.find<AppointmentController>().isOld}",
+    );
     return SliderDrawerWidget(
       key: drawerKey,
       option: SliderDrawerOption(
@@ -231,13 +233,15 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
                           ),
                           const Spacer(),
                           Visibility(
-                             visible:  () {
-                              final expiredAt = diabeticControl.subscriptionModel?.expiredAt ??
+                            visible: () {
+                              final expiredAt = diabeticControl
+                                      .subscriptionModel?.expiredAt ??
                                   "${DateTime.now()}";
                               int daysLeft = 0;
 
                               try {
-                                final DateTime expiry = DateTime.parse(expiredAt);
+                                final DateTime expiry =
+                                    DateTime.parse(expiredAt);
                                 final DateTime now = DateTime.now();
 
                                 if (expiry.isAfter(now)) {
@@ -256,95 +260,92 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
                             child: ElevatedButton(
                                 onPressed: () {
                                   Get.to(() => PlanPaymentRenewScreen(
-                                    patientId: ((diabeticControl
-                                        .patientData ??
-                                        PatientData(
-                                            diabetesProblem:
-                                            0,
-                                            bpProblem: 0,
-                                            eyeProblem: 0,
-                                            id: 0))
-                                        .id ??
-                                        "")
-                                        .toString(),
-                                    planId: ((diabeticControl
-                                        .planDetails ??
-                                        PlanDetailsModel(
-                                            planId: 0,
-                                            planName: "",
-                                            price: 0,
-                                            discount: 0,
-                                            sellingPrice: 0,
-                                            discountType: 0,
-                                            duration: 9,
-                                            sortDesc: '',
-                                            description: '',
-                                            tagLine: '',
-                                            status: 0,
-                                            sortOrder: 0,
-                                            createdAt:
-                                            DateTime
-                                                .now(),
-                                            updateAt:
-                                            DateTime
-                                                .now(),
-                                            planResources: [],
-                                            subscription: SubscriptionModel(
-                                                subscriptionId:
-                                                0,
-                                                subscriptionUniqueId:
-                                                '',
-                                                patientId: 0,
-                                                userId: 0,
+                                        patientId: ((diabeticControl
+                                                            .patientData ??
+                                                        PatientData(
+                                                            diabetesProblem: 0,
+                                                            bpProblem: 0,
+                                                            eyeProblem: 0,
+                                                            id: 0))
+                                                    .id ??
+                                                "")
+                                            .toString(),
+                                        planId: ((diabeticControl.planDetails ??
+                                                        PlanDetailsModel(
+                                                            planId: 0,
+                                                            planName: "",
+                                                            price: 0,
+                                                            discount: 0,
+                                                            sellingPrice: 0,
+                                                            discountType: 0,
+                                                            duration: 9,
+                                                            sortDesc: '',
+                                                            description: '',
+                                                            tagLine: '',
+                                                            status: 0,
+                                                            sortOrder: 0,
+                                                            createdAt:
+                                                                DateTime.now(),
+                                                            updateAt:
+                                                                DateTime.now(),
+                                                            planResources: [],
+                                                            subscription:
+                                                                SubscriptionModel(
+                                                                    subscriptionId:
+                                                                        0,
+                                                                    subscriptionUniqueId:
+                                                                        '',
+                                                                    patientId:
+                                                                        0,
+                                                                    userId: 0,
+                                                                    planId: 0,
+                                                                    subsHistoryId:
+                                                                        0,
+                                                                    status: 0,
+                                                                    expiredAt:
+                                                                        '',
+                                                                    expired: 0,
+                                                                    createdAt:
+                                                                        '',
+                                                                    updatedAt:
+                                                                        '')))
+                                                    .planId ??
+                                                "")
+                                            .toString(),
+                                        patientModel: diabeticControl
+                                                .planDetails ??
+                                            PlanDetailsModel(
                                                 planId: 0,
-                                                subsHistoryId:
-                                                0,
+                                                planName: "",
+                                                price: 0,
+                                                discount: 0,
+                                                sellingPrice: 0,
+                                                discountType: 0,
+                                                duration: 9,
+                                                sortDesc: '',
+                                                description: '',
+                                                tagLine: '',
                                                 status: 0,
-                                                expiredAt: '',
-                                                expired: 0,
-                                                createdAt: '',
-                                                updatedAt:
-                                                '')))
-                                        .planId ??
-                                        "")
-                                        .toString(),
-                                    patientModel: diabeticControl
-                                        .planDetails ??
-                                        PlanDetailsModel(
-                                            planId: 0,
-                                            planName: "",
-                                            price: 0,
-                                            discount: 0,
-                                            sellingPrice: 0,
-                                            discountType: 0,
-                                            duration: 9,
-                                            sortDesc: '',
-                                            description: '',
-                                            tagLine: '',
-                                            status: 0,
-                                            sortOrder: 0,
-                                            createdAt: DateTime.now(),
-                                            updateAt: DateTime.now(),
-                                            planResources: [],
-                                            subscription:
-                                            SubscriptionModel(
-                                                subscriptionId: 0,
-                                                subscriptionUniqueId:
-                                                '',
-                                                patientId: 0,
-                                                userId: 0,
-                                                planId: 0,
-                                                subsHistoryId: 0,
-                                                status: 0,
-                                                expiredAt: '',
-                                                expired: 0,
-                                                createdAt: '',
-                                                updatedAt: '')),
-                                  ));
+                                                sortOrder: 0,
+                                                createdAt: DateTime.now(),
+                                                updateAt: DateTime.now(),
+                                                planResources: [],
+                                                subscription: SubscriptionModel(
+                                                    subscriptionId: 0,
+                                                    subscriptionUniqueId: '',
+                                                    patientId: 0,
+                                                    userId: 0,
+                                                    planId: 0,
+                                                    subsHistoryId: 0,
+                                                    status: 0,
+                                                    expiredAt: '',
+                                                    expired: 0,
+                                                    createdAt: '',
+                                                    updatedAt: '')),
+                                      ));
                                 },
                                 child: const Text("Renew Plan")),
                           ),
-
                         ],
                       ),
                     ),
@@ -380,21 +381,140 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
                   // sizedBoxDefault(),
 
                   // Check for null or empty list
-                  if (!isListEmpty) ...[
-                    const Text('Today’s Blood Sugar Parameters',
-                        style: openSansSemiBold),
+
+                  if (calculateTimeLeft((diabeticControl.subscriptionModel ??
+                                  SubscriptionModel(
+                                      subscriptionId: 0,
+                                      subscriptionUniqueId: "",
+                                      patientId: 0,
+                                      userId: 0,
+                                      planId: 0,
+                                      subsHistoryId: 0,
+                                      status: 0,
+                                      expiredAt: "2021-12-19",
+                                      expired: 0,
+                                      createdAt: "",
+                                      updatedAt: ""))
+                              .expiredAt ??
+                          "") !=
+                      "Expired")
+                    if (!isListEmpty) ...[
+                      const Text('Today’s Blood Sugar Parameters',
+                          style: openSansSemiBold),
+                      sizedBoxDefault(),
+                      SugarChart(),
+                    ],
+                  if (calculateTimeLeft((diabeticControl.subscriptionModel ??
+                      SubscriptionModel(
+                          subscriptionId: 0,
+                          subscriptionUniqueId: "",
+                          patientId: 0,
+                          userId: 0,
+                          planId: 0,
+                          subsHistoryId: 0,
+                          status: 0,
+                          expiredAt: "2024-12-19",
+                          expired: 0,
+                          createdAt: "",
+                          updatedAt: ""))
+                      .expiredAt ??
+                      "") !=
+                      "Expired")
                     sizedBoxDefault(),
-                    SugarChart(),
-                  ],
-                  sizedBoxDefault(),
-                  AddHealthGoal(),
+                  if (calculateTimeLeft((diabeticControl.subscriptionModel ??
+                                  SubscriptionModel(
+                                      subscriptionId: 0,
+                                      subscriptionUniqueId: "",
+                                      patientId: 0,
+                                      userId: 0,
+                                      planId: 0,
+                                      subsHistoryId: 0,
+                                      status: 0,
+                                      expiredAt: "2024-12-19",
+                                      expired: 0,
+                                      createdAt: "",
+                                      updatedAt: ""))
+                              .expiredAt ??
+                          "") !=
+                      "Expired")
+                    AddHealthGoal(),
 
                   // sizedBoxDefault(),
                   // const RoutineComponent(),
-                  sizedBoxDefault(),
+                  if (calculateTimeLeft((diabeticControl.subscriptionModel ??
+                      SubscriptionModel(
+                          subscriptionId: 0,
+                          subscriptionUniqueId: "",
+                          patientId: 0,
+                          userId: 0,
+                          planId: 0,
+                          subsHistoryId: 0,
+                          status: 0,
+                          expiredAt: "2024-12-19",
+                          expired: 0,
+                          createdAt: "",
+                          updatedAt: ""))
+                      .expiredAt ??
+                      "") !=
+                      "Expired")
+                    sizedBoxDefault(),
                   // const CurrentMedicationComponent(),
                   // sizedBoxDefault(),
-                  const ResourcesComponent(),
+                  if (calculateTimeLeft((diabeticControl.subscriptionModel ??
+                      SubscriptionModel(
+                          subscriptionId: 0,
+                          subscriptionUniqueId: "",
+                          patientId: 0,
+                          userId: 0,
+                          planId: 0,
+                          subsHistoryId: 0,
+                          status: 0,
+                          expiredAt: "2024-12-19",
+                          expired: 0,
+                          createdAt: "",
+                          updatedAt: ""))
+                      .expiredAt ??
+                      "") !=
+                      "Expired")
+                    const ResourcesComponent(),
+                  if (calculateTimeLeft((diabeticControl.subscriptionModel ??
+                      SubscriptionModel(
+                          subscriptionId: 0,
+                          subscriptionUniqueId: "",
+                          patientId: 0,
+                          userId: 0,
+                          planId: 0,
+                          subsHistoryId: 0,
+                          status: 0,
+                          expiredAt: "2024-12-19",
+                          expired: 0,
+                          createdAt: "",
+                          updatedAt: ""))
+                      .expiredAt ??
+                      "") !=
+                      "Expired")
+                    sizedBoxDefault(),
+                  if (calculateTimeLeft((diabeticControl.subscriptionModel ??
+                      SubscriptionModel(
+                          subscriptionId: 0,
+                          subscriptionUniqueId: "",
+                          patientId: 0,
+                          userId: 0,
+                          planId: 0,
+                          subsHistoryId: 0,
+                          status: 0,
+                          expiredAt: "2024-12-19",
+                          expired: 0,
+                          createdAt: "",
+                          updatedAt: ""))
+                      .expiredAt ??
+                      "") ==
+                      "Expired")
+                    Center(
+                        child: Text(
+                      "Renew Plan",
+                      style: openSansSemiBold,
+                    )),
                   sizedBox100(),
                 ],
               );
