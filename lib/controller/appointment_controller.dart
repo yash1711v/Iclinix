@@ -44,8 +44,16 @@ class AppointmentController extends GetxController implements GetxService {
 
   bool get isPlanRenewing => _isPlanRenewing;
 
+  PatientModel _patientData = PatientModel();
+
+  PatientModel get patientData => _patientData;
+
   void setPlanRenewing([bool? val]) {
     _isPlanRenewing = val ?? false;
+    update();
+  }
+ void setpatientData(PatientModel data) {
+   _patientData = data;
     update();
   }
 

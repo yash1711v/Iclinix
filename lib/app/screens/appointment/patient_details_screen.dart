@@ -169,7 +169,7 @@ class PatientDetailsScreen extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              'YOUR Appointment Details',
+                              'Your Appointment Details',
                               style: openSansRegular.copyWith(
                                   fontSize: Dimensions.fontSize12
                               ), //,
@@ -182,7 +182,7 @@ class PatientDetailsScreen extends StatelessWidget {
                           inputType: TextInputType.streetAddress,
                           controller: _otherProblemController,
                           maxLines: 4,
-                          hintText: "Write here.....",
+                          hintText: "Write Your Concern here.....",
                           validation: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your appointment Details';
@@ -333,7 +333,7 @@ class PatientDetailsScreen extends StatelessWidget {
                             ),
                             sizedBox10(),
                             Text(
-                              'YOUR Appointment Details',
+                              'Your Appointment Details',
                               style: openSansRegular.copyWith(
                                   fontSize: Dimensions.fontSize12
                               ), //,
@@ -344,7 +344,7 @@ class PatientDetailsScreen extends StatelessWidget {
                               inputType: TextInputType.streetAddress,
                               controller: _otherProblemController,
                               maxLines: 4,
-                              hintText: "Write here.....",
+                              hintText: "Write Your Concern here.....",
                               validation: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Please enter your appointment Details';

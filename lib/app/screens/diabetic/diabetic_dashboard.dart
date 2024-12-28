@@ -204,6 +204,120 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
                                     color: Theme.of(context).cardColor,
                                     fontSize: Dimensions.fontSizeDefault),
                               ),
+                              diabeticControl.planDetails != null?Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: "First Name: ",
+                                          style: openSansRegular.copyWith(
+                                            fontSize: Dimensions.fontSize12,
+                                            color: yellowColor,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: "${Get.find<AppointmentController>().patientData.firstName}",
+                                          // Provide a fallback value if planDetails is null
+                                          style: openSansSemiBold.copyWith(
+                                            fontSize: Dimensions.fontSizeDefault,
+                                            color: yellowColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: "Last Name: ",
+                                          style: openSansRegular.copyWith(
+                                            fontSize: Dimensions.fontSize12,
+                                            color: yellowColor,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: "${Get.find<AppointmentController>().patientData.lastName}",
+                                          // Provide a fallback value if planDetails is null
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: yellowColor
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: "Diabetic: ",
+                                          style: openSansRegular.copyWith(
+                                            fontSize: Dimensions.fontSize12,
+                                            color: yellowColor,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: "${Get.find<AppointmentController>().patientData.diabetesProblem == 0?"No":"Yes"}",
+                                          // Provide a fallback value if planDetails is null
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: yellowColor
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: "Eye Problem: ",
+                                          style: openSansRegular.copyWith(
+                                            fontSize: Dimensions.fontSize12,
+                                            color: yellowColor,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: "${Get.find<AppointmentController>().patientData.eyeProblem == 0?"No":"Yes"}",
+                                          // Provide a fallback value if planDetails is null
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: yellowColor
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: "BP Problem: ",
+                                          style: openSansRegular.copyWith(
+                                            fontSize: Dimensions.fontSize12,
+                                            color: yellowColor,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: "${Get.find<AppointmentController>().patientData.bloodPressureProblem == 0?"No":"Yes"}",
+                                          // Provide a fallback value if planDetails is null
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: yellowColor
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ):Container(),
                               RichText(
                                 text: TextSpan(
                                   children: [
@@ -217,9 +331,9 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
                                     TextSpan(
                                       text: diabeticControl.planDetails != null
                                           ? calculateTimeLeft(diabeticControl
-                                                  .subscriptionModel!
-                                                  .expiredAt ??
-                                              "")
+                                          .subscriptionModel!
+                                          .expiredAt ??
+                                          "")
                                           : "N/A",
                                       // Provide a fallback value if planDetails is null
                                       style: openSansSemiBold.copyWith(

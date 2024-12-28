@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,6 +10,7 @@ import 'package:iclinix/data/api/api_client.dart';
 import 'package:iclinix/data/models/response/diabetic_dashboard_detail_model.dart';
 import 'package:iclinix/data/models/response/health_goal_model.dart';
 import 'package:iclinix/data/models/response/patient_data_model.dart';
+import 'package:iclinix/data/models/response/patients_model.dart';
 import 'package:iclinix/data/models/response/sugar_checkup_model.dart';
 import 'package:iclinix/data/repo/diabetic_repo.dart';
 import 'package:iclinix/helper/date_converter.dart';
@@ -284,10 +287,10 @@ class DiabeticController extends GetxController implements GetxService {
 
       if (response.statusCode == 200) {
         var data = response.body['data'];
+        // log("Data: ${response.body['data']["patientDetails"]}");
          var renewOption = response.body["renew_option"];
          var oldSubs = response.body["old_subs"];
-         Get.find<AppointmentController>().setisRenew(renewOption);
-         Get.find<AppointmentController>().setisOld(oldSubs);
+
 
         print("Full API Response: ${renewOption}");
         print("Full API Response: ${oldSubs}");
@@ -362,6 +365,10 @@ class DiabeticController extends GetxController implements GetxService {
         } else {
           print("No data found in the response.");
         }
+        var PatientData = PatientModel.fromJson(response.body['data']["patientDetails"]);
+        Get.find<AppointmentController>().setisRenew(renewOption);
+        Get.find<AppointmentController>().setisOld(oldSubs);
+        Get.find<AppointmentController>().setpatientData(PatientData);
       } else {
         print("Error fetching dashboard data. Status code: ${response.statusCode}");
       }
