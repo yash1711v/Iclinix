@@ -114,7 +114,17 @@ class _AddHealthGoalState extends State<AddHealthGoal> {
                 // ),
                 Container(
                   height: 120,
-                  child: Scrollbar(
+                  child: controller.healthGoalData?.length == 0
+                      ? Center(
+                    child: Text(
+                      'No health goals available',
+                      style: TextStyle(
+                        fontSize: Dimensions.fontSizeDefault,
+                        color: Theme.of(context).disabledColor,
+                      ),
+                    ),
+                  )
+                      : Scrollbar(
                     controller: _scrollController,
                     thumbVisibility: true, // Always show the scroll indicator
                     child: ListView.builder(

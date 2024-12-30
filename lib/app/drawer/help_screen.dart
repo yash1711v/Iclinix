@@ -92,7 +92,7 @@ class HelpScreen extends StatelessWidget {
                         title: 'Mail: ', data: 'iclinix@gmail.com'),
                     sizedBox10(),
                     buildRichText(context,
-                        title: 'Contact No: ', data: '91-6366526413'),
+                        title: 'Contact No: ', data: '91-9899118030'),
                     sizedBox10(),
                     // buildRichText(context,
                     //     title: 'Website ', data: 'https://iclinix.in/'),
