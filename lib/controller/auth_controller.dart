@@ -114,7 +114,7 @@ class AuthController extends GetxController implements GetxService {
         String otp = responseData['otp'].toString();
         _isLoginLoading = false;
         update();
-        showCustomSnackBar(responseData['message'], isError: false);
+        // showCustomSnackBar(responseData['message'], isError: false);
         Get.toNamed(RouteHelper.getOtpVerificationRoute(phoneNo));
       } else {
         _isLoginLoading = false;
@@ -162,11 +162,11 @@ class AuthController extends GetxController implements GetxService {
 
       // Add fields to the request
       request.fields.addAll({
-        'mobile': phoneNo,
+        'mobile': "+91${phoneNo}",
         'otp': otp,
         "device_token": deviceToken ?? "",
       });
-
+      debugPrint('Device token: ${request.fields}');
       http.StreamedResponse response = await request.send();
       if (response.statusCode == 200 || response.statusCode == 201) {
         String responseString = await response.stream.bytesToString();

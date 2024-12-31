@@ -23,7 +23,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Timer? _timer;
-  int _remainingTime = 60;
+  int _remainingTime = 60*5;
   bool _isResendEnabled = false;
 
   @override
@@ -41,7 +41,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   void _startTimer() {
     setState(() {
       _isResendEnabled = false;
-      _remainingTime = 60;
+      _remainingTime = 60 * 5; // 5 minutes in seconds
     });
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -54,6 +54,12 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         }
       });
     });
+  }
+
+  String _formatTime(int seconds) {
+    final minutes = seconds ~/ 60;
+    final remainingSeconds = seconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
   }
 
   void _resendOtp() {
@@ -172,7 +178,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                     TextSpan(
                                       text: _isResendEnabled
                                           ? "Resend"
-                                          : "Resend in $_remainingTime seconds",
+                                          : "Resend in ${_formatTime(_remainingTime)}",
                                       style: openSansBold.copyWith(
                                         fontSize: Dimensions.fontSize12,
                                         color: _isResendEnabled

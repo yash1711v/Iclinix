@@ -867,7 +867,13 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                           visible: index == 1,
                           child: SizedBox(
                             height: MediaQuery.of(context).size.height-200,
-                            child: SingleChildScrollView(
+                            child: appointmentHistoryList.isEmpty ||
+                                appointmentHistoryList.every((appointment) => appointment.patientAppointments.isEmpty)
+                                ? EmptyDataWidget(
+                              text: 'Nothing Available',
+                              image: Images.icEmptyDataHolder,
+                              fontColor: Theme.of(context).disabledColor,
+                            ):SingleChildScrollView(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -894,7 +900,7 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                                               final patientAppointment =
                                               patientAppointments[j];
                                               debugPrint(
-                                                  'Patient Appointment: ${patientAppointments[j].branchName}');
+                                                  'Patient Appointment: ${patientAppointments[j].status}');
                                               return Visibility(
                                                 visible:  patientAppointments[j].status == 1,
                                                 child: Padding(

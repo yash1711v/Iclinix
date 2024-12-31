@@ -35,11 +35,11 @@ class AuthRepo {
   }
 
   Future<Response> sendOtpRepo(String? phoneNo,) async {
-    return await apiClient.postData(AppConstants.sendOtpUrl, {"mobile": phoneNo});
+    return await apiClient.postData(AppConstants.sendOtpUrl, {"mobile":"+91${phoneNo}"});
   }
 
   Future<Response> verifyOtp(String? phoneNo,String? otp,) async {
-    return await apiClient.postData(AppConstants.verifyOtpUrl, {"mobile": phoneNo, "otp" : otp});
+    return await apiClient.postData(AppConstants.verifyOtpUrl, {"mobile": "+91${phoneNo}", "otp" : otp});
   }
 
   Future<Response> getUserData() async {

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:iclinix/app/screens/dashboard/dashboard_screen.dart';
 import 'package:iclinix/app/widget/custom_snackbar.dart';
 import 'package:iclinix/app/widget/loading_widget.dart';
 import 'package:iclinix/controller/appointment_controller.dart';
@@ -14,6 +15,7 @@ import 'package:iclinix/data/models/response/patients_model.dart';
 import 'package:iclinix/data/models/response/sugar_checkup_model.dart';
 import 'package:iclinix/data/repo/diabetic_repo.dart';
 import 'package:iclinix/helper/date_converter.dart';
+import 'package:iclinix/helper/route_helper.dart';
 
 import '../data/models/response/user_data.dart';
 import 'package:http/http.dart' as http;
@@ -209,9 +211,12 @@ class DiabeticController extends GetxController implements GetxService {
     if(response.statusCode == 200) {
       var responseData = response.body;
       if(responseData["msg"]  == "Data Inserted Successfully") {
+
         _isDailySugarCheckupLoading = false;
+        //
+        // Get.back();
+        Get.to(()=>DashboardScreen(pageIndex: 1));
         update();
-        Get.back();
         return showCustomSnackBar('Added Successfully', );
       } else {
         showCustomSnackBar(responseData["msg"], isError: true);
@@ -393,17 +398,23 @@ class DiabeticController extends GetxController implements GetxService {
       if(responseData["msg"]  == "Data updated successfully") {
         Get.back();
         _isDailySugarCheckupLoading = false;
+
+        Get.to(()=>DashboardScreen(pageIndex: 1));
         update();
         return showCustomSnackBar('Added Successfully', );
       } else {
         showCustomSnackBar(responseData["msg"], isError: true);
         _isDailySugarCheckupLoading = false;
+
         update();
       }
       _isDailySugarCheckupLoading = false;
+
+
       update();
     } else {
       _isDailySugarCheckupLoading = false;
+
       update();
     }
     _isDailySugarCheckupLoading = false;
